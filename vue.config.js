@@ -2,17 +2,7 @@ const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: {
-    externals:
-      process.env.NODE_ENV === "development"
-        ? {}
-        : {
-            vue: "Vue",
-            "vue-router": "VueRouter",
-            pinia: "Pinia",
-            axios: "axios",
-            "@arco-design/web-vue": "ArcoVue",
-            "@arco-design/web-vue/es/icon": "ArcoVueIcon",
-          },
+    externals: {},
     plugins: [],
   },
   devServer: {
@@ -20,8 +10,8 @@ module.exports = defineConfig({
       "Access-Control-Allow-Origin": "*",
     },
   },
-  outputDir: process.env.NODE_ENV === "development" ? "dist" : "plugins/",
-  publicPath: process.env.NODE_ENV === "development" ? "/" : "/plugins/",
+  outputDir: process.env.NODE_ENV === "development" ? "dist" : "plugins/webmaster_tools/",
+  publicPath: process.env.NODE_ENV === "development" ? "/plugins" : "/plugins/webmaster_tools/",
   productionSourceMap: process.env.NODE_ENV === "development" ? true : false,
   chainWebpack: (config) => {
     config.plugins.delete("prefetch");
