@@ -9,7 +9,7 @@ function post(url, data, callback=()=>{}, errCallback=()=>{}){
         if (result.code === 0 && result.hasOwnProperty("data")){
             callback(result);
         }else{
-            Message.error(result.message);
+            Message.error(result.msg);
             errCallback();
         }
     })
