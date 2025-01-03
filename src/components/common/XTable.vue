@@ -51,8 +51,8 @@ defineExpose({queryTableData, table, setData, onPageIndexChange})
     <div style="height: 12px;"></div>
     <div style="display: flex; height: 32px;">
         <div style="width: 400px; display: flex; align-items: center">
-            页面共计：{{ table.total }}条，
-            成功：<span style="color: green">{{table.successCount}}</span>条，失败：<span style="color: red">{{table.failCount}}</span>条
+            页面共计：{{ table.total }}&nbsp;条，
+            成功：<span style="color: green">{{table.successCount}}</span>&nbsp;条，失败：<span style="color: red">{{table.failCount}}</span>&nbsp;条
         </div>
         <div style="flex: 1; justify-items: right">
             <a-pagination v-model="table.pageIndex" :page-size="table.pageSize" :total="table.total" show-page-size @change="onPageIndexChange" @page-size-change="onPageSizeChange"/>

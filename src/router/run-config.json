@@ -1,0 +1,66 @@
+{
+    "routes": {
+        "title": "站长工具",
+        "name": "webmaster-tools",
+        "children": [
+            {
+                "title": "SEO工具",
+                "name": "seo-check",
+                "children": [
+                    {
+                        "title": "域名工具",
+                        "name": "domain",
+                        "children": [
+                            {
+                                "title": "备案信息",
+                                "name": "record-keeping-info"
+                            },
+                            {
+                                "title": "注册信息",
+                                "name": "register-info"
+                            },
+                            {
+                                "title": "域名安全",
+                                "name": "domain-security"
+                            },
+                            {
+                                "title": "域名综合",
+                                "name": "domain-complex"
+                            },
+                            {
+                                "title": "网站TDK",
+                                "name": "website-tdk"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "网站",
+                        "name": "website",
+                        "children": [
+                            {
+                                "title": "网站收录",
+                                "name": "collect-website"
+                            },
+                            {
+                                "title": "同IP网站",
+                                "name": "ip-website"
+                            },
+                            {
+                                "title": "网站词库",
+                                "name": "word-library"
+                            },
+                            {
+                                "title": "网站权重",
+                                "name": "weight-website"
+                            },
+                            {
+                                "title": "网站首页外链",
+                                "name": "outer-link"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -5,7 +5,7 @@ import DomainRegisterQuery from "./DomainRegisterQuery.vue";
 </script>
 
 <template>
-    <div style="padding: 12px; display: flex; flex-direction: column; height: 100%; min-height: 955px;">
+    <div class="index">
         <div style="flex: 1;">
             <a-tabs default-active-key="1" justify>
                 <a-tab-pane key="1" title="域名注册信息查询">
@@ -26,27 +26,11 @@ import DomainRegisterQuery from "./DomainRegisterQuery.vue";
 </template>
 
 <style lang="less" scoped>
-
 :deep(.arco-tabs-tab-active) {
     font-weight: bold;
 }
 
 :deep(.arco-tabs-tab-active:hover) {
     font-weight: 500;
-}
-
-.form_explain {
-    border-radius: 10px;
-    background-color: #f0f4ff;
-    font-size: 13px;
-    color: #333;
-    padding: 16px;
-    font-weight: 500;
-    line-height: 32px;
-    .form_explain_title {
-        color: #6235F4;
-        font-size: 16px;
-        padding: 0 0 10px;
-    }
 }
 </style>

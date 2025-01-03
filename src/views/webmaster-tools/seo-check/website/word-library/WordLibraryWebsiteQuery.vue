@@ -2,7 +2,7 @@
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div style="height: 12px;"></div>
         <div style="display: flex; gap: 12px;">
-            <div style="display: flex; gap: 12px; width: 400px;">
+            <div style="display: flex; gap: 12px; width: 300px;">
                 <div style="font-weight: bold">站长平台</div>
                 <a-radio-group v-model="queryParam.platform">
                     <a-radio value="az">爱站</a-radio>
@@ -12,11 +12,11 @@
             <div style="display: flex; gap: 12px; flex: 1">
                 <div style="font-weight: bold">搜索引擎</div>
                 <a-radio-group v-model="queryParam.searchEngines">
-                    <a-radio v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-radio>
+                    <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-radio>
                 </a-radio-group>
             </div>
         </div>
-        <div style="height: 8px;"></div>
+        <div style="height: 25px;"></div>
         <div style="flex: 1;">
             <XTextarea v-model="queryParam.domains"
                        placeholder="请输入需要查询的网站域名，一行一个，单词最多提交20个，格式如：www.google.com"/>

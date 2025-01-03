@@ -1,25 +1,12 @@
 <template>
-    <router-view />
+    <div class="plugins-container">
+        <div class="plugins-container-box">
+            <router-view/>
+        </div>
+    </div>
 </template>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-html,
-body,
-#plugins {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-size: 14px;
-  background-color: var(--color-bg-1);
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-}
-.container {
-  margin-top: 20px;
-  padding: 0 20px 20px 20px;
-}
+@import '@/assets/style/global.less';
+
 </style>

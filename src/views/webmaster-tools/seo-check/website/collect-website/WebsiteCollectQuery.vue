@@ -1,16 +1,16 @@
 <template>
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div style="height: 12px;"></div>
-        <div style="display: flex; gap: 12px;">
+        <div style="display: flex; gap: 20px;">
             <div style="font-weight: bold">搜索引擎</div>
             <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="allSelect">全选</div>
             <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="revoltSelect">反选</div>
             <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="queryParam.range=[]">清除</div>
             <a-checkbox-group v-model="queryParam.range">
-                <a-checkbox v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
+                <a-checkbox style="margin-left: 30px" v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
             </a-checkbox-group>
         </div>
-        <div style="height: 8px;"></div>
+        <div style="height: 25px;"></div>
         <div style="flex: 1;">
             <XTextarea v-model="queryParam.domains"
                        placeholder="请输入需要查询的网站域名，一行一个，单词最多提交100个，格式如：www.google.com"/>
@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import {reactive, ref, toRaw} from "vue";
+import {reactive, ref, toRaw, computed} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import {useHttp} from "@/hooks/useHttp";
@@ -52,63 +52,33 @@ let searchEngines = [
     {code: "yahu", name: "雅虎"}
 ];
 
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        width: 100
-    },
-    {
-        title: '网站域名',
-        dataIndex: 'domain',
-        minWidth: 200
-    },
-    {
-        title: '百度',
-        dataIndex: 'baidu',
-        width: 100
-    },
-    {
-        title: '谷歌',
-        dataIndex: 'google',
-        minWidth: 100
-    },
-    {
-        title: '360',
-        dataIndex: 'so',
-        minWidth: 100
-    },
-    {
-        title: '搜狗',
-        dataIndex: 'sogou',
-        minWidth: 100
-    },
-    {
-        title: '神马',
-        dataIndex: 'sm',
-        minWidth: 100
-    },
-    {
-        title: '头条',
-        dataIndex: 'toutiao',
-        minWidth: 100
-    },
-    {
-        title: '必应',
-        dataIndex: 'bing',
-        minWidth: 100
-    },
-    {
-        title: '雅虎',
-        dataIndex: 'yahu',
-        minWidth: 100
-    },
-];
-
 let queryParam = reactive({
     domains: "",
     range: []
 });
+
+let columns = computed(()=>{
+    return [
+        {
+            title: '序号',
+            dataIndex: 'serialNumber',
+            width: 100
+        },
+        {
+            title: '网站域名',
+            dataIndex: 'domain',
+            minWidth: 200
+        },
+        ... searchEngines.filter(sEngines => queryParam.range.includes(sEngines.code)).map((sEngines) => {
+            return {
+                title: sEngines.name,
+                dataIndex: sEngines.code,
+                minWidth: 100
+            }
+        })
+    ]
+});
+
 let xTable = ref({});
 let isDownloadFile = ref(false);
 

@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "record-keeping-info": "npm run build --abc=/webmaster-tools/seo-check/domain/record-keeping-info",
+    "run-build": "node run-build.js"
   },
   "dependencies": {
     "axios": "^1.7.9",

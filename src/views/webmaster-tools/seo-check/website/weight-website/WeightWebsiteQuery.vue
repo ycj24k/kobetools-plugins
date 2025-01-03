@@ -7,7 +7,7 @@
                 <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="revoltSelect">反选</div>
                 <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="queryParam.platforms=[];queryParam.searchEngines=[];">清除</div>
             </div>
-            <div style="display: flex; gap: 12px; width: 350px;">
+            <div style="display: flex; gap: 12px; width: 300px;">
                 <div style="font-weight: bold">站长平台</div>
                 <a-checkbox-group v-model="queryParam.platforms">
                     <a-checkbox v-for="platform in platforms" :value="platform.code">{{platform.name}}</a-checkbox>
@@ -16,11 +16,11 @@
             <div style="display: flex; gap: 12px; flex: 1">
                 <div style="font-weight: bold">搜索引擎</div>
                 <a-checkbox-group v-model="queryParam.searchEngines">
-                    <a-checkbox v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
+                    <a-checkbox style="margin-left: 30px" v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
                 </a-checkbox-group>
             </div>
         </div>
-        <div style="height: 8px;"></div>
+        <div style="height: 25px;"></div>
         <div style="flex: 1;">
             <XTextarea v-model="queryParam.domains"
                        placeholder="请输入需要查询的网站域名，一行一个，单词最多提交100个，格式如：www.google.com"/>
@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import {useHttp} from "@/hooks/useHttp";
@@ -99,97 +99,114 @@ let searchEngines = [
     {code: "bing", name: "必应"},
 ];
 
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        width: 100,
-    },
-    {
-        title: '网站域名',
-        dataIndex: 'domain',
-        minWidth: 200
-    },
-    {
-        title: '站长平台',
-        dataIndex: 'platform',
-        width: 100
-    },
-    {
-        title: '预估流量',
-        dataIndex: 'weight',
-        minWidth: 100
-    },
-    {
-        title: '百度',
-        dataIndex: 'BaidupcBr',
-        slotName: 'BaidupcBr',
-        width: 100
-    },
-    {
-        title: '手机百度',
-        dataIndex: 'BaiduMobileBr',
-        slotName: 'BaiduMobileBr',
-        minWidth: 100
-    },
-    {
-        title: '360',
-        dataIndex: 'SopcBr',
-        slotName: 'SopcBr',
-        minWidth: 100
-    },
-    {
-        title: '手机360',
-        dataIndex: 'SoMobileBr',
-        slotName: 'SoMobileBr',
-        minWidth: 100
-    },
-    {
-        title: '搜狗',
-        dataIndex: 'SoGoupcBr',
-        slotName: 'SoGoupcBr',
-        minWidth: 100
-    },
-    {
-        title: '手机搜狗',
-        dataIndex: 'SoGouMobileBr',
-        slotName: 'SoGouMobileBr',
-        minWidth: 100
-    },
-    {
-        title: '神马',
-        dataIndex: 'SmBr',
-        slotName: 'SmBr',
-        minWidth: 100
-    },
-    {
-        title: '头条',
-        dataIndex: 'TtBr',
-        slotName: 'TtBr',
-        minWidth: 100
-    },
-    {
-        title: '必应',
-        dataIndex: 'BingBR',
-        slotName: 'BingBR',
-        minWidth: 100
-    },
-    {
-        title: '操作',
-        slotName: 'option',
-        minWidth: 100
-    },
-];
-
-let xTable = ref({});
-
-let isDownloadFile = ref(false);
 
 let queryParam = reactive({
     platforms: ['az'],
     searchEngines: ['baidu'],
     domains: ""
 });
+
+let allSearchEngines = [
+    {
+        title: '百度',
+        code: 'baidu',
+        dataIndex: 'BaidupcBr',
+        slotName: 'BaidupcBr',
+        width: 100
+    },
+    {
+        title: '手机百度',
+        code: 'baidu',
+        dataIndex: 'BaiduMobileBr',
+        slotName: 'BaiduMobileBr',
+        minWidth: 100
+    },
+    {
+        title: '360',
+        code: 'so',
+        dataIndex: 'SopcBr',
+        slotName: 'SopcBr',
+        minWidth: 100
+    },
+    {
+        title: '手机360',
+        code: 'so',
+        dataIndex: 'SoMobileBr',
+        slotName: 'SoMobileBr',
+        minWidth: 100
+    },
+    {
+        title: '搜狗',
+        code: 'sogou',
+        dataIndex: 'SoGoupcBr',
+        slotName: 'SoGoupcBr',
+        minWidth: 100
+    },
+    {
+        title: '手机搜狗',
+        code: 'sogou',
+        dataIndex: 'SoGouMobileBr',
+        slotName: 'SoGouMobileBr',
+        minWidth: 100
+    },
+    {
+        title: '神马',
+        code: 'sm',
+        dataIndex: 'SmBr',
+        slotName: 'SmBr',
+        minWidth: 100
+    },
+    {
+        title: '头条',
+        code: 'toutiao',
+        dataIndex: 'TtBr',
+        slotName: 'TtBr',
+        minWidth: 100
+    },
+    {
+        title: '必应',
+        code: 'bing',
+        dataIndex: 'BingBR',
+        slotName: 'BingBR',
+        minWidth: 100
+    },
+];
+
+let columns = computed(()=>{
+    return [
+        {
+            title: '序号',
+            dataIndex: 'serialNumber',
+            width: 100,
+        },
+        {
+            title: '网站域名',
+            dataIndex: 'domain',
+            minWidth: 200
+        },
+        {
+            title: '站长平台',
+            dataIndex: 'platform',
+            width: 100
+        },
+        {
+            title: '预估流量',
+            dataIndex: 'weight',
+            minWidth: 100
+        },
+        ... allSearchEngines.filter(sEngines => queryParam.searchEngines.includes(sEngines.code)),
+        {
+            title: '操作',
+            slotName: 'option',
+            minWidth: 100
+        },
+    ]
+});
+
+let xTable = ref({});
+
+let isDownloadFile = ref(false);
+
 
 function queryTableData() {
 
