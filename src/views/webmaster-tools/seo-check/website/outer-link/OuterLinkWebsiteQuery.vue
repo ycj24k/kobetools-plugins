@@ -16,11 +16,13 @@
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns">
                 <template #option="{ record }">
-                    详情|未开发
+                    <XButton shape="square" text="详情" @xClick="outerLinkWebsiteQueryDetails.show(record)"/>
                 </template>
             </XTable>
         </div>
     </div>
+
+    <OuterLinkWebsiteQueryDetails ref="outerLinkWebsiteQueryDetails" />
 </template>
 
 <script setup>
@@ -30,6 +32,7 @@ import XTextarea from "@/components/common/XTextarea.vue";
 import {useHttp} from "@/hooks/useHttp";
 import {Message} from "@arco-design/web-vue";
 import XTable from "@/components/common/XTable.vue";
+import OuterLinkWebsiteQueryDetails from "./OuterLinkWebsiteQueryDetails.vue";
 
 let {download} = useHttp();
 
@@ -37,50 +40,53 @@ let columns = [
     {
         title: '序号',
         dataIndex: 'serialNumber',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
         width: 100
     },
     {
         title: '域名信息',
         dataIndex: 'domain',
-        minWidth: 200
+        width: 300
     },
     {
         title: '反链数量',
         dataIndex: 'backlink_count',
-        width: 100
+        width: 150
     },
     {
         title: 'Notfflow',
         dataIndex: 'nofollow',
-        minWidth: 100
+        width: 150
     },
     {
         title: '有回链',
         dataIndex: 'has_backlink',
-        minWidth: 100
+        width: 150
     },
     {
         title: '高权重数',
-        dataIndex: 'pc_weight',
-        minWidth: 100
+        dataIndex: 'maxCount',
+        width: 150
+    },
+    {
+        title: '最高权重',
+        dataIndex: 'maxBr',
+        width: 150
     },
     {
         title: '发现时间',
-        dataIndex: 'found_time',
-        minWidth: 200
+        dataIndex: 'date',
+        width: 150
     },
     {
         title: '操作',
         slotName: 'option',
-        minWidth: 200
+        width: 100
     },
 ];
 
 let domains = ref("");
-let xTable = ref({});
+let xTable = ref(null);
+let outerLinkWebsiteQueryDetails = ref(null);
 let isDownloadFile = ref(false);
 
 function queryTableData() {

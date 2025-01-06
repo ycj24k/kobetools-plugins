@@ -18,6 +18,8 @@ const props = defineProps({
             <img v-if="type==='sm'" alt="" style="width: 15px;" src="@/assets/sm.png" />
             <img v-if="type==='toutiao'" alt="" style="width: 15px;" src="@/assets/toutiao.png" />
             <img v-if="type==='bing'" alt="" style="width: 15px;" src="@/assets/bing.png" />
+            <img v-if="type==='aizhan'" alt="" style="width: 15px;" src="@/assets/aizhan.png" />
+            <img v-if="type==='zhanzhang'" alt="" style="width: 15px;" src="@/assets/zhanzhang.png" />
         </div>
         <div style="width: 50%; height: 100%; color: white; display:flex; justify-content: center; align-items: center">
             {{ text }}
@@ -54,5 +56,13 @@ const props = defineProps({
     .bing{
         background-color: #2b99ff;
         border: 2px solid #2b99ff
+    }
+    .aizhan{
+        background-color: #1bbf4f;
+        border: 2px solid #1bbf4f
+    }
+    .zhanzhang{
+        background-color: rgb(89,133,192);
+        border: 2px solid rgb(89,133,192)
     }
 </style>

@@ -3,6 +3,7 @@ const props = defineProps({
     color: String,
     text: String,
     loading: Boolean,
+    shape: String,
 });
 
 let emits = defineEmits(['xClick']);
@@ -13,7 +14,10 @@ function click(){
 </script>
 
 <template>
-    <div class="button">
+    <div v-if="shape==='square'" class="square">
+        <a-button @click="click" :loading="loading" :class="props.color" type="primary" html-type="submit">{{props.text}}</a-button>
+    </div>
+    <div v-else class="round">
         <a-button @click="click" :loading="loading" :class="props.color" type="primary" html-type="submit">{{props.text}}</a-button>
     </div>
 </template>
@@ -31,12 +35,12 @@ function click(){
 .pink {
     background: linear-gradient(to right, #b50fa5, #ea61ef);
 }
-.button{
+.round{
     display: inline;
     border: none;
     color: #fff;
 }
-.button{
+.round{
     .arco-btn {
         width: 160px;
         height: 42px;

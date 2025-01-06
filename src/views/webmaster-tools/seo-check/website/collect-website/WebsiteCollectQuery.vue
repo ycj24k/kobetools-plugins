@@ -7,7 +7,7 @@
             <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="revoltSelect">反选</div>
             <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="queryParam.range=[]">清除</div>
             <a-checkbox-group v-model="queryParam.range">
-                <a-checkbox style="margin-left: 30px" v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
+                <a-checkbox style="margin-left: 30px" v-for="sEngines in searchEngines" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
             </a-checkbox-group>
         </div>
         <div style="height: 25px;"></div>
@@ -42,14 +42,14 @@ import XTable from "@/components/common/XTable.vue";
 let {download} = useHttp();
 
 let searchEngines = [
-    {code: "baidu", name: "百度"},
-    {code: "google", name: "谷歌"},
-    {code: "so", name: "360"},
-    {code: "sogou", name: "搜狗"},
-    {code: "sm", name: "神马"},
-    {code: "toutiao", name: "头条"},
-    {code: "bing", name: "必应"},
-    {code: "yahu", name: "雅虎"}
+    {code: "baidu", name: "百度", disabled: false},
+    {code: "so", name: "360", disabled: false},
+    {code: "sogou", name: "搜狗", disabled: false},
+    {code: "sm", name: "神马", disabled: false},
+    {code: "google", name: "谷歌-即将开放", disabled: true},
+    {code: "toutiao", name: "头条-即将开放", disabled: true},
+    {code: "bing", name: "必应-即将开放", disabled: true},
+    {code: "yahu", name: "雅虎-即将开放", disabled: true}
 ];
 
 let queryParam = reactive({

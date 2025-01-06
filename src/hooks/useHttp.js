@@ -12,6 +12,9 @@ function post(url, data, callback=()=>{}, errCallback=()=>{}){
             Message.error(result.msg);
             errCallback();
         }
+    }).catch(error => {
+        Message.error(error.response.data.msg);
+        errCallback();
     })
 }
 

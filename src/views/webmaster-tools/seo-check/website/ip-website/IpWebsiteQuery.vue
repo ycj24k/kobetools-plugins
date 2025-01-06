@@ -16,11 +16,13 @@
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns">
                 <template #option="{ record }">
-                    详情|未开发
+                    <XButton shape="square" text="详情" @xClick="ipWebsiteQueryDetails.show(record)"/>
                 </template>
             </XTable>
         </div>
     </div>
+
+    <IpWebsiteQueryDetails ref="ipWebsiteQueryDetails" />
 </template>
 
 <script setup>
@@ -30,6 +32,8 @@ import XTextarea from "@/components/common/XTextarea.vue";
 import {useHttp} from "@/hooks/useHttp";
 import {Message} from "@arco-design/web-vue";
 import XTable from "@/components/common/XTable.vue";
+import IpWebsiteQueryDetails from "./IpWebsiteQueryDetails.vue";
+import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
 
 let {download} = useHttp();
 
@@ -37,44 +41,47 @@ let columns = [
     {
         title: '序号',
         dataIndex: 'serialNumber',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
         width: 100
     },
     {
-        title: '域名信息',
+        title: '域名',
         dataIndex: 'domain',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        minWidth: 200
+        width: 200
     },
     {
-        title: 'IP地址',
+        title: '百度PC权重',
         dataIndex: 'ip',
         width: 300
     },
     {
-        title: 'IP地区',
+        title: '百度移动权重',
         dataIndex: 'address',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        minWidth: 150
+        width: 150
     },
     {
-        title: '站点个数',
+        title: '搜狗PC权重',
         dataIndex: 'siteNum',
-        minWidth: 230
+        width: 230
     },
     {
-        title: '查询时间',
+        title: '搜狗移动权重',
         dataIndex: 'date',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        minWidth: 200
+        width: 200
+    },
+    {
+        title: '神马权重',
+        dataIndex: 'date',
+        width: 200
+    },
+    {
+        title: '必应权重',
+        dataIndex: 'date',
+        width: 200
+    },
+    {
+        title: '首页标题',
+        dataIndex: 'date',
+        width: 200
     },
     {
         title: '操作',
@@ -84,7 +91,8 @@ let columns = [
 ];
 
 let domains = ref("");
-let xTable = ref({});
+let xTable = ref(null);
+let ipWebsiteQueryDetails = ref(null);
 let isDownloadFile = ref(false);
 
 function queryTableData() {
