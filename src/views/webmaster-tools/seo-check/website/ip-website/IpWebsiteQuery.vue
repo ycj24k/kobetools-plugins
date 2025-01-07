@@ -41,52 +41,37 @@ let columns = [
     {
         title: '序号',
         dataIndex: 'serialNumber',
-        width: 100
+        width: 80
     },
     {
-        title: '域名',
+        title: '域名信息',
         dataIndex: 'domain',
-        width: 200
+        width: 300
     },
     {
-        title: '百度PC权重',
+        title: 'IP地址',
         dataIndex: 'ip',
         width: 300
     },
     {
-        title: '百度移动权重',
+        title: 'IP地区',
         dataIndex: 'address',
-        width: 150
+        width: 300
     },
     {
-        title: '搜狗PC权重',
+        title: '站点个数',
         dataIndex: 'siteNum',
-        width: 230
+        width: 100
     },
     {
-        title: '搜狗移动权重',
+        title: '查询时间',
         dataIndex: 'date',
-        width: 200
-    },
-    {
-        title: '神马权重',
-        dataIndex: 'date',
-        width: 200
-    },
-    {
-        title: '必应权重',
-        dataIndex: 'date',
-        width: 200
-    },
-    {
-        title: '首页标题',
-        dataIndex: 'date',
-        width: 200
+        width: 150
     },
     {
         title: '操作',
         slotName: 'option',
-        minWidth: 200
+        width: 100
     },
 ];
 
