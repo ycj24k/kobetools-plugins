@@ -4,62 +4,82 @@
         "name": "webmaster-tools",
         "children": [
             {
-                "title": "SEO工具",
+                "title": "SEO查询",
                 "name": "seo-check",
                 "children": [
                     {
-                        "title": "域名工具",
+                        "title": "域名信息查询",
                         "name": "domain",
                         "children": [
                             {
-                                "title": "备案信息",
+                                "title": "备案信息查询",
                                 "name": "record-keeping-info"
                             },
                             {
-                                "title": "注册信息",
+                                "title": "域名注册查询",
                                 "name": "register-info"
                             },
                             {
-                                "title": "域名安全",
+                                "title": "域名安全查询",
                                 "name": "domain-security"
                             },
                             {
-                                "title": "域名综合",
+                                "title": "域名综合查询",
                                 "name": "domain-complex"
                             },
                             {
-                                "title": "网站TDK",
+                                "title": "域名TDK查询",
                                 "name": "website-tdk"
                             }
                         ]
                     },
                     {
-                        "title": "网站",
+                        "title": "网站信息查询",
                         "name": "website",
                         "children": [
                             {
-                                "title": "网站收录",
+                                "title": "网站收录查询",
                                 "name": "collect-website"
                             },
                             {
-                                "title": "同IP网站",
+                                "title": "同IP网站查询",
                                 "name": "ip-website"
                             },
                             {
-                                "title": "网站词库",
+                                "title": "网站词库查询",
                                 "name": "word-library"
                             },
                             {
-                                "title": "网站权重",
+                                "title": "网站权重查询",
                                 "name": "weight-website"
                             },
                             {
-                                "title": "网站首页外链",
+                                "title": "网站外链查询",
                                 "name": "outer-link"
                             }
                         ]
                     }
                 ]
+            },
+            {
+                "title": "SEO监控",
+                "name": "seo-monitor",
+                "children": []
+            },
+            {
+                "title": "SEO排名",
+                "name": "seo-ranking",
+                "children": []
+            },
+            {
+                "title": "谷歌SEO",
+                "name": "seo-google",
+                "children": []
+            },
+            {
+                "title": "SEM工具",
+                "name": "sem-tool",
+                "children": []
             }
         ]
     }

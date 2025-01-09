@@ -24,11 +24,9 @@
 import {ref} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
-import {useHttp} from "@/hooks/useHttp";
-import {Message} from "@arco-design/web-vue";
+import {post, download} from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
-
-let {post, download} = useHttp();
+import {showErrorNotification} from "@/hooks/useNotification";
 
 let columns = [
     {
@@ -81,13 +79,13 @@ let countdownQuerySecond = ref(0); // 倒计时查询
 
 function queryTableData() {
     if (domains.value.trim().length === 0){
-        Message.error("请输入需要查询的网站域名");
+        showErrorNotification('请输入需要查询的网站域名！');
         return;
     }
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
     post("/api/sites/query/baidutask/create", data, (result)=>{
         if (result.data.success.length === 0){
-            Message.error("未取到任务ID");
+            showErrorNotification('未取到任务ID！');
             return;
         }
         let taskIds = result.data.success.map(task => task.taskid);
@@ -96,12 +94,10 @@ function queryTableData() {
         countdownQuerySecond.value = 10;
         countdownAutoQuery(taskIds);
     })
-    //
 }
 
 // 倒计时自动查询
 function countdownAutoQuery(taskIds){
-    console.log("countdownAutoQuery")
     if (!isAutoQuery.value){
         return;
     }
@@ -118,7 +114,7 @@ function countdownAutoQuery(taskIds){
 
 function exportTableData(){
     if (domains.value.trim().length === 0){
-        Message.error("请输入需要查询的网站域名");
+        showErrorNotification('请输入需要查询的网站域名！');
         return;
     }
     isDownloadFile.value = true;

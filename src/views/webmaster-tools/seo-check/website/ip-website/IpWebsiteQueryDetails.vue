@@ -1,6 +1,6 @@
 <template>
     <a-modal width="auto" v-model:visible="visible" title-align="start" :closable="false" :footer="false">
-        <div style="width: 1800px; height: 1000px">
+        <div :style="{width: '1800px', height: (innerHeight * 0.8)+'px'}">
             <div style="height: 65px; display: flex;">
                 <div style="width: 500px;">
                     <XButton color="purple_blue_pink" text="返回列表页" @xClick="visible=false"/>
@@ -46,10 +46,9 @@
 
 <script setup>
 import {ref} from "vue";
-let {download} = useHttp();
 import XTable from "@/components/common/XTable.vue";
 import XButton from "@/components/common/XButton.vue";
-import {useHttp} from "@/hooks/useHttp";
+import {download} from "@/hooks/useHttp";
 import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
 
 let visible = ref(false);
@@ -105,12 +104,14 @@ let columns = [
 let xTable = ref(null);
 let isDownloadFile = ref(false);
 let rowData = ref({});
+let innerHeight = ref(0);
 
 /**
  * 打开详情窗口
  * @param record
  */
 function show(record){
+    innerHeight.value = window.innerHeight;
     rowData.value = record;
     visible.value = true;
     queryTableData();

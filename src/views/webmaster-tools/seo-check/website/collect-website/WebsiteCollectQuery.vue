@@ -35,11 +35,9 @@
 import {reactive, ref, toRaw, computed} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
-import {useHttp} from "@/hooks/useHttp";
-import {Message} from "@arco-design/web-vue";
+import {download} from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
-
-let {download} = useHttp();
+import {showErrorNotification} from "@/hooks/useNotification";
 
 let searchEngines = [
     {code: "baidu", name: "百度", disabled: false},
@@ -96,11 +94,11 @@ function revoltSelect() {
 
 function queryTableData() {
     if (queryParam.range.length === 0) {
-        Message.error("请选择搜索引擎");
+        showErrorNotification('请选择搜索引擎！');
         return;
     }
     if (queryParam.domains.trim().length === 0) {
-        Message.error("请输入需要查询的网站域名");
+        showErrorNotification('请输入需要查询的网站域名！');
         return;
     }
     let data = {
@@ -112,11 +110,11 @@ function queryTableData() {
 
 function exportToLocation() {
     if (queryParam.range.length === 0) {
-        Message.error("请选择搜索引擎");
+        showErrorNotification('请选择搜索引擎！');
         return;
     }
     if (queryParam.domains.trim().length === 0) {
-        Message.error("请输入需要查询的网站域名");
+        showErrorNotification('请输入需要查询的网站域名！');
         return;
     }
     let data = {

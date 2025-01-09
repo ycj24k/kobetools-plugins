@@ -40,14 +40,13 @@ function click(){
     border: none;
     color: #fff;
 }
-.round{
-    .arco-btn {
-        width: 160px;
-        height: 42px;
-        border-radius: 30px;
-        font-size: 16px;
-        font-weight: 500;
-        border: none;
-    }
+.round .arco-btn {
+    width: 160px;
+    height: 42px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
 }
+
 </style>

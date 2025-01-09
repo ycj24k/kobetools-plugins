@@ -22,11 +22,9 @@
 import {ref} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
-import {useHttp} from "@/hooks/useHttp";
-import {Message} from "@arco-design/web-vue";
+import { download } from "@/hooks/useHttp";
+import { showErrorNotification } from "@/hooks/useNotification";
 import XTable from "@/components/common/XTable.vue";
-
-let {download} = useHttp();
 
 let columns = [
     {
@@ -41,7 +39,7 @@ let isDownloadFile = ref(false);
 
 function queryTableData() {
     if (domains.value.trim().length === 0){
-        Message.error("请输入需要查询的域名信息");
+        showErrorNotification('请输入需要查询的域名信息！');
         return;
     }
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
@@ -50,7 +48,7 @@ function queryTableData() {
 
 function exportToLocation(){
     if (domains.value.trim().length === 0){
-        Message.error("请输入需要查询的域名信息");
+        showErrorNotification('请输入需要查询的域名信息！');
         return;
     }
     isDownloadFile.value = true;

@@ -78,12 +78,10 @@
 import {computed, reactive, ref} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
-import {useHttp} from "@/hooks/useHttp";
-import {Message} from "@arco-design/web-vue";
+import {download} from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
 import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
-
-let {download} = useHttp();
+import {showErrorNotification} from "@/hooks/useNotification";
 
 let platforms = [
     {code: "az", name: "爱站"},
@@ -211,7 +209,7 @@ let isDownloadFile = ref(false);
 function queryTableData() {
 
     if (queryParam.platforms.length === 0 || queryParam.searchEngines.length === 0 || queryParam.domains.trim().length === 0) {
-        Message.error("站长平台和搜索引擎分别至少选择一个，查询的网站域名不能为空");
+        showErrorNotification('站长平台和搜索引擎分别至少选择一个，查询的网站域名不能为空！');
         return;
     }
     let data = queryParam.domains.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
@@ -243,7 +241,7 @@ function queryTableData() {
 
 function exportTableData() {
     if (queryParam.platforms.length === 0 || queryParam.searchEngines.length === 0 || queryParam.domains.trim().length === 0) {
-        Message.error("站长平台和搜索引擎分别至少选择一个，查询的网站域名不能为空");
+        showErrorNotification('站长平台和搜索引擎分别至少选择一个，查询的网站域名不能为空！');
         return;
     }
     let data = queryParam.domains.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());

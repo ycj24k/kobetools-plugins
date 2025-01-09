@@ -1,5 +1,7 @@
 import axios from "axios";
 import {Message} from "@arco-design/web-vue";
+import {showErrorNotification} from "@/hooks/useNotification";
+
 
 const host = "http://hw.izbw.net";
 
@@ -9,7 +11,7 @@ function post(url, data, callback=()=>{}, errCallback=()=>{}){
         if (result.code === 200 && result.hasOwnProperty("data")){
             callback(result);
         }else{
-            Message.error(result.msg);
+            showErrorNotification(result.msg)
             errCallback();
         }
     }).catch(error => {
@@ -40,6 +42,6 @@ function downloadFile(response, fileName="导出文件.xlsx", callback){
     window.URL.revokeObjectURL(link.href);
 }
 
-export function useHttp(){
-    return {post, download}
+export {
+    post, download
 }

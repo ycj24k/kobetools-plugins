@@ -1,9 +1,7 @@
 <script setup>
 
-import {useHttp} from "@/hooks/useHttp";
+import {post} from "@/hooks/useHttp";
 import {reactive} from "vue";
-
-let {post} = useHttp();
 
 const props = defineProps({
     columns: Array,
@@ -115,27 +113,36 @@ defineExpose({queryTableData, table, setData, onPageIndexChange})
 </script>
 
 <template>
-    <a-table style="height: calc(100% - 44px);" :loading="table.isLoadTable"
-             :scroll="{y: '100%'}"
-             :scrollbar="true"
-             :columns="dealColumns(columns)"
-             :data="table.tableCurrData"
-             :bordered="{cell:true}"
-             :row-selection="rowSelection"
-             :spanMethod="spanMethod"
-             :pagination="false">
-        <template v-for="(slot, slotName) in $slots" #[slotName]="slotProps">
-            <slot :name="slotName" v-bind="slotProps" />
-        </template>
-    </a-table>
-    <div style="height: 12px;"></div>
-    <div style="display: flex; height: 32px;">
-        <div style="width: 400px; display: flex; align-items: center">
-            页面共计：{{ table.total }}&nbsp;条，
-            成功：<span style="color: green">{{table.successCount}}</span>&nbsp;条，失败：<span style="color: red">{{table.failCount}}</span>&nbsp;条
+    <div style="height: 100%; display: flex; flex-direction: column">
+        <div style="flex: 1; overflow-y: auto">
+            <a-table column-resizable :loading="table.isLoadTable"
+                     :scroll="{y: '100%'}"
+                     :scrollbar="true"
+                     :columns="dealColumns(columns)"
+                     :data="table.tableCurrData"
+                     :bordered="{cell:true}"
+                     :row-selection="rowSelection"
+                     :spanMethod="spanMethod"
+                     :pagination="false">
+                <template v-for="(slot, slotName) in $slots" #[slotName]="slotProps">
+                    <slot :name="slotName" v-bind="slotProps" />
+                </template>
+                        <template #empty>
+                            <div style="display: flex; align-items: center; justify-content: center; height: 295px;">
+                                暂无数据
+                            </div>
+                        </template>
+            </a-table>
         </div>
-        <div style="flex: 1; justify-items: right">
-            <a-pagination v-model="table.pageIndex" :page-size="table.pageSize" :total="table.total" show-page-size @change="onPageIndexChange" @page-size-change="onPageSizeChange"/>
+        <div style="height: 12px;"></div>
+        <div style="height: 32px; display: flex;">
+            <div style="width: 400px; display: flex; align-items: center">
+                页面共计：{{ table.total }}&nbsp;条，
+                成功：<span style="color: green">{{table.successCount}}</span>&nbsp;条，失败：<span style="color: red">{{table.failCount}}</span>&nbsp;条
+            </div>
+            <div style="flex: 1; text-align: right">
+                <a-pagination style="display: inline-block" v-model="table.pageIndex" :page-size="table.pageSize" :total="table.total" show-page-size @change="onPageIndexChange" @page-size-change="onPageSizeChange"/>
+            </div>
         </div>
     </div>
 </template>
