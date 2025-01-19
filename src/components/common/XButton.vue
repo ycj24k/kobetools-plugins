@@ -4,6 +4,9 @@ const props = defineProps({
     text: String,
     loading: Boolean,
     shape: String,
+    size: {
+        default: 'normal'
+    },
 });
 
 let emits = defineEmits(['xClick']);
@@ -14,11 +17,13 @@ function click(){
 </script>
 
 <template>
+    <!--方形按钮-->
     <div v-if="shape==='square'" class="square">
-        <a-button @click="click" :loading="loading" :class="props.color" type="primary" html-type="submit">{{props.text}}</a-button>
+        <a-button @click="click" :loading="loading" :class="[props.color, size]" type="primary" html-type="submit">{{props.text}}</a-button>
     </div>
+    <!--圆形按钮-->
     <div v-else class="round">
-        <a-button @click="click" :loading="loading" :class="props.color" type="primary" html-type="submit">{{props.text}}</a-button>
+        <a-button @click="click" :loading="loading" :class="[props.color, size]" type="primary" html-type="submit">{{props.text}}</a-button>
     </div>
 </template>
 
@@ -41,12 +46,17 @@ function click(){
     color: #fff;
 }
 .round .arco-btn {
-    width: 160px;
-    height: 42px;
     border-radius: 30px;
     font-size: 16px;
     font-weight: 500;
     border: none;
+}
+.normal{
+    width: 160px;
+    height: 42px;
+}
+.small{
+    padding: 0 25px;
 }
 
 </style>

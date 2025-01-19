@@ -24,11 +24,9 @@
 import {ref} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
-import {useHttp} from "@/hooks/useHttp";
+import {download} from "@/hooks/useHttp";
 import {Message} from "@arco-design/web-vue";
 import XTable from "@/components/common/XTable.vue";
-
-let {download} = useHttp();
 
 let columns = [
     {

@@ -58,6 +58,24 @@
                                 "name": "outer-link"
                             }
                         ]
+                    },
+                    {
+                        "title": "网站工具",
+                        "name": "tool",
+                        "children": [
+                            {
+                                "title": "网站提取工具",
+                                "name": "website-tool"
+                            },
+                            {
+                                "title": "关键词排名查询",
+                                "name": "keywords-ranking"
+                            },
+                            {
+                                "title": "关键词索引查询",
+                                "name": "keywords-index"
+                            }
+                        ]
                     }
                 ]
             },

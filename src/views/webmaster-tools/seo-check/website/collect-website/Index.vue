@@ -3,6 +3,9 @@
 import WebsiteCollectQuery from "./WebsiteCollectQuery.vue";
 import BaiduCollectQuery from "./BaiduCollectQuery.vue";
 import GoogleCollectQuery from "./GoogleCollectQuery.vue";
+import HomeCollectQuery from "./HomeCollectQuery.vue";
+import LinkCollectQuery from "./LinkCollectQuery.vue";
+import WebsiteDemotionCollectQuery from "./WebsiteDemotionCollectQuery.vue";
 
 </script>
 
@@ -18,6 +21,15 @@ import GoogleCollectQuery from "./GoogleCollectQuery.vue";
                 </a-tab-pane>
                 <a-tab-pane key="3" title="谷歌收录查询(没有接口)">
                     <GoogleCollectQuery />
+                </a-tab-pane>
+                <a-tab-pane key="4" title="首页收录查询">
+                    <HomeCollectQuery />
+                </a-tab-pane>
+                <a-tab-pane key="5" title="链接收录查询">
+                    <LinkCollectQuery />
+                </a-tab-pane>
+                <a-tab-pane key="6" title="网站降权查询">
+                    <WebsiteDemotionCollectQuery />
                 </a-tab-pane>
             </a-tabs>
         </div>
