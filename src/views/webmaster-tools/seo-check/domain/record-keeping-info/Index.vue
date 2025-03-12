@@ -1,30 +1,42 @@
 <script setup>
+import { ref } from "vue";
 import RecordKeepingInfoQuery from './RecordKeepingInfoQuery.vue'
 import EnterpriseRecordKeepingQuery from './EnterpriseRecordKeepingQuery.vue'
 import DomainRecordKeepingHistoryQuery from './DomainRecordKeepingHistoryQuery.vue'
+const localeData = ref({})
+const localeGet = (key) => {
+    return localeData.value[key]
+}
+// 监听函数
+function dataListener(data) {
+    console.log('来自主应用的数据', data)
+    localeData.value = data
+}
+// 监听数据变化，初始化时如果有数据则主动触发一次
+if (window.microApp) window.microApp.addDataListener(dataListener, true)
 </script>
 
 <template>
     <div class="index">
         <div style="flex: 1;">
             <a-tabs default-active-key="1" justify>
-                <a-tab-pane key="1" title="备案信息查询">
-                    <RecordKeepingInfoQuery />
+                <a-tab-pane key="1" :title="localeGet('type1')">
+                    <RecordKeepingInfoQuery :locales="localeData" />
                 </a-tab-pane>
-                <a-tab-pane key="2" title="企业/个人备案查询">
-                    <EnterpriseRecordKeepingQuery />
+                <a-tab-pane key="2" :title="localeGet('type2')">
+                    <EnterpriseRecordKeepingQuery :locales="localeData" />
                 </a-tab-pane>
-                <a-tab-pane key="3" title="域名备案历史查询">
-                    <DomainRecordKeepingHistoryQuery />
+                <a-tab-pane key="3" :title="localeGet('type3')">
+                    <DomainRecordKeepingHistoryQuery :locales="localeData" />
                 </a-tab-pane>
             </a-tabs>
         </div>
         <div style="height: 12px"></div>
         <div class="form_explain">
-            <div class="form_explain_title">工具介绍：</div>
-            <div>1、Kobetools域名备案查询工具支持高效率、批量、查询域名ICP备案信息。</div>
-            <div>2、Kobetools企业/个人ICP备案查询，可根据备案主体批量查询该企业下所有域名的ICP备案信息。</div>
-            <div>3、Kobetools域名备案历史查询工具支持高效率、批量、查询域名历史ICP备案信息。</div>
+            <div class="form_explain_title">{{ localeGet('introduce1') }}</div>
+            <div>{{ localeGet('content1') }}</div>
+            <div>{{ localeGet('content2') }}</div>
+            <div>{{ localeGet('content3') }}</div>
         </div>
     </div>
 </template>

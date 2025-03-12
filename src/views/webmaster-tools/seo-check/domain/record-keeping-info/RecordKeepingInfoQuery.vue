@@ -1,117 +1,135 @@
 <template>
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div style="flex: 1;">
-            <XTextarea v-model="domains" placeholder="请输入需要查询的域名，一行一个，单次最多提交100个，格式如：google.com"/>
+            <XTextarea v-model="domains" :placeholder="localeGet('placeholder3')" />
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" text="立即查询"/>
+                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
+                    :text="localeGet('button1')" />
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" text="导出备案域名"/>
-                <XButton color="yellow" text="导出未备案域名"/>
-                <XButton color="pink" text="VIP查询通道"/>
+                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
+                    :text="localeGet('button2')" />
+                <XButton color="yellow" :text="localeGet('button3')" />
+                <XButton color="pink" :text="localeGet('button4')" />
             </div>
         </div>
         <div style="height: 400px;">
-            <XTable ref="xTable" :columns="columns" />
+            <XTable ref="xTable" :columns="columns" :locales="localeData" />
         </div>
     </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import { ref, watch } from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
-import {download} from "@/hooks/useHttp";
+import { download } from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
-import {showErrorNotification} from "@/hooks/useNotification";
+import { showErrorNotification } from "@/hooks/useNotification";
 
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
+// 多语言
+const props = defineProps({
+    locales: {
+        type: Object,
+        default: {}
+    }
+});
+const localeData = ref(props.locales);
+const columns = ref([]);
+console.log(localeData.value)
+// 监听 props 的变化
+watch(() => props.locales, (newVal) => {
+    console.log(newVal)
+    localeData.value = newVal;
+    columns.value = [
+        {
+            title: localeGet('domainColumns.label1'),
+            dataIndex: 'serialNumber',
+            sortable: {
+                sortDirections: ['ascend', 'descend']
+            },
+            width: 100
         },
-        width: 100
-    },
-    {
-        title: '域名信息',
-        dataIndex: 'domain',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
+        {
+            title: localeGet('domainColumns.label2'),
+            dataIndex: 'domain',
+            sortable: {
+                sortDirections: ['ascend', 'descend']
+            },
+            minWidth: 200
         },
-        minWidth: 200
-    },
-    {
-        title: '域名所有人',
-        dataIndex: 'company',
-        width: 300
-    },
-    {
-        title: '单位性质',
-        dataIndex: 'type',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
+        {
+            title: localeGet('domainColumns.label3'),
+            dataIndex: 'company',
+            width: 300
         },
-        minWidth: 150
-    },
-    {
-        title: '主备案号',
-        dataIndex: 'icp_main',
-        minWidth: 230
-    },
-    {
-        title: '备案号',
-        dataIndex: 'icp',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
+        {
+            title: localeGet('domainColumns.label4'),
+            dataIndex: 'type',
+            sortable: {
+                sortDirections: ['ascend', 'descend']
+            },
+            minWidth: 150
         },
-        minWidth: 200
-    },
-    {
-        title: '备案ID',
-        dataIndex: 'main_id',
-        minWidth: 200
-    },
-    {
-        title: '审核时间',
-        dataIndex: 'icp_time',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
+        {
+            title: localeGet('domainColumns.label5'),
+            dataIndex: 'icp_main',
+            minWidth: 230
         },
-        minWidth: 150
-    },
-];
+        {
+            title: localeGet('domainColumns.label6'),
+            dataIndex: 'icp',
+            sortable: {
+                sortDirections: ['ascend', 'descend']
+            },
+            minWidth: 200
+        },
+        {
+            title: localeGet('domainColumns.label7'),
+            dataIndex: 'main_id',
+            minWidth: 200
+        },
+        {
+            title: localeGet('domainColumns.label8'),
+            dataIndex: 'icp_time',
+            sortable: {
+                sortDirections: ['ascend', 'descend']
+            },
+            minWidth: 150
+        },
+    ]
+});
+const localeGet = (key) => {
+    return localeData.value[key]
+}
 
 let domains = ref("");
 let xTable = ref({});
 let isDownloadFile = ref(false);
 
 function queryTableData() {
-    if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的域名！');
+    if (domains.value.trim().length === 0) {
+        showErrorNotification(localeGet('message1'));
         return;
     }
-    let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
+    let data = domains.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
     xTable.value.queryTableData("/api/beian/query/domains", data);
 }
 
-function exportRecordKeepingDomains(){
-    if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的域名！');
+function exportRecordKeepingDomains() {
+    if (domains.value.trim().length === 0) {
+        showErrorNotification(localeGet('message1'));
         return;
     }
     isDownloadFile.value = true;
-    let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
-    download("/api/beian/export/domains", data, "导出文件.xlsx", () => {
+    let data = domains.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
+    download("/api/beian/export/domains", data, localeGet('title1') + ".xlsx", () => {
         isDownloadFile.value = false;
     });
 }
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
