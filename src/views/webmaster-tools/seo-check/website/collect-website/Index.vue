@@ -5,7 +5,7 @@ import BaiduCollectQuery from "./BaiduCollectQuery.vue";
 import GoogleCollectQuery from "./GoogleCollectQuery.vue";
 import HomeCollectQuery from "./HomeCollectQuery.vue";
 import LinkCollectQuery from "./LinkCollectQuery.vue";
-import WebsiteDemotionCollectQuery from "./WebsiteDemotionCollectQuery.vue";
+// import WebsiteDemotionCollectQuery from "./WebsiteDemotionCollectQuery.vue";
 
 </script>
 
@@ -16,7 +16,7 @@ import WebsiteDemotionCollectQuery from "./WebsiteDemotionCollectQuery.vue";
                 <a-tab-pane key="1" title="网站收录查询">
                     <WebsiteCollectQuery />
                 </a-tab-pane>
-                <a-tab-pane key="2" title="百录收录查询">
+                <a-tab-pane key="2" title="百度收录查询">
                     <BaiduCollectQuery />
                 </a-tab-pane>
                 <a-tab-pane key="3" title="谷歌收录查询(没有接口)">
@@ -28,9 +28,9 @@ import WebsiteDemotionCollectQuery from "./WebsiteDemotionCollectQuery.vue";
                 <a-tab-pane key="5" title="链接收录查询">
                     <LinkCollectQuery />
                 </a-tab-pane>
-                <a-tab-pane key="6" title="网站降权查询">
+                <!-- <a-tab-pane key="6" title="网站降权查询">
                     <WebsiteDemotionCollectQuery />
-                </a-tab-pane>
+                </a-tab-pane> -->
             </a-tabs>
         </div>
         <div style="height: 12px"></div>

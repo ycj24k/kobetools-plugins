@@ -10,7 +10,8 @@
                 <span v-if="isAutoQuery" style="margin-left: 12px; cursor: pointer; color: #4c6ef0" @click="isAutoQuery=false">取消</span>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出到本地"/>
+                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出收录站点"/>
+                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="yellow" text="导出未收录站点"/>
                 <XButton color="pink" text="VIP查询通道"/>
             </div>
         </div>

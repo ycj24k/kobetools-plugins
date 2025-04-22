@@ -21,7 +21,8 @@
                          text="立即查询"/>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" text="导出到本地"/>
+                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" text="导出收录站点"/>
+                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="yellow" text="导出未收录站点"/>
                 <XButton color="pink" text="VIP查询通道"/>
             </div>
         </div>

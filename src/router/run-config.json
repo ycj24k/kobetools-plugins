@@ -26,10 +26,6 @@
                             {
                                 "title": "域名综合查询",
                                 "name": "domain-complex"
-                            },
-                            {
-                                "title": "域名TDK查询",
-                                "name": "website-tdk"
                             }
                         ]
                     },
@@ -37,6 +33,10 @@
                         "title": "网站信息查询",
                         "name": "website",
                         "children": [
+                            {
+                                "title": "网站TDK查询",
+                                "name": "website-tdk"
+                            },
                             {
                                 "title": "网站收录查询",
                                 "name": "collect-website"
@@ -52,6 +52,18 @@
                             {
                                 "title": "网站权重查询",
                                 "name": "weight-website"
+                            },
+                            {
+                                "title": "建站历史查询",
+                                "name": "website-history"
+                            },
+                            {
+                                "title": "网站综合查询",
+                                "name": "website-synthesize"
+                            },
+                            {
+                                "title": "网站降权查询",
+                                "name": "website-power"
                             },
                             {
                                 "title": "网站外链查询",
