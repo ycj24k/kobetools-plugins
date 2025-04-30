@@ -1,22 +1,23 @@
 <template>
     <div style="display: flex; flex-direction: column; height: 100%;">
-<!--        <div style="flex: 1;">
-            <XTextarea v-model="domains" placeholder="请输入需要查询的域名或IP地址，一行一个，单词最多提交10个，格式如：www.google.com，192.168.1.13"/>
+        <div style="flex: 1;">
+            <XTextarea v-model="domains" placeholder="请输入需要查询的网站域名，一行一个，单词最多提交10个，格式如：www.google.com"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
                 <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" text="立即查询"/>
+                <span v-if="isAutoQuery" style="margin-left: 12px;">{{ countdownQuerySecond }}秒后自动查询</span>
+                <span v-if="isAutoQuery" style="margin-left: 12px; cursor: pointer; color: #4c6ef0" @click="isAutoQuery=false">取消</span>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出查询列表"/>
-                <XButton color="yellow" text="导出网站列表"/>
+                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出收录站点"/>
+                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="yellow" text="导出未收录站点"/>
                 <XButton color="pink" text="VIP查询通道"/>
             </div>
         </div>
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns"></XTable>
-        </div>-->
-        没有接口
+        </div>
     </div>
 </template>
 
@@ -24,81 +25,102 @@
 import {ref} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
-import {download} from "@/hooks/useHttp";
-import {Message} from "@arco-design/web-vue";
+import {post, download} from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
+import {showErrorNotification} from "@/hooks/useNotification";
 
 let columns = [
     {
         title: '序号',
         dataIndex: 'serialNumber',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
         width: 100
     },
     {
-        title: '域名信息',
+        title: '网站域名',
         dataIndex: 'domain',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
         minWidth: 200
     },
     {
-        title: 'IP地址',
-        dataIndex: 'ip',
-        width: 300
+        title: '首页位置',
+        dataIndex: 'baidupos',
+        width: 100
     },
     {
-        title: 'IP地区',
-        dataIndex: 'address',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        minWidth: 150
+        title: '总收录',
+        dataIndex: 'baidusl',
+        minWidth: 100
     },
     {
-        title: '站点个数',
-        dataIndex: 'siteNum',
-        minWidth: 230
+        title: '总索引',
+        dataIndex: 'baidusy',
+        minWidth: 100
     },
     {
-        title: '查询时间',
-        dataIndex: 'date',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        minWidth: 200
+        title: '日收录',
+        dataIndex: 'baidu1d',
+        minWidth: 100
     },
     {
-        title: '操作',
-        slotName: 'option',
-        minWidth: 200
+        title: '周收录',
+        dataIndex: 'baidu7d',
+        minWidth: 100
+    },
+    {
+        title: '月收录',
+        dataIndex: 'baidu30d',
+        minWidth: 100
     },
 ];
 
 let domains = ref("");
 let xTable = ref({});
 let isDownloadFile = ref(false);
+let isAutoQuery = ref(false); // 是否开启倒计时查询
+let countdownQuerySecond = ref(0); // 倒计时查询
 
 function queryTableData() {
     if (domains.value.trim().length === 0){
-        Message.error("请输入需要查询的域名或IP地址");
+        showErrorNotification('请输入需要查询的网站域名！');
         return;
     }
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
-    xTable.value.queryTableData("/api/sites/query/dnsinfo", data);
+    post("/api/sites/query/baidutask/create", data, (result)=>{
+        if (result.data.success.length === 0){
+            showErrorNotification('未取到任务ID！');
+            return;
+        }
+        let taskIds = result.data.success.map(task => task.taskid);
+        // 开始自动查询
+        isAutoQuery.value = true;
+        countdownQuerySecond.value = 10;
+        countdownAutoQuery(taskIds);
+    })
+}
+
+// 倒计时自动查询
+function countdownAutoQuery(taskIds){
+    if (!isAutoQuery.value){
+        return;
+    }
+    if (countdownQuerySecond.value > 0){
+        countdownQuerySecond.value--;
+        setTimeout(countdownAutoQuery, 1000, taskIds);
+    }else{
+        xTable.value.queryTableData("/api/sites/query/baidutask/result", taskIds, ()=>{
+            countdownQuerySecond.value = 10;
+            setTimeout(countdownAutoQuery, 1000, taskIds);
+        });
+    }
 }
 
 function exportTableData(){
     if (domains.value.trim().length === 0){
-        Message.error("请输入需要查询的域名或IP地址");
+        showErrorNotification('请输入需要查询的网站域名！');
         return;
     }
     isDownloadFile.value = true;
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
-    download("/api/sites/export/dnsinfo", data, "导出文件.xlsx", () => {
+    download("/api/sites/export/baidutask/result", data, "导出文件.xlsx", () => {
         isDownloadFile.value = false;
     });
 }

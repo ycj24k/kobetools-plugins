@@ -23,7 +23,7 @@
         <div style="height: 25px;"></div>
         <div style="flex: 1;">
             <XTextarea v-model="queryParam.domains"
-                       placeholder="请输入需要查询的网站域名，一行一个，单词最多提交100个，格式如：www.google.com"/>
+                       placeholder="请输入需要查询的网站域名，一行一个，单词最多提交10个，格式如：www.google.com"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
@@ -89,12 +89,15 @@ let platforms = [
 ];
 
 let searchEngines = [
-    {code: "baidu", name: "百度"},
-    {code: "so", name: "360"},
-    {code: "sogou", name: "搜狗"},
-    {code: "sm", name: "神马"},
-    {code: "toutiao", name: "头条"},
-    {code: "bing", name: "必应"},
+    {code: "baidu", name: "百度", disabled: false},
+    {code: "google", name: "谷歌", disabled: false},
+    {code: "bing", name: "必应", disabled: false},
+    {code: "so", name: "360", disabled: false},
+    {code: "sogou", name: "搜狗", disabled: false},
+    {code: "sm", name: "神马", disabled: false},
+    {code: "toutiao", name: "头条", disabled: false},
+    {code: "yahu", name: "雅虎", disabled: false},
+    {code: "yandex", name: "Yandex", disabled: false}
 ];
 
 

@@ -1,7 +1,7 @@
 <template>
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div style="flex: 1;">
-            <XTextarea v-model="domains" placeholder="请输入需要查询的域名，一行一个，单词最多提交100个，格式如：google.com"/>
+            <XTextarea v-model="domains" placeholder="请输入需要查询的域名，一行一个，单词最多提交10个，格式如：google.com"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">

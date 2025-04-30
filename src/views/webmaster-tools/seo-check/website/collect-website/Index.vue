@@ -3,6 +3,10 @@
 import WebsiteCollectQuery from "./WebsiteCollectQuery.vue";
 import BaiduCollectQuery from "./BaiduCollectQuery.vue";
 import GoogleCollectQuery from "./GoogleCollectQuery.vue";
+import BiyingCollectQuery from "./BiyingCollectQuery.vue";
+import SougouCollectQuery from "./SougouCollectQuery.vue";
+import ShenmaCollectQuery from "./ShenmaCollectQuery.vue";
+import YandexCollectQuery from "./YandexCollectQuery.vue";
 import HomeCollectQuery from "./HomeCollectQuery.vue";
 import LinkCollectQuery from "./LinkCollectQuery.vue";
 // import WebsiteDemotionCollectQuery from "./WebsiteDemotionCollectQuery.vue";
@@ -19,13 +23,25 @@ import LinkCollectQuery from "./LinkCollectQuery.vue";
                 <a-tab-pane key="2" title="百度收录查询">
                     <BaiduCollectQuery />
                 </a-tab-pane>
-                <a-tab-pane key="3" title="谷歌收录查询(没有接口)">
+                <a-tab-pane key="3" title="谷歌收录查询">
                     <GoogleCollectQuery />
                 </a-tab-pane>
-                <a-tab-pane key="4" title="首页收录查询">
+                <a-tab-pane key="4" title="必应收录查询">
+                    <BiyingCollectQuery />
+                </a-tab-pane>
+                <a-tab-pane key="5" title="搜狗收录查询">
+                    <SougouCollectQuery />
+                </a-tab-pane>
+                <a-tab-pane key="6" title="神马收录查询">
+                    <ShenmaCollectQuery />
+                </a-tab-pane>
+                <a-tab-pane key="7" title="Yandex收录查询">
+                    <YandexCollectQuery />
+                </a-tab-pane>
+                <a-tab-pane key="8" title="首页收录查询">
                     <HomeCollectQuery />
                 </a-tab-pane>
-                <a-tab-pane key="5" title="链接收录查询">
+                <a-tab-pane key="9" title="链接收录查询">
                     <LinkCollectQuery />
                 </a-tab-pane>
                 <!-- <a-tab-pane key="6" title="网站降权查询">

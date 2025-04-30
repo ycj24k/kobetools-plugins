@@ -61,12 +61,15 @@ import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
 
 let searchEngines = [
-    {code: "baidu", name: "百度"},
-    {code: "so", name: "360"},
-    {code: "sogou", name: "搜狗"},
-    {code: "sm", name: "神马"},
-    {code: "toutiao", name: "头条"},
-    {code: "bing", name: "必应"},
+    {code: "baidu", name: "百度", disabled: false},
+    {code: "google", name: "谷歌", disabled: false},
+    {code: "bing", name: "必应", disabled: false},
+    {code: "so", name: "360", disabled: false},
+    {code: "sogou", name: "搜狗", disabled: false},
+    {code: "sm", name: "神马", disabled: false},
+    {code: "toutiao", name: "头条", disabled: false},
+    {code: "yahu", name: "雅虎", disabled: false},
+    {code: "yandex", name: "Yandex", disabled: false}
 ];
 
 let columns = [
