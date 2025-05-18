@@ -760,10 +760,10 @@ import { Message } from '@arco-design/web-vue';
 import { titleTaskList } from '@/api/apps/tools/title';
 import { articleTaskAdd, articleTaskAddText, articleTaskAddXg } from '@/api/apps/tools/article';
 import { getListFromZip } from '@/utils';
-import { articleFormDefault, washDraftFormDefault, wayOptions, langOptions, sourceOptions, lengthOptions, titleNumOptions, titleNumMinOptions, titleNumMaxOptions, autoContentOptions, sensitiveOptions, customOptions, synonymOptions, synonymCustomOptions, disturbOptions, autoLinkOptions, autoImgOptions, watermarkOptions, titleImgOptions, imgPositionOptions, imgAlignOptions, formatOptions, includeOptions, excludeOptions, orderOptions } from '../utils/config';
+import { articleFormDefault, washDraftFormDefault, wayOptions, langOptions, sourceOptions, lengthOptions, titleNumOptions, titleNumMinOptions, titleNumMaxOptions, autoContentOptions, sensitiveOptions, customOptions, synonymOptions, synonymCustomOptions, disturbOptions, autoLinkOptions, autoImgOptions, watermarkOptions, titleImgOptions, imgPositionOptions, imgAlignOptions, formatOptions, includeOptions, excludeOptions } from '../utils/config';
 
 import localeConfig from './zh-CN.js';
-import { useRouter } from 'vue-router';
+import { jumpPage } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;
@@ -774,13 +774,12 @@ const localeGet = (key) => {
 // 监听函数
 function dataListener(data) {
   console.log('来自主应用的数据', data);
-  if (data) localeData.value = data;
+  if (data&&data.locales) localeData.value = data.locales;
 }
 // 监听数据变化，初始化时如果有数据则主动触发一次
 //@ts-ignore
 if (window.microApp) window.microApp.addDataListener(dataListener, true);
 
-const router = useRouter();
 const loading = ref(false);
 
 // 标题生成文章
@@ -814,9 +813,7 @@ const articleFormSubmit = async ({ errors, values }) => {
       articleTaskAdd(articleForm.value)
         .then((res) => {
           Message.success(localeGet('message11'));
-          router.push({
-            name: 'ArticleTask',
-          });
+          jumpPage('/webmaster-tools/seo-writing/article/article-task')
         })
         .catch(() => {});
     } catch (err) {
@@ -890,9 +887,7 @@ const washDraftFormSubmit = async () => {
     percent.value = 1;
     textList.value = [];
     Message.success(localeGet('message11'));
-    router.push({
-      path: '/webmaster-tools/seo-writing/article/article-task'
-    });
+    jumpPage('/webmaster-tools/seo-writing/article/article-task')
   } catch (err) {
     Message.error(err.message);
   } finally {

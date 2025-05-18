@@ -197,7 +197,7 @@ import { keywordTaskList } from '@/api/apps/tools/keyword';
 import { titleTaskAdd } from '@/api/apps/tools/title';
 import { titleFormDefault, optionOptions, connectorOptions, ruleOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions } from '../utils/config';
 import localeConfig from './zh-CN.js';
-import { useRouter } from 'vue-router';
+import { jumpPage } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;
@@ -208,13 +208,12 @@ const localeGet = (key) => {
 // 监听函数
 function dataListener(data) {
   console.log('来自主应用的数据', data);
-  if (data) localeData.value = data;
+  if (data&&data.locales) localeData.value = data.locales;
 }
 // 监听数据变化，初始化时如果有数据则主动触发一次
 //@ts-ignore
 if (window.microApp) window.microApp.addDataListener(dataListener, true);
 
-const router = useRouter();
 const loading = ref(false);
 
 // 智能双标题生成
@@ -259,9 +258,7 @@ const titleFormSubmit = async ({ errors, values }) => {
       titleTaskAdd(titleForm.value)
         .then((res) => {
           Message.success(localeGet('message6'));
-          router.push({
-            path: '/webmaster-tools/seo-writing/title/title-task'
-          });
+          jumpPage('/webmaster-tools/seo-writing/title/title-task')
         })
         .catch(() => {
 

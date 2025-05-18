@@ -4,6 +4,7 @@ import { Modal, Button } from '@arco-design/web-vue';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
+import router from '../router';
 
 export const openWindow = (url, opts) => {
   const { target = '_blank', ...others } = opts || {};
@@ -218,4 +219,16 @@ export const getExportName = (name) => {
   const seconds = pad(now.getSeconds());
 
   return `${year}${month}${day}${hours}${minutes}${seconds}-${name}`;
+}
+
+// 跳转页面
+export const jumpPage = (path, query={}) => {
+  if (window.microApp) {
+    window.microApp.dispatch({type: 'route', path, query})
+  } else {
+    router.push({
+      path,
+      query,
+    });
+  }
 }

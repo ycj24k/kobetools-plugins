@@ -66,7 +66,7 @@ const localeGet = (key) => {
 // 监听函数
 function dataListener(data) {
   console.log('来自主应用的数据', data);
-  if (data) localeData.value = data;
+  if (data&&data.locales) localeData.value = data.locales;
 }
 // 监听数据变化，初始化时如果有数据则主动触发一次
 //@ts-ignore
@@ -126,13 +126,9 @@ const wordFormSubmit = async ({ errors, values }) => {
         .then((res) => {
           Message.success(localeGet('message5'));
           if (wordForm.value.type === 1) {
-            router.push({
-              name: 'CustomSensitive',
-            });
+            jumpPage('/ai-apps/ai-tools/custom-dict/sensitive')
           } else {
-            router.push({
-              name: 'CustomSynonym',
-            });
+            jumpPage('/ai-apps/ai-tools/custom-dict/synonym')
           }
         })
         .catch(() => {});

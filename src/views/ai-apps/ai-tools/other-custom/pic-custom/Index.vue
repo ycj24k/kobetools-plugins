@@ -70,8 +70,7 @@ import { Message } from '@arco-design/web-vue';
 import { storageList, storageDel, storageEdit } from '@/api/apps/tools/other';
 import { storageFormDefault, storageTableColumns } from '../utils/config';
 import localeConfig from './zh-CN.js';
-import { useRouter } from 'vue-router';
-const router = useRouter();
+import { jumpPage } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;
@@ -82,7 +81,7 @@ const localeGet = (key) => {
 // 监听函数
 function dataListener(data) {
   console.log('来自主应用的数据', data);
-  if (data) localeData.value = data;
+  if (data&&data.locales) localeData.value = data.locales;
 }
 // 监听数据变化，初始化时如果有数据则主动触发一次
 //@ts-ignore
@@ -164,7 +163,7 @@ const handleDelete = (rowIndex) => {
 // 详情
 const handleDetail = (rowIndex) => {
   console.log(tableData.value[rowIndex]);
-  router.push({ path: '/ai-apps/ai-tools/other-custom/pic-detail', query: { tid: tableData.value[rowIndex].id } });
+  jumpPage('/ai-apps/ai-tools/other-custom/pic-detail', { tid: tableData.value[rowIndex].id })
 };
 // 编辑
 const handleEdit = (rowIndex) => {

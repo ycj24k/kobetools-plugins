@@ -330,7 +330,7 @@ import useClipboard from 'vue-clipboard3';
 import { correlationFormDefault, orderingFormDefault, includeOptions, excludeOptions, depthOptions, keyOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions, orderOptions } from '../utils/config'
 import { exportExcel } from '@/utils';
 import localeConfig from './zh-CN.js';
-import { useRouter } from 'vue-router';
+import { jumpPage } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;
@@ -341,7 +341,7 @@ const localeGet = (key) => {
 // 监听函数
 function dataListener(data) {
   console.log('来自主应用的数据', data);
-  if (data) localeData.value = data;
+  if (data&&data.locales) localeData.value = data.locales;
 }
 // 监听数据变化，初始化时如果有数据则主动触发一次
 //@ts-ignore
@@ -349,7 +349,6 @@ if (window.microApp) window.microApp.addDataListener(dataListener, true);
 
 const { toClipboard } = useClipboard();
 
-const router = useRouter();
 const loading = ref(false);
 
 // 关键词挖掘
@@ -424,9 +423,7 @@ const correlationFormSubmit = async ({ errors, values }) => {
           Message.success(localeGet('message5'));
           correlationForm.value = { ...correlationFormDefault };
           keyword.value = '';
-          router.push({
-            path: '/webmaster-tools/keyword-tools/keyword/keyword-task'
-          });
+          jumpPage('/webmaster-tools/keyword-tools/keyword/keyword-task')
         })
         .catch(() => {
 
@@ -596,9 +593,7 @@ const orderingFormSubmit = () => {
   keywordTaskAdd(orderingForm)
     .then((res) => {
       Message.success(localeGet('message5'));
-      router.push({
-        name: 'KeywordTask'
-      });
+      jumpPage('/webmaster-tools/keyword-tools/keyword/keyword-task')
     })
     .catch(() => {
 

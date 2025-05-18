@@ -224,7 +224,7 @@ import dayjs from 'dayjs';
 import { keywordTaskList, keywordTaskClean, keywordTaskDel, keywordTaskOut, keywordTaskSave } from '@/api/apps/tools/keyword';
 import { includeOptions, excludeOptions, keyOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions, typeOptions, taskTableColumns, clearFormDefault } from '../utils/config';
 import localeConfig from './zh-CN.js';
-import { useRouter } from 'vue-router';
+import { jumpPage } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;
@@ -235,13 +235,11 @@ const localeGet = (key) => {
 // 监听函数
 function dataListener(data) {
   console.log('来自主应用的数据', data);
-  if (data) localeData.value = data;
+  if (data&&data.locales) localeData.value = data.locales;
 }
 // 监听数据变化，初始化时如果有数据则主动触发一次
 //@ts-ignore
 if (window.microApp) window.microApp.addDataListener(dataListener, true);
-
-const router = useRouter();
 
 const selectedKeys = ref([]);
 const rowSelection = reactive({
@@ -336,7 +334,7 @@ const handleSave = () => {
 
 // 详情
 const handleDetail = (rowIndex) => {
-  router.push({ path: '/webmaster-tools/keyword-tools/keyword/keyword-mine', query: { tid: tableData.value[rowIndex].id } });
+  jumpPage('/webmaster-tools/keyword-tools/keyword/keyword-mine', { tid: tableData.value[rowIndex].id })
 };
 // 清洗
 const clearVisible = ref(false);
