@@ -25,7 +25,14 @@ if (process.env.VUE_APP_ABC) {
         }
         return routes;
     }
-    routes = generateRoutes(config.routes);
+    const routeList = config.routes.map(item => {
+        return generateRoutes(item)
+    });
+    routeList.forEach(item => {
+        item.forEach(child => {
+            routes.push(child)
+        })
+    })
 }
 
 const router = createRouter({

@@ -1,0 +1,228 @@
+<template>
+  <div class="container">
+    <div class="container_box">
+      <a-form class="form_box" ref="queryFormRef" layout="vertical" hide-label :model="queryForm">
+        <a-grid :col-gap="24" :row-gap="12">
+          <a-grid-item :span="4" class="flex_box">
+            <a-form-item field="type">
+              <a-select v-model="queryForm.type" :options="typeOptions" allow-search :placeholder="localeGet('placeholder1')">
+                <template #label="{ data }">
+                  <span>{{ localeGet(data?.label) }}</span>
+                </template>
+                <template #option="{ data }">
+                  <span>{{ localeGet(data?.label) }}</span>
+                </template>
+              </a-select>
+            </a-form-item>
+          </a-grid-item>
+          <a-grid-item :span="4" class="flex_box">
+            <a-form-item field="name">
+              <a-input v-model="queryForm.name" :placeholder="localeGet('placeholder2')" />
+            </a-form-item>
+          </a-grid-item>
+          <a-grid-item :span="4" class="flex_box">
+            <a-form-item field="website">
+              <a-input v-model="queryForm.website" :placeholder="localeGet('placeholder3')" />
+            </a-form-item>
+          </a-grid-item>
+          <a-grid-item :span="4">
+            <div class="flex_box form_btns">
+              <a-button class="form_btn1" type="primary" @click="handleSearch">{{ localeGet('btn1') }}</a-button>
+              <a-button class="form_btn7" type="outline" @click="handleReset">{{ localeGet('btn2') }}</a-button>
+              <a-button type="outline" @click="handleRefresh">{{ localeGet('btn3') }}</a-button>
+            </div>
+          </a-grid-item>
+        </a-grid>
+      </a-form>
+      <div class="table_box">
+        <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading" :columns="taskTableColumns" :data="tableData" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange" :scroll="{ x: '100%', y: 500 }">
+          <template #header="{ column }">
+            <div>{{ localeGet(column.title) }}</div>
+          </template>
+          <template #name="{ rowIndex }">
+            <a-input @change="handleSaveChange(rowIndex, 'name')" v-model="tableData[rowIndex].name" />
+          </template>
+          <template #website="{ rowIndex }">
+            <a-input @change="handleSaveChange(rowIndex, 'website')" v-model="tableData[rowIndex].website" />
+          </template>
+          <template #type="{ rowIndex }">
+            <template v-for="item in typeOptions" :key="item.value">
+              <div v-if="item.value === tableData[rowIndex].type">{{ localeGet(item.label) }}</div>
+            </template>
+          </template>
+          <template #update_time="{ rowIndex }">
+            <div>{{ dayjs(tableData[rowIndex].update_time * 1000).format('YYYY-MM-DD hh:mm') }}</div>
+          </template>
+          <template #actions="{ rowIndex }">
+            <div class="flex_box flex_row_between table_btns">
+              <a-button size="mini" class="form_btn3" @click="handleDetail(rowIndex)">{{ localeGet('btn4') }}</a-button>
+              <a-popconfirm position="left" :content="localeGet('message1')" @ok="handlePause(rowIndex)">
+                <a-button size="mini" class="form_btn5">{{ localeGet('btn5') }}</a-button>
+              </a-popconfirm>
+              <a-popconfirm position="left" :content="localeGet('message2')" @ok="handleDelete(rowIndex)">
+                <a-button size="mini" style="color: #333">{{ localeGet('btn6') }}</a-button>
+              </a-popconfirm>
+            </div>
+          </template>
+        </a-table>
+        <div class="table_save">
+          <a-button class="form_btn5" type="primary" @click="handleSave">{{ localeGet('btn7') }}</a-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, reactive } from 'vue';
+import { Message } from '@arco-design/web-vue';
+import dayjs from 'dayjs';
+import { articleTaskList, articleTaskDel, articleTaskOut, articleTaskSave } from '@/api/apps/tools/article';
+import { typeOptions, taskTableColumns } from '../utils/config';
+import localeConfig from './zh-CN.js';
+import { useRouter } from 'vue-router';
+// 多语言
+const localeData = ref({});
+localeData.value = localeConfig;
+const localeGet = (key) => {
+  return localeData.value[key];
+};
+
+// 监听函数
+function dataListener(data) {
+  console.log('来自主应用的数据', data);
+  if (data) localeData.value = data;
+}
+// 监听数据变化，初始化时如果有数据则主动触发一次
+//@ts-ignore
+if (window.microApp) window.microApp.addDataListener(dataListener, true);
+
+const router = useRouter();
+
+const selectedKeys = ref([]);
+const rowSelection = reactive({
+  showCheckedAll: true,
+  onlyCurrent: false,
+});
+const pagination = ref({ pageSize: 100, showPageSize: true, pageSizeOptions: [100, 200, 500, 1000, 2000] });
+const queryFormRef = ref(null);
+const queryForm = ref({
+  type: '',
+  name: '',
+  website: '',
+  page: 1,
+  limit: 100,
+});
+const tableLoading = ref(false);
+const tableData = ref([]);
+const tableDataAll = ref([]);
+const currentTask = ref(null);
+// 保存数据
+const saveForm = ref({
+  data: [],
+});
+// 获取列表
+const getList = async () => {
+  tableLoading.value = true;
+  try {
+    const res = await articleTaskList(queryForm.value);
+    tableData.value = res.data.data;
+    tableDataAll.value = res.data.data;
+  } catch (error) {
+    console.log(error);
+  }
+  tableLoading.value = false;
+  saveForm.value.data = [];
+};
+getList();
+// 分页发生改变
+const handlePageSizeChange = (pageSize) => {
+  queryForm.value.page = 1;
+  queryForm.value.limit = pageSize;
+  pagination.value.pageSize = pageSize;
+  getList();
+};
+// 搜索
+const handleSearch = () => {
+  const list = filteredData();
+  tableData.value = list;
+};
+const filteredData = () => {
+  return tableDataAll.value.filter((item) => {
+    return (!queryForm.value.name || (queryForm.value.name && item.name.toLowerCase().includes(queryForm.value.name.toLowerCase()))) && (!queryForm.value.type || (queryForm.value.type && item.type.toString().includes(queryForm.value.type))) && (!queryForm.value.website || (queryForm.value.website && item.website.toLowerCase().includes(queryForm.value.website.toLowerCase())));
+  });
+};
+// 重置
+const handleReset = () => {
+  queryFormRef.value.resetFields();
+};
+// 刷新
+const handleRefresh = async () => {
+  await getList();
+  handleSearch();
+};
+// 保存数据获取
+const handleSaveChange = (rowIndex, type) => {
+  let list = saveForm.value.data;
+  const row = tableData.value[rowIndex];
+  let index = list.findIndex((item) => item.id === row.id);
+  if (index === -1) {
+    let item = {
+      id: row.id,
+      [type]: row[type],
+    };
+    list.push(item);
+  } else {
+    list[index][type] = row[type];
+  }
+};
+// 保存
+const handleSave = () => {
+  if (saveForm.value.data.length === 0) {
+    return Message.warning(localeGet('message3'));
+  }
+  articleTaskSave(saveForm.value)
+    .then((res) => {
+      Message.success(localeGet('message4'));
+      getList();
+    })
+    .catch(() => {});
+};
+
+// 详情
+const handleDetail = (rowIndex) => {
+  router.push({ path: '/webmaster-tools/seo-writing/article/article-mine', query: { tid: tableData.value[rowIndex].id } });
+};
+// 暂停
+const handlePause = (rowIndex) => {
+  articleTaskOut({
+    id: tableData.value[rowIndex].id,
+  })
+    .then((res) => {
+      Message.success(localeGet('message5'));
+      getList();
+    })
+    .catch(() => {});
+};
+// 删除
+const handleDelete = (rowIndex) => {
+  articleTaskDel({
+    id: tableData.value[rowIndex].id,
+  })
+    .then((res) => {
+      Message.success(localeGet('message6'));
+      getList();
+    })
+    .catch(() => {});
+};
+</script>
+
+<script>
+export default {
+  name: 'ArticleTask', // If you want the include property of keep-alive to take effect, you must name the component
+};
+</script>
+
+<style lang="less" scoped>
+@import '@/assets/style/table.less';
+</style>

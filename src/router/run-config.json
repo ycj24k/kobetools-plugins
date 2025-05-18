@@ -1,116 +1,275 @@
 {
-    "routes": {
-        "title": "站长工具",
-        "name": "webmaster-tools",
-        "children": [
-            {
-                "title": "SEO查询",
-                "name": "seo-check",
-                "children": [
-                    {
-                        "title": "域名信息查询",
-                        "name": "domain",
-                        "children": [
-                            {
-                                "title": "备案信息查询",
-                                "name": "record-keeping-info"
-                            },
-                            {
-                                "title": "域名注册查询",
-                                "name": "register-info"
-                            },
-                            {
-                                "title": "域名安全查询",
-                                "name": "domain-security"
-                            },
-                            {
-                                "title": "域名综合查询",
-                                "name": "domain-complex"
-                            }
-                        ]
-                    },
-                    {
-                        "title": "网站信息查询",
-                        "name": "website",
-                        "children": [
-                            {
-                                "title": "网站TDK查询",
-                                "name": "website-tdk"
-                            },
-                            {
-                                "title": "网站收录查询",
-                                "name": "collect-website"
-                            },
-                            {
-                                "title": "同IP网站查询",
-                                "name": "ip-website"
-                            },
-                            {
-                                "title": "网站词库查询",
-                                "name": "word-library"
-                            },
-                            {
-                                "title": "网站权重查询",
-                                "name": "weight-website"
-                            },
-                            {
-                                "title": "建站历史查询",
-                                "name": "website-history"
-                            },
-                            {
-                                "title": "网站综合查询",
-                                "name": "website-synthesize"
-                            },
-                            {
-                                "title": "网站降权查询",
-                                "name": "website-power"
-                            },
-                            {
-                                "title": "网站外链查询",
-                                "name": "outer-link"
-                            }
-                        ]
-                    },
-                    {
-                        "title": "网站工具",
-                        "name": "tool",
-                        "children": [
-                            {
-                                "title": "网站提取工具",
-                                "name": "website-tool"
-                            },
-                            {
-                                "title": "关键词排名查询",
-                                "name": "keywords-ranking"
-                            },
-                            {
-                                "title": "关键词索引查询",
-                                "name": "keywords-index"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "title": "SEO监控",
-                "name": "seo-monitor",
-                "children": []
-            },
-            {
-                "title": "SEO排名",
-                "name": "seo-ranking",
-                "children": []
-            },
-            {
-                "title": "谷歌SEO",
-                "name": "seo-google",
-                "children": []
-            },
-            {
-                "title": "SEM工具",
-                "name": "sem-tool",
-                "children": []
-            }
-        ]
-    }
+    "routes": [
+        {
+            "title": "AI应用",
+            "name": "ai-apps",
+            "children": [
+                {
+                    "title": "AI工具",
+                    "name": "ai-tools",
+                    "children": [
+                        {
+                            "title": "CMS接入",
+                            "name": "cms-access",
+                            "children": [
+                                {
+                                    "title": "网站列表",
+                                    "name": "website-list"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "自定义词库",
+                            "name": "custom-dict",
+                            "children": [
+                                {
+                                    "title": "添加词库",
+                                    "name": "dict-add"
+                                },
+                                {
+                                    "title": "词库分组",
+                                    "name": "dict-group"
+                                },
+                                {
+                                    "title": "敏感词",
+                                    "name": "sensitive"
+                                },
+                                {
+                                    "title": "近义词",
+                                    "name": "synonym"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "其他自定义",
+                            "name": "other-custom",
+                            "children": [
+                                {
+                                    "title": "配图自定义",
+                                    "name": "pic-custom"
+                                },
+                                {
+                                    "title": "配图详情",
+                                    "name": "pic-detail",
+                                    "meta": {
+                                        "hideInMenu": true
+                                    }
+                                },
+                                {
+                                    "title": "内链自定义",
+                                    "name": "link-custom"
+                                },
+                                {
+                                    "title": "内链详情",
+                                    "name": "link-detail",
+                                    "meta": {
+                                        "hideInMenu": true
+                                    }
+                                },
+                                {
+                                    "title": "AI账号配置",
+                                    "name": "ai-account-set"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "站长工具",
+            "name": "webmaster-tools",
+            "children": [
+                {
+                    "title": "关键词工具",
+                    "name": "keyword-tools",
+                    "children": [
+                        {
+                            "title": "关键词挖掘",
+                            "name": "keyword",
+                            "children": [
+                                {
+                                    "title": "关键词挖掘",
+                                    "name": "keyword-form"
+                                },
+                                {
+                                    "title": "关键词任务",
+                                    "name": "keyword-task"
+                                },
+                                {
+                                    "title": "我的关键词",
+                                    "name": "keyword-mine"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "关键词查询",
+                            "name": "keyword-query",
+                            "children": []
+                        },
+                        {
+                            "title": "关键词分析",
+                            "name": "keyword-analysis",
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "title": "SEO查询",
+                    "name": "seo-check",
+                    "children": [
+                        {
+                            "title": "域名信息查询",
+                            "name": "domain",
+                            "children": [
+                                {
+                                    "title": "备案信息查询",
+                                    "name": "record-keeping-info"
+                                },
+                                {
+                                    "title": "域名注册查询",
+                                    "name": "register-info"
+                                },
+                                {
+                                    "title": "域名安全查询",
+                                    "name": "domain-security"
+                                },
+                                {
+                                    "title": "域名综合查询",
+                                    "name": "domain-complex"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "网站信息查询",
+                            "name": "website",
+                            "children": [
+                                {
+                                    "title": "网站TDK查询",
+                                    "name": "website-tdk"
+                                },
+                                {
+                                    "title": "网站收录查询",
+                                    "name": "collect-website"
+                                },
+                                {
+                                    "title": "同IP网站查询",
+                                    "name": "ip-website"
+                                },
+                                {
+                                    "title": "网站词库查询",
+                                    "name": "word-library"
+                                },
+                                {
+                                    "title": "网站权重查询",
+                                    "name": "weight-website"
+                                },
+                                {
+                                    "title": "SEO综合查询",
+                                    "name": "seo-synthesize"
+                                },
+                                {
+                                    "title": "网站综合查询",
+                                    "name": "website-synthesize"
+                                },
+                                {
+                                    "title": "网站降权查询",
+                                    "name": "website-power"
+                                },
+                                {
+                                    "title": "网站外链查询",
+                                    "name": "outer-link"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "网站工具",
+                            "name": "tool",
+                            "children": [
+                                {
+                                    "title": "网站提取工具",
+                                    "name": "website-tool"
+                                },
+                                {
+                                    "title": "关键词排名查询",
+                                    "name": "keywords-ranking"
+                                },
+                                {
+                                    "title": "关键词索引查询",
+                                    "name": "keywords-index"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "SEO监控",
+                    "name": "seo-monitor",
+                    "children": []
+                },
+                {
+                    "title": "SEO排名",
+                    "name": "seo-ranking",
+                    "children": []
+                },
+                {
+                    "title": "谷歌SEO",
+                    "name": "seo-google",
+                    "children": []
+                },
+                {
+                    "title": "SEM工具",
+                    "name": "sem-tool",
+                    "children": []
+                },
+                {
+                    "title": "SEO写作",
+                    "name": "seo-writing",
+                    "children": [
+                        {
+                            "title": "文章双标题",
+                            "name": "title",
+                            "children": [
+                                {
+                                    "title": "双标题生成",
+                                    "name": "title-form"
+                                },
+                                {
+                                    "title": "标题任务",
+                                    "name": "title-task"
+                                },
+                                {
+                                    "title": "我的标题",
+                                    "name": "title-mine"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "文章生成器",
+                            "name": "article",
+                            "children": [
+                                {
+                                    "title": "文章挖掘",
+                                    "name": "article-form"
+                                },
+                                {
+                                    "title": "文章任务",
+                                    "name": "article-task"
+                                },
+                                {
+                                    "title": "我的文章",
+                                    "name": "article-mine"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "外链工具",
+                    "name": "link-tools",
+                    "children": []
+                }
+            ]
+        }
+    ]
 }

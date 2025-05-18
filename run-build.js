@@ -17,7 +17,15 @@ function generateRoutes(route, parentPath = "") {
 
   return routes;
 }
-const routes = generateRoutes(config.routes);
+let routes = []
+const routeList = config.routes.map(item => {
+    return generateRoutes(item)
+});
+routeList.forEach(item => {
+    item.forEach(child => {
+        routes.push(child)
+    })
+})
 routes.forEach((item) => {
   console.log(`Building with abc=${item.path}`);
   execSync(`npm run build --abc=${item.path}`, { stdio: "inherit" });

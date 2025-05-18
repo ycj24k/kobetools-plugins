@@ -1,0 +1,18 @@
+export default {
+  'placeholder1': '请输入敏感违禁词，一行一个，请勿有空行空格，示范如下\n第一\n减肥\n赌博',
+  'placeholder2': '请输入同义近义词，一行一个，请勿有空行空格，示范如下\n第一\n减肥\n赌博',
+  'placeholder3': '请输入分组名称',
+  'placeholder4': '请选择分组',
+  'btn1': '立即提交',
+  'message1': '请输入敏感违禁词',
+  'message2': '请输入同义近义词',
+  'message3': '请输入分组名称',
+  'message4': '请选择分组',
+  'message5': '提交成功',
+  'title1': '敏感违禁词',
+  'title2': '同义近义词',
+  'label1': '添加方式',
+  'label2': '分组名称',
+  'addOptions.label1': '新分组添加',
+  'addOptions.label2': '已有分组添加',
+};

@@ -3,27 +3,27 @@
         <div style="height: 12px;"></div>
         <div style="display: flex; gap: 12px;">
             <div style="display: flex; gap: 12px; width: 150px;">
-                <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="allSelect">全选</div>
-                <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="revoltSelect">反选</div>
-                <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="queryParam.platforms=[];queryParam.searchEngines=[];">清除</div>
+                <!-- <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="allSelect">全选</div>
+                <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="revoltSelect">反选</div> -->
+                <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="queryParam.platforms='';queryParam.searchEngines='';">清除</div>
             </div>
             <div style="display: flex; gap: 12px; width: 300px;">
                 <div style="font-weight: bold">站长平台</div>
-                <a-checkbox-group v-model="queryParam.platforms">
-                    <a-checkbox v-for="platform in platforms" :value="platform.code">{{platform.name}}</a-checkbox>
-                </a-checkbox-group>
+                <a-radio-group v-model="queryParam.platforms">
+                    <a-radio v-for="platform in platforms" :value="platform.code">{{platform.name}}</a-radio>
+                </a-radio-group>
             </div>
             <div style="display: flex; gap: 12px; flex: 1">
                 <div style="font-weight: bold">搜索引擎</div>
-                <a-checkbox-group v-model="queryParam.searchEngines">
-                    <a-checkbox style="margin-left: 30px" v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
-                </a-checkbox-group>
+                <a-radio-group v-model="queryParam.searchEngines">
+                    <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-radio>
+                </a-radio-group>
             </div>
         </div>
         <div style="height: 25px;"></div>
         <div style="flex: 1;">
             <XTextarea v-model="queryParam.domains"
-                       placeholder="请输入需要查询的网站域名，一行一个，单词最多提交10个，格式如：www.google.com"/>
+                       placeholder="请输入需要查询的网址，单次最多10个网站，如：www.google.com，一行一个，请勿出现空行或空格"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
@@ -32,43 +32,12 @@
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                 <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出查询数据"/>
-                <XButton color="yellow" text="导出详细数据"/>
+                <!-- <XButton color="yellow" text="导出详细数据"/> -->
                 <XButton color="pink" text="VIP查询通道"/>
             </div>
         </div>
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns" :spanMethod="spanMethod">
-                <template #BaidupcBr="{ record }">
-                    <XCapsuleTag type="baidu" :text="record.BaidupcBr" />
-                </template>
-                <template #BaiduMobileBr="{ record }">
-                    <XCapsuleTag type="baidu_mobile" :text="record.BaiduMobileBr" />
-                </template>
-                <template #SopcBr="{ record }">
-                    <XCapsuleTag type="so" :text="record.SopcBr" />
-                </template>
-                <template #SoMobileBr="{ record }">
-                    <XCapsuleTag type="so" :text="record.SoMobileBr" />
-                </template>
-                <template #SoGoupcBr="{ record }">
-                    <XCapsuleTag type="sougou" :text="record.SoGoupcBr" />
-                </template>
-                <template #SoGouMobileBr="{ record }">
-                    <XCapsuleTag type="sougou" :text="record.SoGouMobileBr" />
-                </template>
-                <template #SmBr="{ record }">
-                    <XCapsuleTag type="sm" :text="record.SmBr" />
-                </template>
-                <template #TtBr="{ record }">
-                    <XCapsuleTag type="toutiao" :text="record.TtBr" />
-                </template>
-                <template #BingBR="{ record }">
-                    <XCapsuleTag type="bing" :text="record.BingBR" />
-                </template>
-
-                <template #option="{ record }">
-                    详情|未开发
-                </template>
             </XTable>
         </div>
     </div>
@@ -82,6 +51,7 @@ import {download} from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
 import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
+import { getExportName } from "@/utils";
 
 let platforms = [
     {code: "az", name: "爱站"},
@@ -89,86 +59,93 @@ let platforms = [
 ];
 
 let searchEngines = [
-    {code: "baidu", name: "百度", disabled: false},
-    {code: "google", name: "谷歌", disabled: false},
-    {code: "bing", name: "必应", disabled: false},
-    {code: "so", name: "360", disabled: false},
-    {code: "sogou", name: "搜狗", disabled: false},
-    {code: "sm", name: "神马", disabled: false},
-    {code: "toutiao", name: "头条", disabled: false},
-    {code: "yahu", name: "雅虎", disabled: false},
-    {code: "yandex", name: "Yandex", disabled: false}
+    {code: 'baidu', name: '百度', disabled: false},
+    // {code: 'google', name: '谷歌', disabled: false},
+    {code: 'bing', name: '必应', disabled: false},
+    {code: '360', name: '360', disabled: false},
+    {code: 'sogou', name: '搜狗', disabled: false},
+    {code: 'sm', name: '神马', disabled: false},
+    {code: 'toutiao', name: '头条', disabled: false},
+    // {code: 'yahu', name: '雅虎', disabled: false},
+    // {code: 'yandex', name: 'Yandex', disabled: false}
 ];
 
 
 let queryParam = reactive({
-    platforms: ['az'],
-    searchEngines: ['baidu'],
-    domains: ""
+    platforms: 'az',
+    searchEngines: 'baidu',
+    domains: ''
 });
 
 let allSearchEngines = [
     {
-        title: '百度',
-        code: 'baidu',
-        dataIndex: 'BaidupcBr',
-        slotName: 'BaidupcBr',
-        width: 100
-    },
-    {
-        title: '手机百度',
-        code: 'baidu',
-        dataIndex: 'BaiduMobileBr',
-        slotName: 'BaiduMobileBr',
+        title: 'PC权重',
+        code: ['baidu', 'bing', '360', 'sogou'],
+        dataIndex: 'weight',
+        slotName: 'weight',
         minWidth: 100
     },
     {
-        title: '360',
-        code: 'so',
-        dataIndex: 'SopcBr',
-        slotName: 'SopcBr',
+        title: '移动权重',
+        code: ['baidu', '360', 'sogou', 'sm', 'toutiao'],
+        dataIndex: 'weight',
+        slotName: 'weight',
         minWidth: 100
     },
     {
-        title: '手机360',
-        code: 'so',
-        dataIndex: 'SoMobileBr',
-        slotName: 'SoMobileBr',
+        title: 'PC词库',
+        code: ['baidu', 'bing', '360', 'sogou'],
+        dataIndex: 'weight',
+        slotName: 'weight',
         minWidth: 100
     },
     {
-        title: '搜狗',
-        code: 'sogou',
-        dataIndex: 'SoGoupcBr',
-        slotName: 'SoGoupcBr',
+        title: '移动词库',
+        code: ['baidu', '360', 'sogou', 'sm', 'toutiao'],
+        dataIndex: 'weight',
+        slotName: 'weight',
         minWidth: 100
     },
     {
-        title: '手机搜狗',
-        code: 'sogou',
-        dataIndex: 'SoGouMobileBr',
-        slotName: 'SoGouMobileBr',
+        title: 'PC预估流量',
+        code: ['baidu', 'bing', '360', 'sogou'],
+        dataIndex: 'weight',
+        slotName: 'weight',
         minWidth: 100
     },
     {
-        title: '神马',
-        code: 'sm',
-        dataIndex: 'SmBr',
-        slotName: 'SmBr',
+        title: '移动预估流量',
+        code: ['baidu', '360', 'sogou', 'sm', 'toutiao'],
+        dataIndex: 'weight',
+        slotName: 'weight',
         minWidth: 100
     },
     {
-        title: '头条',
-        code: 'toutiao',
-        dataIndex: 'TtBr',
-        slotName: 'TtBr',
+        title: '网站收录',
+        code: ['baidu', 'bing', '360', 'sogou'],
+        dataIndex: 'weight',
+        slotName: 'weight',
         minWidth: 100
     },
     {
-        title: '必应',
-        code: 'bing',
-        dataIndex: 'BingBR',
-        slotName: 'BingBR',
+        title: '日收录',
+        code: ['baidu'],
+        dataIndex: 'weight',
+        slotName: 'weight',
+        minWidth: 100
+    },
+    {
+        title: '周收录',
+        code: ['baidu'],
+        dataIndex: 'weight',
+        slotName: 'weight',
+        minWidth: 100
+    },
+    {
+        title: '月收录',
+        code: ['baidu'],
+        dataIndex: 'weight',
+        slotName: 'weight',
         minWidth: 100
     },
 ];
@@ -181,24 +158,29 @@ let columns = computed(()=>{
             width: 100,
         },
         {
-            title: '网站域名',
+            title: '网址',
             dataIndex: 'domain',
             minWidth: 200
         },
+        // {
+        //     title: '站长平台',
+        //     dataIndex: 'platform',
+        //     width: 100
+        // },
+        ... allSearchEngines.filter(sEngines => sEngines.code.includes(queryParam.searchEngines)),
         {
-            title: '站长平台',
-            dataIndex: 'platform',
+            title: '备案信息',
+            dataIndex: 'icp',
+            minWidth: 200
+        },
+        {
+            title: '域名年龄',
+            dataIndex: 'age',
             width: 100
         },
         {
-            title: '预估流量',
-            dataIndex: 'weight',
-            minWidth: 100
-        },
-        ... allSearchEngines.filter(sEngines => queryParam.searchEngines.includes(sEngines.code)),
-        {
-            title: '操作',
-            slotName: 'option',
+            title: '首页标题',
+            dataIndex: 'title',
             minWidth: 100
         },
     ]
@@ -249,23 +231,21 @@ function exportTableData() {
     }
     let data = queryParam.domains.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
     isDownloadFile.value = true;
-    download("/api/sites/export/weight", data, "导出文件.xlsx", () => {
+    const name = getExportName('seoall')
+    download("/api/sites/export/weight", data, name + ".xlsx", () => {
         isDownloadFile.value = false;
     });
 }
 
 // 全选
 function allSelect() {
-    queryParam.platforms = platforms.map(platform => platform.code);
+    queryParam.platforms = 'az'
     queryParam.searchEngines = searchEngines.map(sEngines => sEngines.code);
 }
 
 // 反选
 function revoltSelect() {
-    queryParam.platforms = platforms
-        .filter(platform => !queryParam.platforms.includes(platform.code))
-        .map(platform => platform.code);
-
+    queryParam.platforms = queryParam.platforms === 'az' ? 'zz' : 'az'
     queryParam.searchEngines = searchEngines
         .filter(sEngines => !queryParam.searchEngines.includes(sEngines.code))
         .map(sEngines => sEngines.code);
