@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "seo-synthesize": "npm run build --abc=/webmaster-tools/seo-check/website/seo-synthesize",
+    "keyword-form": "npm run build --abc=/webmaster-tools/keyword-tools/keyword/keyword-form",
     "run-build": "node run-build.js"
   },
   "dependencies": {

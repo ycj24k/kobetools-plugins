@@ -72,14 +72,57 @@ export const orderingFormDefault = {
   sensitiveCustom: '',
 };
 
+// 竟对关键词初始表单
+export const jingduiFormDefault = {
+  // 关键词
+  keyword: '',
+  // 任务类型：1：智能挖掘，2：在线组合，3：手动录入，4：智能清洗
+  type: 1,
+  // 原始词
+  reserveKeyword: '',
+  // 挖掘来源
+  support: 1,
+  // 搜索引擎
+  engine: [],
+  // 包含关键字开关：0：关闭，1：开启
+  include: 0,
+  // 包含关键字
+  includeKeyword: [],
+  // 不含关键字开关：0：关闭，1：开启
+  exclude: 0,
+  // 不含关键字
+  excludeKeyword: [],
+  // 保留原始词开关：0：关闭，1：开启
+  reserve: 0,
+  // 关键词去重开关：0：关闭，1：开启
+  removal: 0,
+  // 关键词过滤开关：0：关闭，1：开启
+  keyFilter: 0,
+  // 关键词过滤
+  keyFilterVal: 1,
+  // 字符长度过滤开关：0：关闭，1：开启
+  lengthFilter: 1,
+  // 字符长度过滤
+  lengthFilterVal: {
+    min: 0,
+    max: 0,
+  },
+  // 违禁词过滤开关：0：关闭，1：开启
+  sensitiveFilter: 0,
+  // 违禁词过滤
+  sensitiveFilterVal: 1,
+  // 违禁词过滤自定义词库
+  sensitiveCustom: '',
+};
+
 // 包含关键词
 export const includeOptions = [
   {
-    label: 'includeOptions.label1',
+    label: '任一项',
     value: 1,
   },
   {
-    label: 'includeOptions.label2',
+    label: '所有项',
     value: 0,
   },
 ];
@@ -87,12 +130,54 @@ export const includeOptions = [
 // 不包含关键词
 export const excludeOptions = [
   {
-    label: 'includeOptions.label1',
+    label: '任一项',
     value: 1,
   },
   {
-    label: 'includeOptions.label2',
+    label: '所有项',
     value: 0,
+  },
+];
+// 挖掘来源
+export const supportOptions = [
+  {
+    label: '站内布局词',
+    value: 1,
+  },
+  {
+    label: '已出排名词',
+    value: 2,
+  },
+  {
+    label: '投放竞价词',
+    value: 3,
+  },
+];
+// 搜索引擎
+export const engineOptions = [
+  {
+    label: '百度',
+    value: 1,
+  },
+  {
+    label: '谷歌',
+    value: 2,
+  },
+  {
+    label: '必应',
+    value: 3,
+  },
+  {
+    label: '神马',
+    value: 4,
+  },
+  {
+    label: '搜狗',
+    value: 5,
+  },
+  {
+    label: '360',
+    value: 6,
   },
 ];
 // 挖掘深度
@@ -339,7 +424,7 @@ export const clearFormDefault = {
     max: 0,
   },
   // 违禁词过滤开关：0：关闭，1：开启
-  sensitiveFilter: 0,
+  sensitiveFilter: 1,
   // 违禁词过滤
   sensitiveFilterVal: 1,
   // 违禁词过滤自定义词库
@@ -378,7 +463,7 @@ export const addFormDefault = {
     max: 0,
   },
   // 违禁词过滤开关：0：关闭，1：开启
-  sensitiveFilter: 0,
+  sensitiveFilter: 1,
   // 违禁词过滤
   sensitiveFilterVal: 1,
   // 违禁词过滤自定义词库

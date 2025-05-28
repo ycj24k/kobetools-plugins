@@ -85,53 +85,6 @@
         <div class="flex_box form_item">
           <div class="form_title">{{ localeGet('title2') }}</div>
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
-            <a-grid-item :span="6" class="flex_box form_option">
-              <div class="form_label">{{ localeGet('label1') }}</div>
-              <a-form-item no-style field="removal">
-                <a-space :size="20">
-                  <a-switch v-model="clearForm.form.removal" :checked-value="1" :unchecked-value="0" />
-                </a-space>
-              </a-form-item>
-            </a-grid-item>
-            <a-grid-item :span="18" class="flex_box form_option">
-              <div class="form_label">{{ localeGet('label2') }}</div>
-              <a-form-item no-style field="keyFilter">
-                <a-space :size="20">
-                  <a-switch v-model="clearForm.form.keyFilter" :checked-value="1" :unchecked-value="0" />
-                  <template v-if="clearForm.form.keyFilter === 1">
-                    <a-radio-group v-model="clearForm.form.keyFilterVal" :options="keyOptions"></a-radio-group>
-                  </template>
-                </a-space>
-              </a-form-item>
-            </a-grid-item>
-            <a-grid-item :span="18" class="flex_box form_option">
-              <div class="form_label">{{ localeGet('label3') }}</div>
-              <a-form-item no-style field="sensitiveFilter">
-                <a-space :size="20">
-                  <a-switch v-model="clearForm.form.sensitiveFilter" :checked-value="1" :unchecked-value="0" />
-                  <template v-if="clearForm.form.sensitiveFilter === 1">
-                    <a-radio-group v-model="clearForm.form.sensitiveFilterVal" :options="sensitiveOptions">
-                      <template #label="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                      <template #option="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                    </a-radio-group>
-                  </template>
-                  <template v-if="clearForm.form.sensitiveFilter === 1 && clearForm.form.sensitiveFilterVal === 2">
-                    <a-select v-model="clearForm.form.sensitiveCustom" :options="customOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder4')">
-                      <template #label="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                      <template #option="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                    </a-select>
-                  </template>
-                </a-space>
-              </a-form-item>
-            </a-grid-item>
             <a-grid-item :span="24" class="flex_box form_option">
               <div class="form_label">{{ localeGet('label4') }}</div>
               <a-form-item no-style field="lengthFilter">
@@ -163,48 +116,82 @@
                 </a-space>
               </a-form-item>
             </a-grid-item>
+            <a-grid-item :span="24" class="flex_box form_option">
+              <div class="form_label">违禁词过滤</div>
+              <a-form-item no-style field="sensitiveFilter">
+                <a-space :size="20">
+                  <a-switch v-model="clearForm.form.sensitiveFilter" :checked-value="1" :unchecked-value="0" />
+                  <template v-if="clearForm.form.sensitiveFilter === 1">
+                    <a-radio-group v-model="clearForm.form.sensitiveFilterVal" :options="sensitiveOptions">
+                      <template #label="{ data }">
+                        <span>{{ localeGet(data?.label) }}</span>
+                      </template>
+                      <template #option="{ data }">
+                        <span>{{ localeGet(data?.label) }}</span>
+                      </template>
+                    </a-radio-group>
+                  </template>
+                  <template v-if="clearForm.form.sensitiveFilter === 1 && clearForm.form.sensitiveFilterVal === 2">
+                    <a-select v-model="clearForm.form.sensitiveCustom" :options="customOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')">
+                      <template #label="{ data }">
+                        <span>{{ localeGet(data?.label) }}</span>
+                      </template>
+                      <template #option="{ data }">
+                        <span>{{ localeGet(data?.label) }}</span>
+                      </template>
+                    </a-select>
+                  </template>
+                </a-space>
+              </a-form-item>
+            </a-grid-item>
           </a-grid>
         </div>
-        <div class="flex_box form_item">
-          <div class="form_title">{{ localeGet('title3') }}</div>
-          <div class="form_content">
-            <div class="form_content_item">
+        <div class="form_item">
+          <a-grid :col-gap="20" :row-gap="10" class="form_content">
+            <a-grid-item :span="12" class="flex_box form_content_item">
+              <div class="form_title">{{ localeGet('title3') }}</div>
               <div class="flex_box form_content_top">
-                <div class="form_label">{{ localeGet('label7') }}</div>
-                <a-form-item no-style field="includeKeyword">
+                <div class="form_label">结果包含</div>
+                <a-form-item no-style field="include">
                   <a-radio-group v-model="clearForm.form.include" :options="includeOptions">
                     <template #label="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
+                      <span>{{ data?.label }}</span>
                     </template>
                     <template #option="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
+                      <span>{{ data?.label }}</span>
                     </template>
                   </a-radio-group>
                 </a-form-item>
               </div>
-              <div class="form_content_input">
-                <a-input-tag v-model="clearForm.form.includeKeyword" :placeholder="localeGet('placeholder7')" allow-clear />
-              </div>
-            </div>
-            <div class="form_content_item">
+            </a-grid-item>
+            <a-grid-item :span="12" class="form_content_item">
               <div class="flex_box form_content_top">
-                <div class="form_label">{{ localeGet('label8') }}</div>
-                <a-form-item no-style field="excludeKeyword">
+                <div class="form_label">结果不包含</div>
+                <a-form-item no-style field="exclude">
                   <a-radio-group v-model="clearForm.form.exclude" :options="excludeOptions">
                     <template #label="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
+                      <span>{{ data?.label }}</span>
                     </template>
                     <template #option="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
+                      <span>{{ data?.label }}</span>
                     </template>
                   </a-radio-group>
                 </a-form-item>
               </div>
+            </a-grid-item>
+          </a-grid>
+          <a-grid :col-gap="20" :row-gap="10" class="form_content">
+            <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-input-tag v-model="clearForm.form.excludeKeyword" :placeholder="localeGet('placeholder7')" allow-clear />
+                <a-textarea v-model="clearForm.form.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
               </div>
-            </div>
-          </div>
+            </a-grid-item>
+            <a-grid-item :span="12" class="form_content_item">
+              <div class="form_content_input">
+                <a-textarea v-model="clearForm.form.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+              </div>
+            </a-grid-item>
+          </a-grid>
         </div>
       </a-form>
       <template #footer>
@@ -228,6 +215,7 @@ import { jumpPage } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;
+console.log(localeData.value, lengthMinOptions)
 const localeGet = (key) => {
   return localeData.value[key];
 };
@@ -353,7 +341,10 @@ const handleClear = (rowIndex) => {
 };
 
 const clearSubmit = () => {
-  keywordTaskClean(clearForm.value)
+  let params = {...clearForm.value}
+  params.form.includeKeyword = clearForm.value.form.includeKeyword ? clearForm.value.form.includeKeyword.split('\n') : [];
+  params.form.excludeKeyword = clearForm.value.form.excludeKeyword ? clearForm.value.form.excludeKeyword.split('\n') : [];
+  keywordTaskClean(params)
     .then((res) => {
       Message.success(localeGet('message3'));
       clearVisible.value = false;
@@ -393,4 +384,10 @@ export default {
 
 <style lang="less" scoped>
 @import '@/assets/style/table.less';
+.modal_box .form_box .form_item .form_title {
+  width: 100px;
+}
+.modal_box .form_box .form_item .form_label {
+  width: 100px;
+}
 </style>

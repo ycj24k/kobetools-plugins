@@ -82,7 +82,7 @@
             <div class="modal_title_text">{{ localeGet('title1') }}</div>
           </div>
         </template>
-        <a-spin :loading="addLoading" :tip="localeGet('tip1')">
+        <a-spin :loading="addLoading" :tip="localeGet('tip1')" style="width: 100%;">
           <a-form class="form_box" ref="addFormRef" layout="vertical" hide-label :model="addForm">
             <a-grid class="form_main">
               <a-grid-item :span="6" class="form_left">
@@ -97,26 +97,19 @@
                     <a-grid-item :span="24" class="flex_box form_option">
                       <div class="form_label"><span style="color: #ff0000">*</span>{{ localeGet('label1') }}</div>
                       <a-form-item no-style field="type">
-                        <a-radio-group v-model="addForm.type" :options="addTypeOptions">
-                          <template #label="{ data }">
-                            <span>{{ localeGet(data?.label) }}</span>
+                        <a-space :size="20">
+                          <a-radio-group v-model="addForm.type" :options="addTypeOptions">
+                            <template #label="{ data }">
+                              <span>{{ localeGet(data?.label) }}</span>
+                            </template>
+                            <template #option="{ data }">
+                              <span>{{ localeGet(data?.label) }}</span>
+                            </template>
+                          </a-radio-group>
+                          <template v-if="addForm.type === 1">
+                            <a-input v-model="addForm.taskName" :placeholder="localeGet('placeholder6')" />
                           </template>
-                          <template #option="{ data }">
-                            <span>{{ localeGet(data?.label) }}</span>
-                          </template>
-                        </a-radio-group>
-                      </a-form-item>
-                    </a-grid-item>
-                    <a-grid-item :span="12" class="flex_box form_option">
-                      <div class="form_label"><span style="color: #ff0000">*</span>{{ localeGet('label2') }}</div>
-                      <a-form-item no-style field="taskName">
-                        <a-input v-model="addForm.taskName" :placeholder="localeGet('placeholder6')" />
-                      </a-form-item>
-                    </a-grid-item>
-                    <a-grid-item :span="12" class="flex_box form_option">
-                      <div class="form_label">{{ localeGet('label3') }}</div>
-                      <a-form-item no-style field="website">
-                        <a-input v-model="addForm.website" :placeholder="localeGet('placeholder4')" />
+                        </a-space>
                       </a-form-item>
                     </a-grid-item>
                   </a-grid>
@@ -124,32 +117,6 @@
                 <div class="flex_box form_item">
                   <div class="form_title">{{ localeGet('title3') }}</div>
                   <a-grid :col-gap="20" :row-gap="10" class="form_content">
-                    <a-grid-item :span="6" class="flex_box form_option">
-                      <div class="form_label">{{ localeGet('label4') }}</div>
-                      <a-form-item no-style field="removal">
-                        <a-space :size="20">
-                          <a-switch v-model="addForm.removal" :checked-value="1" :unchecked-value="0" />
-                        </a-space>
-                      </a-form-item>
-                    </a-grid-item>
-                    <a-grid-item :span="18" class="flex_box form_option">
-                      <div class="form_label">{{ localeGet('label5') }}</div>
-                      <a-form-item no-style field="keyFilter">
-                        <a-space :size="20">
-                          <a-switch v-model="addForm.keyFilter" :checked-value="1" :unchecked-value="0" />
-                          <template v-if="addForm.keyFilter === 1">
-                            <a-radio-group v-model="addForm.keyFilterVal" :options="keyOptions">
-                              <template #label="{ data }">
-                                <span>{{ localeGet(data?.label) }}</span>
-                              </template>
-                              <template #option="{ data }">
-                                <span>{{ localeGet(data?.label) }}</span>
-                              </template>
-                            </a-radio-group>
-                          </template>
-                        </a-space>
-                      </a-form-item>
-                    </a-grid-item>
                     <a-grid-item :span="18" class="flex_box form_option">
                       <div class="form_label">{{ localeGet('label6') }}</div>
                       <a-form-item no-style field="sensitiveFilter">
@@ -211,46 +178,52 @@
                     </a-grid-item>
                   </a-grid>
                 </div>
-                <div class="flex_box form_item">
-                  <div class="form_title">{{ localeGet('title4') }}</div>
-                  <div class="form_content">
-                    <div class="form_content_item">
+                <div class="form_item">
+                  <a-grid :col-gap="20" :row-gap="10" class="form_content">
+                    <a-grid-item :span="12" class="flex_box form_content_item">
+                      <div class="form_title">{{ localeGet('title4') }}</div>
                       <div class="flex_box form_content_top">
-                        <div class="form_label">{{ localeGet('label8') }}</div>
-                        <a-form-item no-style field="includeKeyword">
+                        <div class="form_label">结果包含</div>
+                        <a-form-item no-style field="include">
                           <a-radio-group v-model="addForm.include" :options="includeOptions">
                             <template #label="{ data }">
-                              <span>{{ localeGet(data?.label) }}</span>
+                              <span>{{ data?.label }}</span>
                             </template>
                             <template #option="{ data }">
-                              <span>{{ localeGet(data?.label) }}</span>
+                              <span>{{ data?.label }}</span>
                             </template>
                           </a-radio-group>
                         </a-form-item>
                       </div>
-                      <div class="form_content_input">
-                        <a-input-tag v-model="addForm.includeKeyword" :placeholder="localeGet('placeholder10')" allow-clear />
-                      </div>
-                    </div>
-                    <div class="form_content_item">
+                    </a-grid-item>
+                    <a-grid-item :span="12" class="form_content_item">
                       <div class="flex_box form_content_top">
-                        <div class="form_label">{{ localeGet('label9') }}</div>
-                        <a-form-item no-style field="excludeKeyword">
+                        <div class="form_label">结果不包含</div>
+                        <a-form-item no-style field="exclude">
                           <a-radio-group v-model="addForm.exclude" :options="excludeOptions">
                             <template #label="{ data }">
-                              <span>{{ localeGet(data?.label) }}</span>
+                              <span>{{ data?.label }}</span>
                             </template>
                             <template #option="{ data }">
-                              <span>{{ localeGet(data?.label) }}</span>
+                              <span>{{ data?.label }}</span>
                             </template>
                           </a-radio-group>
                         </a-form-item>
                       </div>
+                    </a-grid-item>
+                  </a-grid>
+                  <a-grid :col-gap="20" :row-gap="10" class="form_content">
+                    <a-grid-item :span="12" class="flex_box form_content_item">
                       <div class="form_content_input">
-                        <a-input-tag v-model="addForm.excludeKeyword" :placeholder="localeGet('placeholder10')" allow-clear />
+                        <a-textarea v-model="addForm.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
                       </div>
-                    </div>
-                  </div>
+                    </a-grid-item>
+                    <a-grid-item :span="12" class="form_content_item">
+                      <div class="form_content_input">
+                        <a-textarea v-model="addForm.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                      </div>
+                    </a-grid-item>
+                  </a-grid>
                 </div>
               </a-grid-item>
             </a-grid>
@@ -539,4 +512,10 @@ export default {
 
 <style lang="less" scoped>
 @import '@/assets/style/table.less';
+.modal_box .form_box .form_item .form_title {
+  width: 100px;
+}
+.modal_box .form_box .form_item .form_label {
+  width: 100px;
+}
 </style>
