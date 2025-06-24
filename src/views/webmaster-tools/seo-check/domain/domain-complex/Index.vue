@@ -8,7 +8,7 @@ import DomainComplexQuery from "./DomainComplexQuery.vue";
     <div class="index">
         <div style="flex: 1;">
             <a-tabs default-active-key="1" justify>
-                <a-tab-pane key="1" title="域名综合查询(没有接口)">
+                <a-tab-pane key="1" title="域名历史查询(没有接口)">
                     <DomainComplexQuery />
                 </a-tab-pane>
             </a-tabs>

@@ -10,20 +10,15 @@
           </a-grid-item>
           <a-grid-item :span="4" class="flex_box">
             <a-form-item field="title">
-              <a-input v-model="queryForm.title" :placeholder="localeGet('placeholder2')" />
+              <a-input v-model="queryForm.title" placeholder="请输入标题关键字" />
             </a-form-item>
           </a-grid-item>
-          <a-grid-item :span="4" class="flex_box">
-            <a-form-item field="website">
-              <a-input v-model="queryForm.website" :placeholder="localeGet('placeholder3')" />
-            </a-form-item>
-          </a-grid-item>
-          <a-grid-item :span="4">
+          <a-grid-item :span="16">
             <div class="flex_box form_btns">
               <a-button class="form_btn1" type="primary" @click="getList">{{ localeGet('btn1') }}</a-button>
               <a-button class="form_btn2" type="primary" @click="handleAdd">{{ localeGet('btn2') }}</a-button>
-              <a-button class="form_btn5" type="primary" @click="handleExport('txt')">{{ localeGet('btn3') }}</a-button>
-              <a-button class="form_btn5" type="primary" @click="handleExport('csv')">{{ localeGet('btn4') }}</a-button>
+              <a-button class="form_btn3" type="primary" @click="handleExport('txt')">导出TXT</a-button>
+              <a-button class="form_btn4" type="primary" @click="handleExport('csv')">导出表格</a-button>
               <a-button class="form_btn7" type="outline" @click="handleReset">{{ localeGet('btn5') }}</a-button>
               <a-button type="outline" @click="handleRefresh">{{ localeGet('btn6') }}</a-button>
             </div>
@@ -33,7 +28,7 @@
       <div class="table_box">
         <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading || saveLoading" :columns="myTableColumns" :data="tableData" row-key="id" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange" :scroll="{ x: '100%', y: 500 }">
           <template #header="{ column }">
-            <div>{{ localeGet(column.title) }}</div>
+            <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
           </template>
           <template #title="{ rowIndex }">
             <a-input @change="handleSaveChange(rowIndex, 'title')" v-model="tableData[rowIndex].title" />
@@ -52,12 +47,14 @@
         </a-table>
         <a-space :size="20" class="table_save">
           <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('btn9') }}</a-button>
+          <a-button :loading="saveLoading" class="form_btn8" type="primary">批量删除</a-button>
+          <a-button :loading="saveLoading" class="form_btn1" type="primary">一键生成关键词描述</a-button>
           <a-button type="outline" @click="getListAll">{{ localeGet('btn10') }}</a-button>
           <div class="table_save_total">{{ localeGet('message2') }}{{ tableDataAll.length }}{{ localeGet('message3') }}</div>
         </a-space>
       </div>
       <!-- 手动加词 -->
-      <a-modal :mask-closable="false" :esc-to-close="false" class="modal_box" v-model:visible="addVisible" width="60%">
+      <a-modal :mask-closable="false" :esc-to-close="false" class="modal_box" v-model:visible="addVisible" width="65%">
         <template #title>
           <div class="flex_box modal_title">
             <div class="modal_title_icon">
@@ -73,29 +70,37 @@
                 <div class="flex_box form_item">
                   <div class="form_title">{{ localeGet('title2') }}</div>
                   <a-grid :col-gap="20" :row-gap="10" class="form_content">
-                    <a-grid-item :span="24" class="flex_box form_option">
-                      <div class="form_label"><span style="color: #ff0000">*</span>{{ localeGet('label1') }}</div>
+                    <a-grid-item :span="8" class="flex_box form_option">
                       <a-form-item no-style field="type">
-                        <a-radio-group v-model="addForm.type" :options="addTypeOptions">
-                          <template #label="{ data }">
-                            <span>{{ localeGet(data?.label) }}</span>
+                        <a-space :size="20">
+                          <a-radio @click="addForm.type = 1" :model-value="addForm.type === 1">新任务</a-radio>
+                          <template v-if="addForm.type === 1">
+                            <a-input v-model="addForm.taskName" :placeholder="localeGet('placeholder6')" />
                           </template>
-                          <template #option="{ data }">
-                            <span>{{ localeGet(data?.label) }}</span>
-                          </template>
-                        </a-radio-group>
+                        </a-space>
                       </a-form-item>
                     </a-grid-item>
-                    <a-grid-item :span="12" class="flex_box form_option">
-                      <div class="form_label"><span style="color: #ff0000">*</span>{{ localeGet('label2') }}</div>
-                      <a-form-item no-style field="taskName">
-                        <a-input v-model="addForm.taskName" :placeholder="localeGet('placeholder8')" />
+                    <a-grid-item :span="8" class="flex_box form_option">
+                      <a-form-item no-style field="type">
+                        <a-space :size="20">
+                          <a-radio @click="addForm.type = 2" :model-value="addForm.type === 2">已有任务</a-radio>
+                          <template v-if="addForm.type === 2">
+                            <a-select v-model="addForm.tid" :options="taskList" placeholder="请选择任务" allow-search>
+                                <!-- <template #label="{ data }">
+                                  <span>{{ localeGet(data?.label) }}</span>
+                                </template>
+                                <template #option="{ data }">
+                                  <span>{{ localeGet(data?.label) }}</span>
+                                </template> -->
+                              </a-select>
+                          </template>
+                        </a-space>
                       </a-form-item>
                     </a-grid-item>
-                    <a-grid-item :span="12" class="flex_box form_option">
-                      <div class="form_label">{{ localeGet('label3') }}</div>
-                      <a-form-item no-style field="website">
-                        <a-input v-model="addForm.website" :placeholder="localeGet('placeholder3')" />
+                    <a-grid-item :span="8" class="flex_box form_option">
+                      <div class="form_label">备注信息</div>
+                      <a-form-item no-style field="type">
+                        <a-input v-model="addForm.website" placeholder="请输入备注信息" />
                       </a-form-item>
                     </a-grid-item>
                   </a-grid>
@@ -110,26 +115,47 @@
                     </a-form-item>
                   </a-grid>
                 </div>
-                <div class="flex_box form_item">
-                  <div class="form_title">{{ localeGet('title4') }}</div>
+                <div class="form_item">
                   <a-grid :col-gap="20" :row-gap="10" class="form_content">
-                    <a-grid-item :span="18" class="flex_box form_option">
-                      <div class="form_label">{{ localeGet('label4') }}</div>
+                    <a-grid-item :span="15" class="flex_box form_option">
+                      <div class="form_title">{{ localeGet('title4') }}</div>
+                      <div class="form_label">标题长度</div>
+                      <a-form-item no-style field="lengthFilter">
+                        <a-space :size="20">
+                          <a-switch v-model="addForm.lengthFilter" :checked-value="1" :unchecked-value="0" />
+                          <template v-if="addForm.lengthFilter === 1">
+                            <a-space :size="20">
+                              <span>最少</span>
+                              <a-select v-model="addForm.lengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
+                                <!-- <template #label="{ data }">
+                                  <span>{{ localeGet(data?.label) }}</span>
+                                </template>
+                                <template #option="{ data }">
+                                  <span>{{ localeGet(data?.label) }}</span>
+                                </template> -->
+                              </a-select>
+                              <span>-</span>
+                              <span>最多</span>
+                              <a-select v-model="addForm.lengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder4')">
+                                <!-- <template #label="{ data }">
+                                  <span>{{ localeGet(data?.label) }}</span>
+                                </template>
+                                <template #option="{ data }">
+                                  <span>{{ localeGet(data?.label) }}</span>
+                                </template> -->
+                              </a-select>
+                            </a-space>
+                          </template>
+                        </a-space>
+                      </a-form-item>
+                    </a-grid-item>
+                    <a-grid-item :span="9" class="flex_box form_option">
+                      <div class="form_label">违禁词过滤</div>
                       <a-form-item no-style field="sensitiveFilter">
                         <a-space :size="20">
                           <a-switch v-model="addForm.sensitiveFilter" :checked-value="1" :unchecked-value="0" />
                           <template v-if="addForm.sensitiveFilter === 1">
-                            <a-radio-group v-model="addForm.sensitiveFilterVal" :options="sensitiveOptions">
-                              <template #label="{ data }">
-                                <span>{{ localeGet(data?.label) }}</span>
-                              </template>
-                              <template #option="{ data }">
-                                <span>{{ localeGet(data?.label) }}</span>
-                              </template>
-                            </a-radio-group>
-                          </template>
-                          <template v-if="addForm.sensitiveFilter === 1 && addForm.sensitiveFilterVal === 2">
-                            <a-select v-model="addForm.sensitiveCustom" :options="customOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder4')">
+                            <a-select v-model="addForm.sensitiveFilterVal" :options="customOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')">
                               <template #label="{ data }">
                                 <span>{{ localeGet(data?.label) }}</span>
                               </template>
@@ -137,37 +163,6 @@
                                 <span>{{ localeGet(data?.label) }}</span>
                               </template>
                             </a-select>
-                          </template>
-                        </a-space>
-                      </a-form-item>
-                    </a-grid-item>
-                    <a-grid-item :span="24" class="flex_box form_option">
-                      <div class="form_label">{{ localeGet('label5') }}</div>
-                      <a-form-item no-style field="lengthFilter">
-                        <a-space :size="20">
-                          <a-switch v-model="addForm.lengthFilter" :checked-value="1" :unchecked-value="0" />
-                          <template v-if="addForm.lengthFilter === 1">
-                            <a-space :size="20">
-                              <span>{{ localeGet('label6') }}</span>
-                              <a-select v-model="addForm.lengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder5')">
-                                <template #label="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template>
-                                <template #option="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template>
-                              </a-select>
-                              <span>-</span>
-                              <span>{{ localeGet('label7') }}</span>
-                              <a-select v-model="addForm.lengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder6')">
-                                <template #label="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template>
-                                <template #option="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template>
-                              </a-select>
-                            </a-space>
                           </template>
                         </a-space>
                       </a-form-item>

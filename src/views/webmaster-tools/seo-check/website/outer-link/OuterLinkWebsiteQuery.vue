@@ -16,7 +16,7 @@
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns">
                 <template #option="{ record }">
-                    <XButton shape="square" text="详情" @xClick="outerLinkWebsiteQueryDetails.show(record)"/>
+                    <XButton size="small" shape="square" text="详情" @xClick="outerLinkWebsiteQueryDetails.show(record)"/>
                 </template>
             </XTable>
         </div>
@@ -43,7 +43,7 @@ let columns = [
     {
         title: '域名信息',
         dataIndex: 'domain',
-        width: 300
+        width: 150
     },
     {
         title: '反链数量',

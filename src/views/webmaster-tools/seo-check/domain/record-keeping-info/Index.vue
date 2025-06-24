@@ -1,16 +1,24 @@
 <script setup>
 import { ref } from "vue";
+import localeConfig from './zh-CN.js';
 import RecordKeepingInfoQuery from './RecordKeepingInfoQuery.vue'
 import EnterpriseRecordKeepingQuery from './EnterpriseRecordKeepingQuery.vue'
 import DomainRecordKeepingHistoryQuery from './DomainRecordKeepingHistoryQuery.vue'
 const localeData = ref({})
+setTimeout(() => {
+    localeData.value = localeConfig;
+}, 100);
 const localeGet = (key) => {
     return localeData.value[key]
 }
 // 监听函数
 function dataListener(data) {
     console.log('来自主应用的数据', data)
-    if (data&&data.locales) localeData.value = data.locales;
+    if (data&&data.locales) {
+        setTimeout(() => {
+            localeData.value = data.locales;
+        }, 200);
+    }
 }
 // 监听数据变化，初始化时如果有数据则主动触发一次
 if (window.microApp) window.microApp.addDataListener(dataListener, true)

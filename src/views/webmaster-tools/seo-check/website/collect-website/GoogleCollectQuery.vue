@@ -10,8 +10,8 @@
                 <span v-if="isAutoQuery" style="margin-left: 12px; cursor: pointer; color: #4c6ef0" @click="isAutoQuery=false">取消</span>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出收录站点"/>
-                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="yellow" text="导出未收录站点"/>
+                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
+                    text="导出查询结果" />
                 <XButton color="pink" text="VIP查询通道"/>
             </div>
         </div>
@@ -28,6 +28,7 @@ import XTextarea from "@/components/common/XTextarea.vue";
 import {post, download} from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
+import { handleExport } from '@/utils';
 
 let columns = [
     {
@@ -113,17 +114,14 @@ function countdownAutoQuery(taskIds){
     }
 }
 
-function exportTableData(){
-    if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的网站域名！');
+function exportRecordKeepingDomains() {
+    if (xTable.value.table.tableCurrData.length === 0) {
+        showErrorNotification('未获取到查询结果');
         return;
     }
-    isDownloadFile.value = true;
-    let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
-    download("/api/sites/export/baidutask/result", data, "导出文件.xlsx", () => {
-        isDownloadFile.value = false;
-    });
+    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns.value, '', 'csv')
 }
+
 
 </script>
 

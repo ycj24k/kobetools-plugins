@@ -57,7 +57,7 @@ export default {
   'lengthMaxOptions.label6': '30',
   'taskTableColumns.title1': 'ID',
   'taskTableColumns.title2': '任务名称',
-  'taskTableColumns.title3': '标题数',
+  'taskTableColumns.title3': '标题数量',
   'taskTableColumns.title4': '任务类型',
   'taskTableColumns.title5': '应用站点',
   'taskTableColumns.title6': '更新时间',

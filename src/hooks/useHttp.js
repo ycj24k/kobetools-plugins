@@ -7,11 +7,10 @@ const host = "http://hw.izbw.net";
 
 function post(url, data, callback=()=>{}, errCallback=()=>{}){
     axios.post(host+url, data).then((res) => {
-        let result = res.data;
-        if (result.code === 200 && result.hasOwnProperty("data")){
-            callback(result);
+        if (res.code === 200 && res.hasOwnProperty("data")){
+            callback(res);
         }else{
-            showErrorNotification(result.msg)
+            showErrorNotification(res.msg)
             errCallback();
         }
     }).catch(error => {

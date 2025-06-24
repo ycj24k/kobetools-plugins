@@ -16,7 +16,7 @@
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns">
                 <template #option="{ record }">
-                    <XButton shape="square" text="详情" @xClick="ipWebsiteQueryDetails.show(record)"/>
+                    <XButton size="small" shape="square" text="详情" @xClick="showDetail(record)"/>
                 </template>
             </XTable>
         </div>
@@ -43,17 +43,17 @@ let columns = [
     {
         title: '域名信息',
         dataIndex: 'domain',
-        width: 300
+        width: 150
     },
     {
         title: 'IP地址',
         dataIndex: 'ip',
-        width: 300
+        width: 150
     },
     {
         title: 'IP地区',
         dataIndex: 'address',
-        width: 300
+        width: 200
     },
     {
         title: '站点个数',
@@ -102,6 +102,10 @@ function exportTableData(){
     download("/api/sites/export/dnsinfo", data, "导出文件.xlsx", () => {
         isDownloadFile.value = false;
     });
+}
+
+function showDetail(record) {
+    ipWebsiteQueryDetails.value.show(record)
 }
 
 </script>

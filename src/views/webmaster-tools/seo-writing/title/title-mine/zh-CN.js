@@ -67,9 +67,9 @@ export default {
   'addTypeOptions.label1': '新任务添加',
   'addTypeOptions.label2': '已有任务添加',
   'myTableColumns.title1': '标题',
-  'myTableColumns.title2': '相关词数',
+  'myTableColumns.title2': '关键词数量',
   'myTableColumns.title3': '所属任务',
-  'myTableColumns.title4': '应用站点',
+  'myTableColumns.title4': '描述信息',
   'myTableColumns.title5': '更新时间',
   'myTableColumns.title6': '操作',
 };

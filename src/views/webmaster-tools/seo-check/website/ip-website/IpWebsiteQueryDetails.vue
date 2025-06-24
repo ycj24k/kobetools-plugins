@@ -10,8 +10,8 @@
                     <XButton color="pink" text="查询站点信息"/>
                 </div>
             </div>
-            <div style="height: calc(100% - 65px)">
-                <XTable ref="xTable" :columns="columns">
+            <div style="height: calc(100% - 65px)" v-if="visible">
+                <XTable ref="detailTable" :columns="columns">
                     <template #baiduPCWeight="{ record }">
                         <div style="display:flex;">
                             <XCapsuleTag type="aizhan" :text="record.aizhanPcBr" />
@@ -101,7 +101,7 @@ let columns = [
         tooltip: true
     },
 ];
-let xTable = ref(null);
+let detailTable = ref(null);
 let isDownloadFile = ref(false);
 let rowData = ref({});
 let innerHeight = ref(0);
@@ -114,7 +114,9 @@ function show(record){
     innerHeight.value = window.innerHeight;
     rowData.value = record;
     visible.value = true;
-    queryTableData();
+    setTimeout(() => {
+        queryTableData();
+    }, 200);
 }
 
 /**
@@ -124,7 +126,7 @@ function queryTableData(){
     let data = {
         domain: rowData.value.domain
     };
-    xTable.value.queryTableData("/api/sites/query/dnsinfo/detail", data);
+    detailTable.value.queryTableData("/api/sites/query/dnsinfo/detail", data);
 }
 
 /**

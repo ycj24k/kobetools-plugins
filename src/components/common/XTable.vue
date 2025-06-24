@@ -12,7 +12,6 @@ const props = defineProps({
     }
 });
 const localeData = ref(props.locales);
-console.log(props.locales);
 // 监听 props 的变化
 watch(() => props.locales, (newVal) => {
   localeData.value = newVal;
@@ -44,21 +43,36 @@ const rowSelection = reactive({
     onlyCurrent: false,
 });
 
+const selectedKeys = ref([]);
+
 /**
  * 表的网络查询
  * @param url
  * @param data
  * @param callback
  */
-function queryTableData(url, data, callback = (result) => { }) {
+function queryTableData(url, data, callback = () => { }) {
     table.isLoadTable = true;
+    selectedKeys.value = []
     post(url, data, (result) => {
         table.isLoadTable = false;
+        if (url === '/api/beian/query/domains' || url === '/api/beian/query/logs' || url === '/api/beian/query/corps') {
+            result.data = result.data.map((item) => {
+                for (let key in props.columns) {
+                    if (!item[props.columns[key].dataIndex] && item[props.columns[key].dataIndex] !== 0) item[props.columns[key].dataIndex] = '未备案'
+                }
+                return item;
+            });
+        }
         setData(result, callback);
     }, () => {
         table.isLoadTable = false;
     });
 }
+
+setTimeout(() => {
+    console.log(props.columns)
+}, 5000);
 
 /**
  * 批量设置表字段内容居中
@@ -79,7 +93,7 @@ function dealColumns(columns) {
  * @param result
  * @param callback
  */
-function setData(result, callback = (result) => { }) {
+function setData(result, callback = () => { }) {
     table.isLoadTable = false;
     table.tableAllData = result.data;
     for (let i = 0; i < table.tableAllData.length; i++) {
@@ -121,7 +135,7 @@ function onPageSizeChange(pageSize) {
 /**
  * 导出给父组件调用
  */
-defineExpose({ queryTableData, table, setData, onPageIndexChange })
+defineExpose({ queryTableData, table, setData, onPageIndexChange, selectedKeys })
 
 </script>
 
@@ -129,24 +143,22 @@ defineExpose({ queryTableData, table, setData, onPageIndexChange })
     <div style="height: 100%; display: flex; flex-direction: column">
         <div style="flex: 1; overflow-y: auto">
             <a-table column-resizable :loading="table.isLoadTable" :scroll="{ y: '100%' }" :scrollbar="true"
-                :columns="dealColumns(columns)" :data="table.tableCurrData" :bordered="{ cell: true }"
-                :row-selection="rowSelection" :spanMethod="spanMethod" :pagination="false">
+                :columns="dealColumns(columns)" :data="table.tableCurrData" :bordered="{ cell: true }" row-key="serialNumber"
+                :row-selection="rowSelection" :spanMethod="spanMethod" :pagination="false" v-model:selectedKeys="selectedKeys">
                 <template v-for="(slot, slotName) in $slots" #[slotName]="slotProps">
                     <slot :name="slotName" v-bind="slotProps" />
                 </template>
                 <template #empty>
-                    <div style="display: flex; align-items: center; justify-content: center; height: 295px;">
-                        {{localeGet('table.text1')}}
-                    </div>
+                    <div style="display: flex; align-items: center; justify-content: center; height: 295px;">暂无数据</div>
                 </template>
             </a-table>
         </div>
         <div style="height: 12px;"></div>
-        <div style="height: 32px; display: flex;">
+        <div style="height: 32px; display: flex;" v-if="table.total">
             <div style="width: 400px; display: flex; align-items: center">
-                {{localeGet('table.text2')}}{{ table.total }}&nbsp;{{localeGet('table.text3')}}，
-                {{localeGet('table.text4')}}<span style="color: green">{{ table.successCount }}</span>&nbsp;{{localeGet('table.text3')}}，{{localeGet('table.text5')}}<span
-                    style="color: red">{{ table.failCount }}</span>&nbsp;{{localeGet('table.text3')}}
+                查询数量：<span style="color: blue;font-weight: bold;">{{ table.total }}</span>&nbsp;条，
+                成功：<span style="color: green;font-weight: bold;">{{ table.successCount }}</span>&nbsp;条，失败：<span
+                    style="color: red;font-weight: bold;">{{ table.failCount }}</span>&nbsp;条
             </div>
             <div style="flex: 1; text-align: right">
                 <a-pagination style="display: inline-block" v-model="table.pageIndex" :page-size="table.pageSize"

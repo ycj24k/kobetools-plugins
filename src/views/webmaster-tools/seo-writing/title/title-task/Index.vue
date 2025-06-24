@@ -17,12 +17,12 @@
           </a-grid-item>
           <a-grid-item :span="4" class="flex_box">
             <a-form-item field="name">
-              <a-input v-model="queryForm.name" :placeholder="localeGet('placeholder2')" />
+              <a-input v-model="queryForm.name" placeholder="输入任务名称关键字" />
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="4" class="flex_box">
             <a-form-item field="website">
-              <a-input v-model="queryForm.website" :placeholder="localeGet('placeholder3')" />
+              <a-input v-model="queryForm.website" placeholder="输入备注信息关键字" />
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="4">
@@ -37,7 +37,7 @@
       <div class="table_box">
         <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading" :columns="taskTableColumns" :data="tableData" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange" :scroll="{ x: '100%', y: 500 }">
           <template #header="{ column }">
-            <div>{{ localeGet(column.title) }}</div>
+            <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
           </template>
           <template #name="{ rowIndex }">
             <a-input @change="handleSaveChange(rowIndex, 'name')" v-model="tableData[rowIndex].name" />
@@ -72,7 +72,7 @@
       </div>
     </div>
     <!-- 清洗 -->
-    <a-modal :mask-closable="false" l :esc-to-close="false" class="modal_box" v-model:visible="clearVisible" width="60%">
+    <a-modal :mask-closable="false" l :esc-to-close="false" class="modal_box" v-model:visible="clearVisible" width="80%">
       <template #title>
         <div class="flex_box modal_title">
           <div class="modal_title_icon">
@@ -82,26 +82,47 @@
         </div>
       </template>
       <a-form class="form_box" ref="clearFormRef" layout="vertical" hide-label :model="clearForm">
-        <div class="flex_box form_item">
-          <div class="form_title">{{ localeGet('title2') }}</div>
+        <div class="form_item">
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
-            <a-grid-item :span="16" class="flex_box form_option">
-              <div class="form_label">{{ localeGet('label1') }}</div>
+            <a-grid-item :span="12" class="flex_box form_option">
+              <div class="form_title">{{ localeGet('title2') }}</div>
+              <div class="form_label">标题长度</div>
+              <a-form-item no-style field="lengthFilter">
+                <a-space :size="20">
+                  <a-switch v-model="clearForm.form.lengthFilter" :checked-value="1" :unchecked-value="0" />
+                  <template v-if="clearForm.form.lengthFilter === 1">
+                    <a-space :size="20">
+                      <span>最少</span>
+                      <a-select v-model="clearForm.form.lengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
+                        <!-- <template #label="{ data }">
+                          <span>{{ localeGet(data?.label) }}</span>
+                        </template>
+                        <template #option="{ data }">
+                          <span>{{ localeGet(data?.label) }}</span>
+                        </template> -->
+                      </a-select>
+                      <span>-</span>
+                      <span>最多</span>
+                      <a-select v-model="clearForm.form.lengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder4')">
+                        <!-- <template #label="{ data }">
+                          <span>{{ localeGet(data?.label) }}</span>
+                        </template>
+                        <template #option="{ data }">
+                          <span>{{ localeGet(data?.label) }}</span>
+                        </template> -->
+                      </a-select>
+                    </a-space>
+                  </template>
+                </a-space>
+              </a-form-item>
+            </a-grid-item>
+            <a-grid-item :span="12" class="flex_box form_option">
+              <div class="form_label">违禁词过滤</div>
               <a-form-item no-style field="sensitiveFilter">
                 <a-space :size="20">
                   <a-switch v-model="clearForm.form.sensitiveFilter" :checked-value="1" :unchecked-value="0" />
                   <template v-if="clearForm.form.sensitiveFilter === 1">
-                    <a-radio-group v-model="clearForm.form.sensitiveFilterVal" :options="sensitiveOptions">
-                      <template #label="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                      <template #option="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                    </a-radio-group>
-                  </template>
-                  <template v-if="clearForm.form.sensitiveFilter === 1 && clearForm.form.sensitiveFilterVal === 2">
-                    <a-select v-model="clearForm.form.sensitiveCustom" :options="customOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder4')">
+                    <a-select v-model="clearForm.form.sensitiveFilterVal" :options="customOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')">
                       <template #label="{ data }">
                         <span>{{ localeGet(data?.label) }}</span>
                       </template>
@@ -113,79 +134,54 @@
                 </a-space>
               </a-form-item>
             </a-grid-item>
-            <a-grid-item :span="24" class="flex_box form_option">
-              <div class="form_label">{{ localeGet('label2') }}</div>
-              <a-form-item no-style field="lengthFilter">
-                <a-space :size="20">
-                  <a-switch v-model="clearForm.form.lengthFilter" :checked-value="1" :unchecked-value="0" />
-                  <template v-if="clearForm.form.lengthFilter === 1">
-                    <a-space :size="20">
-                      <span>{{ localeGet('label3') }}</span>
-                      <a-select v-model="clearForm.form.lengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder5')">
-                        <template #label="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template>
-                        <template #option="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template>
-                      </a-select>
-                      <span>-</span>
-                      <span>{{ localeGet('label4') }}</span>
-                      <a-select v-model="clearForm.form.lengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder6')">
-                        <template #label="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template>
-                        <template #option="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template>
-                      </a-select>
-                    </a-space>
-                  </template>
-                </a-space>
-              </a-form-item>
-            </a-grid-item>
           </a-grid>
         </div>
-        <div class="flex_box form_item">
-          <div class="form_title">{{ localeGet('title3') }}</div>
-          <div class="form_content">
-            <div class="form_content_item">
+        <div class="form_item">
+          <a-grid :col-gap="20" :row-gap="10" class="form_content">
+            <a-grid-item :span="12" class="flex_box form_content_item">
+              <div class="form_title">{{ localeGet('title3') }}</div>
               <div class="flex_box form_content_top">
-                <div class="form_label">{{ localeGet('label5') }}</div>
-                <a-form-item no-style field="includeKeyword">
+                <div class="form_label">结果包含</div>
+                <a-form-item no-style field="include">
                   <a-radio-group v-model="clearForm.form.include" :options="includeOptions">
                     <template #label="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
+                      <span>{{ data?.label }}</span>
                     </template>
                     <template #option="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
+                      <span>{{ data?.label }}</span>
                     </template>
                   </a-radio-group>
                 </a-form-item>
               </div>
-              <div class="form_content_input">
-                <a-input-tag v-model="clearForm.form.includeKeyword" :placeholder="localeGet('placeholder7')" allow-clear />
-              </div>
-            </div>
-            <div class="form_content_item">
+            </a-grid-item>
+            <a-grid-item :span="12" class="form_content_item">
               <div class="flex_box form_content_top">
-                <div class="form_label">{{ localeGet('label6') }}</div>
-                <a-form-item no-style field="excludeKeyword">
+                <div class="form_label">结果不包含</div>
+                <a-form-item no-style field="exclude">
                   <a-radio-group v-model="clearForm.form.exclude" :options="excludeOptions">
                     <template #label="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
+                      <span>{{ data?.label }}</span>
                     </template>
                     <template #option="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
+                      <span>{{ data?.label }}</span>
                     </template>
                   </a-radio-group>
                 </a-form-item>
               </div>
+            </a-grid-item>
+          </a-grid>
+          <a-grid :col-gap="20" :row-gap="10" class="form_content">
+            <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-input-tag v-model="clearForm.form.excludeKeyword" :placeholder="localeGet('placeholder7')" allow-clear />
+                <a-textarea v-model="clearForm.form.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
               </div>
-            </div>
-          </div>
+            </a-grid-item>
+            <a-grid-item :span="12" class="form_content_item">
+              <div class="form_content_input">
+                <a-textarea v-model="clearForm.form.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+              </div>
+            </a-grid-item>
+          </a-grid>
         </div>
       </a-form>
       <template #footer>
@@ -325,6 +321,7 @@ const handleClear = (rowIndex) => {
     id: tableData.value[rowIndex].id,
     form: { ...clearFormDefault },
   };
+  currentTask.value = tableData.value[rowIndex];
   clearVisible.value = true;
 };
 

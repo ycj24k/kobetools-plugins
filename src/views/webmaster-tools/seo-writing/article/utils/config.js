@@ -64,7 +64,7 @@ export const articleFormDefault = {
   // 违禁词过滤开关：0：关闭，1：开启
   sensitiveFilter: 1,
   // 违禁词过滤
-  sensitiveFilterVal: 1,
+  sensitiveFilterVal: 0,
   // 违禁词过滤自定义词库
   sensitiveCustom: '',
   // 同义词替换开关：0：关闭，1：开启
@@ -148,7 +148,7 @@ export const washDraftFormDefault = {
   // 正文违禁词过滤开关：0：关闭，1：开启
   sensitiveFilter: 1,
   // 正文违禁词过滤
-  sensitiveFilterVal: 1,
+  sensitiveFilterVal: 0,
   // 正文违禁词过滤自定义词库
   sensitiveCustom: '',
   // 标题违禁词过滤开关：0：关闭，1：开启

@@ -36,8 +36,22 @@ export const cdnStorage = (data) => {
   }
   return data;
 };
-export const exportModal = async (data, selects, name, type) => {
-  let list = selects.length > 0 ? selects : data;
+export const handleExport = (dataList, selectList, columns, name, type) => {
+  let list = []
+  list[0] = columns.map(column => column.title);
+  const selects = dataList.filter((item) => selectList.includes(item.serialNumber));
+  let datas = selects.length > 0 ? selects : dataList;
+  datas.forEach(item => {
+      let row = [];
+      columns.forEach(column => {
+          row.push(item[column.dataIndex]);
+      });
+      list.push(row);
+  });
+  // const widths = columns.map(column => column.colWidth);
+  exportModal(list, [], '', type);
+}
+export const exportModal = async (list, widths, name, type) => {
   list = list ? list : []
   let title = type === 'txt' ? '导出.txt文本压缩包' : '导出Excel表格';
   Modal.info({
@@ -51,7 +65,7 @@ export const exportModal = async (data, selects, name, type) => {
         setup() {
           return () =>
             h('div', { class: 'info-modal-content' }, [
-              h('div', { style: { marginBottom: '15px' } }, '是否导出当前页共计：' + list.length + '条？'),
+              h('div', { style: { marginBottom: '15px' } }, '是否导出当前页共计：' + (list.length - 1) + '条？'),
               h('div', {}, name ? '提示：需要操作当前所有内容，请先点击“加载全部”后再进行操作！' : ''),
             ]);
         },
@@ -60,14 +74,14 @@ export const exportModal = async (data, selects, name, type) => {
       if (type && type === 'txt') {
         exportTxt(list);
       } else {
-        exportExcel(list, name);
+        exportExcel(list, name, widths);
       }
     },
   });
 };
-export const exportExcel = (data, title) => {
+export const exportExcel = (data, title, widths) => {
   let arr = [];
-  let name = 'KB_';
+  let name = 'KB-results-';
   if (title === 'KeywordMine') {
     for (let i = 0; i < data.length; i += 1) {
       if (data[i].weight === 0) {
@@ -76,8 +90,7 @@ export const exportExcel = (data, title) => {
         arr.push(['', data[i].title]);
       }
     }
-  }
-  if (title === 'TitleMine') {
+  } else if (title === 'TitleMine') {
     for (let i = 0; i < data.length; i += 1) {
       arr.push([data[i].title, data[i].tags, data[i].keywords.join(',')]);
     }
@@ -97,8 +110,7 @@ export const exportExcel = (data, title) => {
     ];
     arr.unshift(model.map((item) => item.label));
     arr.unshift(model.map((item) => item.field));
-  }
-  if (title === 'ArticleMine') {
+  } else if (title === 'ArticleMine') {
     for (let i = 0; i < data.length; i += 1) {
       const content = cdnStorage(data[i].content);
       arr.push([
@@ -108,8 +120,7 @@ export const exportExcel = (data, title) => {
         data[i].json_extend?.description ? data[i].json_extend.description : '',
       ]);
     }
-  }
-  if (title === 'OtherInnerDetail') {
+  } else if (title === 'OtherInnerDetail') {
     for (let i = 0; i < data.length; i += 1) {
       arr.push([data[i].name, data[i].link, data[i].strong]);
     }
@@ -129,12 +140,18 @@ export const exportExcel = (data, title) => {
     ];
     arr.unshift(model.map((item) => item.label));
     arr.unshift(model.map((item) => item.field));
-  }
-  if (!title) {
+  } else {
     arr = data;
   }
   let ws = utils.aoa_to_sheet(arr);
   let wb = utils.book_new();
+  // 设置列宽
+  if (ws['!cols'] === undefined) ws['!cols'] = [];
+  if (widths.length > 0) {
+    widths.forEach((width, index) => {
+      ws['!cols'][index] = { wch: Math.max(width, 5) }; // 最小宽度为5
+    });
+  }
   utils.book_append_sheet(wb, ws, name + new Date().getTime());
   writeFile(wb, name + new Date().getTime() + '.csv');
 };
@@ -156,7 +173,7 @@ export const exportTxt = (data) => {
   }
   console.log(zip);
   zip.generateAsync({ type: 'blob' }).then(function (blob) {
-    saveAs(blob, 'KB_' + new Date().getTime() + '.zip');
+    saveAs(blob, 'KB-results-' + new Date().getTime() + '.zip');
   });
 };
 export const getListFromExcel = (file) => {
@@ -232,3 +249,209 @@ export const jumpPage = (path, query={}) => {
     });
   }
 }
+
+
+// {
+//   "meta": {
+//     "order": 1,
+//     "roles": [
+//       "*"
+//     ],
+//     "locale": "menu.apps",
+//     "requiresAuth": true
+//   },
+//   "name": "AIApps",
+//   "path": "/ai-apps",
+//   "children": [
+//     {
+//       "meta": {
+//         "roles": [
+//           "*"
+//         ],
+//         "locale": "menu.apps.tools",
+//         "requiresAuth": true
+//       },
+//       "name": "AITools",
+//       "path": "ai-tools",
+//       "children": [
+//         {
+//           "meta": {
+//             "roles": [
+//               "*"
+//             ],
+//             "locale": "menu.apps.tools.cms",
+//             "requiresAuth": true
+//           },
+//           "name": "CmsBox",
+//           "path": "cms",
+//           "children": [
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.cms.add",
+//                 "activeMenu": "AIApps",
+//                 "requiresAuth": true
+//               },
+//               "name": "CmsAdd",
+//               "path": "cms-add",
+//               "component": "@/views/apps/tools/cms/add/index.vue"
+//             }
+//           ],
+//           "component": "@/views/apps/tools/index.vue"
+//         },
+//         {
+//           "meta": {
+//             "roles": [
+//               "*"
+//             ],
+//             "locale": "menu.apps.tools.custom",
+//             "requiresAuth": true
+//           },
+//           "name": "CustomBox",
+//           "path": "custom",
+//           "children": [
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.custom.form",
+//                 "activeMenu": "AIApps",
+//                 "requiresAuth": true
+//               },
+//               "name": "CustomForm",
+//               "path": "custom-form",
+//               "component": "@/views/apps/tools/custom/form/index.vue"
+//             },
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.custom.group",
+//                 "activeMenu": "AIApps",
+//                 "requiresAuth": true
+//               },
+//               "name": "CustomGroup",
+//               "path": "custom-group",
+//               "component": "@/views/apps/tools/custom/group/index.vue"
+//             },
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.custom.sensitive",
+//                 "activeMenu": "AIApps",
+//                 "requiresAuth": true
+//               },
+//               "name": "CustomSensitive",
+//               "path": "custom-sensitive",
+//               "component": "@/views/apps/tools/custom/sensitive/index.vue"
+//             },
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.custom.synonym",
+//                 "activeMenu": "AIApps",
+//                 "requiresAuth": true
+//               },
+//               "name": "CustomSynonym",
+//               "path": "custom-synonym",
+//               "component": "@/views/apps/tools/custom/synonym/index.vue"
+//             }
+//           ],
+//           "component": "@/views/apps/tools/index.vue"
+//         },
+//         {
+//           "meta": {
+//             "roles": [
+//               "*"
+//             ],
+//             "locale": "menu.apps.tools.other",
+//             "requiresAuth": true
+//           },
+//           "name": "OtherBox",
+//           "path": "other",
+//           "children": [
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.other.illustration",
+//                 "activeMenu": "AIApps",
+//                 "requiresAuth": true
+//               },
+//               "name": "OtherIllustration",
+//               "path": "other-illustration",
+//               "component": "@/views/apps/tools/other/illustration/index.vue"
+//             },
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.other.illustration.detail",
+//                 "activeMenu": "AIApps",
+//                 "hideInMenu": true,
+//                 "requiresAuth": true
+//               },
+//               "name": "OtherIllustrationDetail",
+//               "path": "other-illustration-detail",
+//               "component": "@/views/apps/tools/other/illustration/detail.vue"
+//             },
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.other.inner",
+//                 "activeMenu": "AIApps",
+//                 "requiresAuth": true
+//               },
+//               "name": "OtherInner",
+//               "path": "other-inner",
+//               "component": "@/views/apps/tools/other/inner/index.vue"
+//             },
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.other.inner.detail",
+//                 "activeMenu": "AIApps",
+//                 "hideInMenu": true,
+//                 "requiresAuth": true
+//               },
+//               "name": "OtherInnerDetail",
+//               "path": "other-inner-detail",
+//               "component": "@/views/apps/tools/other/inner/detail.vue"
+//             },
+//             {
+//               "meta": {
+//                 "roles": [
+//                   "*"
+//                 ],
+//                 "locale": "menu.apps.tools.other.config",
+//                 "activeMenu": "AIApps",
+//                 "requiresAuth": true
+//               },
+//               "name": "OtherConfig",
+//               "path": "other-config",
+//               "component": "@/views/apps/tools/other/config/index.vue"
+//             }
+//           ],
+//           "component": "@/views/apps/tools/index.vue"
+//         }
+//       ],
+//       "component": "@/views/apps/index.vue"
+//     }
+//   ],
+//   "redirect": "/ai-apps/ai-tools/cms/cms-add",
+//   "component": "DEFAULT_LAYOUT"
+// }

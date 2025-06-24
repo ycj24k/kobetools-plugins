@@ -104,13 +104,47 @@
                         },
                         {
                             "title": "关键词查询",
-                            "name": "keyword-query",
-                            "children": []
+                            "name": "keyword-checker-tools",
+                            "children": [
+                                {
+                                    "title": "关键词指数",
+                                    "name": "search-volume-index-tools"
+                                },
+                                {
+                                    "title": "搜索量查询",
+                                    "name": "keyword-search-volume-checker-tools"
+                                },
+                                {
+                                    "title": "关键词索引",
+                                    "name": "keyword-index-checker-tools"
+                                },
+                                {
+                                    "title": "关键词排名",
+                                    "name": "keyword-rank-checker-serp-checker-tools"
+                                },
+                                {
+                                    "title": "关键词研究",
+                                    "name": "keyword-research-tools"
+                                }
+                            ]
                         },
                         {
-                            "title": "关键词分析",
-                            "name": "keyword-analysis",
-                            "children": []
+                            "title": "关键词过滤",
+                            "name": "keyword-scrubber-tools",
+                            "children": [
+                                {
+                                    "title": "关键词过滤",
+                                    "name": "ai-powered-keyword-filter-tools"
+                                },
+                                {
+                                    "title": "关键词分类",
+                                    "name": "keyword-categorization-tools"
+                                },
+                                {
+                                    "title": "关键词对比",
+                                    "name": "keyword-comparison-tools"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -135,7 +169,7 @@
                                     "name": "domain-security"
                                 },
                                 {
-                                    "title": "域名综合查询",
+                                    "title": "域名历史查询",
                                     "name": "domain-complex"
                                 }
                             ]

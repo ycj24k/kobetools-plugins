@@ -41,7 +41,7 @@
     }
   }
   .form_title {
-    width: 130px;
+    width: 90px;
     line-height: 40px;
     flex-shrink: 0;
     font-size: 14px;
@@ -60,11 +60,12 @@
     padding: 6px 0;
   }
   .form_label {
-    width: 120px;
+    width: 90px;
     font-size: 14px;
     color: #333;
   }
   .form_content {
+    width: 100%;
     // width: calc(100% - 130px);
     .form_content_item {
       padding: 10px 0;
@@ -109,9 +110,37 @@
     }
   }
   .form_item_radio {
+    :deep(.arco-radio-group) {
+      display: flex;
+      width: 100%;
+      align-items: center;
+    }
     :deep(.arco-radio) {
-      width: 120px;
+      flex: 1;
       height: 36px;
+      margin-right: 0;
+    }
+    :deep(.arco-checkbox-group) {
+      display: flex;
+      width: 100%;
+      align-items: center;
+    }
+    :deep(.arco-checkbox) {
+      flex: 1;
+      height: 36px;
+      margin-right: 0;
+    }
+  }
+  .form_item_radio1 {
+    :deep(.arco-radio-group) {
+      display: flex;
+      width: 100%;
+      align-items: center;
+    }
+    :deep(.arco-radio) {
+      min-width: 110px;
+      height: 36px;
+      margin-right: 0;
     }
   }
   .form_item_radio_flex {

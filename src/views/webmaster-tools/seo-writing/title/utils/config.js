@@ -1,4 +1,4 @@
-// 标题初始表单
+// AI智能生成标题初始表单
 export const titleFormDefault = {
   // 任务id
   taskId: '',
@@ -17,7 +17,7 @@ export const titleFormDefault = {
   // 违禁词过滤开关：0：关闭，1：开启
   sensitiveFilter: 0,
   // 违禁词过滤
-  sensitiveFilterVal: 1,
+  sensitiveFilterVal: 0,
   // 违禁词过滤自定义词库
   sensitiveCustom: '',
   // 生成词长度过滤开关：0：关闭，1：开启
@@ -35,7 +35,134 @@ export const titleFormDefault = {
     max: 0,
   },
 };
-
+// 下拉词生成标题初始表单
+export const XlTitleFormDefault = {
+  // 任务id
+  taskId: '',
+  // 标题来源
+  source: '',
+  // 标题风格
+  style: 1,
+  // 标题连接符
+  connector: '',
+  // 标题规则选项
+  rule: 1,
+  // 下拉规则选项
+  xlrule: '',
+  // 下拉组合选项
+  order: '',
+  // 生成词长度过滤开关：0：关闭，1：开启
+  lengthFilter: 1,
+  // 生成词长度过滤
+  lengthFilterVal: {
+    min: 0,
+    max: 0,
+  },
+  // 标题总长度过滤开关：0：关闭，1：开启
+  totalLengthFilter: 1,
+  // 标题总长度过滤
+  totalLengthFilterVal: {
+    min: 0,
+    max: 0,
+  },
+  // 包含关键字开关：0：关闭，1：开启
+  include: 1,
+  // 包含关键字
+  includeKeyword: '',
+  // 不含关键字开关：0：关闭，1：开启
+  exclude: 1,
+  // 不含关键字
+  excludeKeyword: '',
+};
+// 挖掘来源
+export const supportOptions = [
+  {
+    label: '百度',
+    value: 1,
+  },
+  {
+    label: '手机百度',
+    value: 2,
+  },
+  {
+    label: '谷歌',
+    value: 3,
+  },
+  {
+    label: '必应',
+    value: 4,
+  },
+  {
+    label: '头条',
+    value: 5,
+  },
+  {
+    label: '360',
+    value: 6,
+  },
+  {
+    label: '1688',
+    value: 7,
+  },
+  {
+    label: '抖音',
+    value: 8,
+  },
+  {
+    label: '小红书',
+    value: 9,
+  },
+  {
+    label: '搜狗',
+    value: 10,
+  },
+  {
+    label: '淘宝',
+    value: 11,
+  },
+  {
+    label: '一淘',
+    value: 12,
+  },
+];
+// 挖掘来源
+export const XlSourceOptions = [
+  {
+    label: '谷歌',
+    value: 1,
+  },
+  {
+    label: '必应',
+    value: 2,
+  },
+  {
+    label: '百度',
+    value: 3,
+  },
+  {
+    label: '360',
+    value: 4,
+  },
+  {
+    label: '搜狗',
+    value: 5,
+  },
+  {
+    label: '头条',
+    value: 6,
+  },
+];
+// 下拉标题风格
+export const XlStyleOptions = [
+  {
+    label: '单标题风格',
+    value: 1,
+  },
+  {
+    label: '双标题风格',
+    value: 2,
+  },
+];
 
 // 标题选项
 export const optionOptions = [
@@ -110,6 +237,51 @@ export const ruleOptions = [
     value: 6,
   },
 ];
+// 下拉标题规则选项
+export const XlRuleOptions = [
+  {
+    label: '原始词作为标题',
+    value: 1,
+  },
+  {
+    label: '下拉词作为标题',
+    value: 2,
+  },
+];
+// 下拉词规则选项
+export const XlKeyRuleOptions = [
+  {
+    label: '首位下拉词',
+    value: 1,
+  },
+  {
+    label: '末位下拉词',
+    value: 2,
+  },
+  {
+    label: ' 最长下拉词',
+    value: 3,
+  },
+  {
+    label: '随机下拉词',
+    value: 4,
+  },
+];
+// 下拉词组合选项
+export const XlOrderOptions = [
+  {
+    label: '原始词+下拉词',
+    value: 1,
+  },
+  {
+    label: '下拉词+原始词',
+    value: 2,
+  },
+  {
+    label: '下拉词+下拉词',
+    value: 3,
+  },
+];
 // 违禁词过滤
 export const sensitiveOptions = [
   {
@@ -123,6 +295,10 @@ export const sensitiveOptions = [
 ];
 // 违禁词定义
 export const customOptions = [
+  {
+    label: 'sensitiveOptions.label1',
+    value: 0,
+  },
   {
     label: 'customOptions.label1',
     value: 1,
@@ -139,65 +315,149 @@ export const customOptions = [
 // 字符过滤最小
 export const lengthMinOptions = [
   {
-    label: 'lengthMinOptions.label1',
+    label: '不限制',
     value: 0,
   },
   {
-    label: 'lengthMinOptions.label2',
+    label: '2',
+    value: 2,
+  },
+  {
+    label: '3',
+    value: 3,
+  },
+  {
+    label: '4',
     value: 4,
   },
   {
-    label: 'lengthMinOptions.label3',
+    label: '5',
     value: 5,
   },
   {
-    label: 'lengthMinOptions.label4',
+    label: '6',
     value: 6,
   },
   {
-    label: 'lengthMinOptions.label5',
+    label: '7',
     value: 7,
   },
   {
-    label: 'lengthMinOptions.label6',
+    label: '8',
     value: 8,
+  },
+  {
+    label: '9',
+    value: 9,
+  },
+  {
+    label: '10',
+    value: 10,
+  },
+  {
+    label: '11',
+    value: 11,
+  },
+  {
+    label: '12',
+    value: 12,
+  },
+  {
+    label: '13',
+    value: 13,
+  },
+  {
+    label: '14',
+    value: 14,
+  },
+  {
+    label: '15',
+    value: 15,
+  },
+  {
+    label: '16',
+    value: 16,
+  },
+  {
+    label: '17',
+    value: 17,
+  },
+  {
+    label: '18',
+    value: 18,
+  },
+  {
+    label: '19',
+    value: 19,
+  },
+  {
+    label: '20',
+    value: 20,
   },
 ];
 // 字符过滤最大
 export const lengthMaxOptions = [
   {
-    label: 'lengthMaxOptions.label1',
+    label: '不限制',
     value: 0,
   },
   {
-    label: 'lengthMaxOptions.label2',
+    label: '5',
+    value: 5,
+  },
+  {
+    label: '10',
     value: 10,
   },
   {
-    label: 'lengthMaxOptions.label3',
+    label: '15',
     value: 15,
   },
   {
-    label: 'lengthMaxOptions.label4',
+    label: '20',
     value: 20,
   },
   {
-    label: 'lengthMaxOptions.label5',
+    label: '25',
     value: 25,
   },
   {
-    label: 'lengthMaxOptions.label6',
+    label: '30',
     value: 30,
+  },
+  {
+    label: '35',
+    value: 35,
+  },
+  {
+    label: '40',
+    value: 40,
+  },
+  {
+    label: '45',
+    value: 45,
+  },
+  {
+    label: '50',
+    value: 50,
+  },
+  {
+    label: '55',
+    value: 55,
+  },
+  {
+    label: '60',
+    value: 60,
   },
 ];
 // 包含关键词
 export const includeOptions = [
   {
-    label: 'includeOptions.label1',
+    label: '任一项',
     value: 1,
   },
   {
-    label: 'includeOptions.label2',
+    label: '所有项',
     value: 0,
   },
 ];
@@ -205,11 +465,11 @@ export const includeOptions = [
 // 不包含关键词
 export const excludeOptions = [
   {
-    label: 'includeOptions.label1',
+    label: '任一项',
     value: 1,
   },
   {
-    label: 'includeOptions.label2',
+    label: '所有项',
     value: 0,
   },
 ];
@@ -262,7 +522,7 @@ export const taskTableColumns = [
     titleSlotName: 'header'
   },
   {
-    title: 'taskTableColumns.title5',
+    title: '备注信息',
     dataIndex: 'website',
     slotName: 'website',
     width: 300,
@@ -288,7 +548,7 @@ export const clearFormDefault = {
   // 违禁词过滤开关：0：关闭，1：开启
   sensitiveFilter: 0,
   // 违禁词过滤
-  sensitiveFilterVal: 1,
+  sensitiveFilterVal: 0,
   // 违禁词过滤自定义词库
   sensitiveCustom: '',
   // 生成词长度过滤开关：0：关闭，1：开启
@@ -299,11 +559,11 @@ export const clearFormDefault = {
     max: 0,
   },
   // 包含关键字开关：0：关闭，1：开启
-  include: 0,
+  include: 1,
   // 包含关键字
   includeKeyword: [],
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 0,
+  exclude: 1,
   // 不含关键字
   excludeKeyword: [],
 };
@@ -328,7 +588,7 @@ export const addFormDefault = {
   // 违禁词过滤开关：0：关闭，1：开启
   sensitiveFilter: 0,
   // 违禁词过滤
-  sensitiveFilterVal: 1,
+  sensitiveFilterVal: 0,
   // 违禁词过滤自定义词库
   sensitiveCustom: '',
 };

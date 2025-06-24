@@ -10,8 +10,7 @@
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                 <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
-                    :text="localeGet('button2')" />
-                <XButton color="yellow" :text="localeGet('button3')" />
+                    text="导出查询结果" />
                 <XButton color="pink" :text="localeGet('button4')" />
             </div>
         </div>
@@ -28,6 +27,7 @@ import XTextarea from "@/components/common/XTextarea.vue";
 import { download } from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
+import { handleExport } from '@/utils';
 // 多语言
 const props = defineProps({
     locales: {
@@ -57,7 +57,7 @@ watch(() => props.locales, (newVal) => {
             sortable: {
                 sortDirections: ['ascend', 'descend']
             },
-            minWidth: 200
+            width: 150
         },
         {
             title: localeGet('domainColumns.label3'),
@@ -70,12 +70,12 @@ watch(() => props.locales, (newVal) => {
             sortable: {
                 sortDirections: ['ascend', 'descend']
             },
-            minWidth: 150
+            width: 100
         },
         /*{
             title: localeGet('domainColumns.label5'),
             dataIndex: 'icp_main',
-            minWidth: 230
+            width: 230
         },*/
         {
             title: localeGet('domainColumns.label6'),
@@ -83,20 +83,20 @@ watch(() => props.locales, (newVal) => {
             sortable: {
                 sortDirections: ['ascend', 'descend']
             },
-            minWidth: 200
+            width: 150
         },
-        /*{
-            title: localeGet('domainColumns.label7'),
-            dataIndex: 'main_id',
-            minWidth: 200
-        },*/
+        {
+            title: '网站名称',
+            dataIndex: 'website_name',
+            width: 150
+        },
         {
             title: localeGet('domainColumns.label8'),
             dataIndex: 'icp_time',
             sortable: {
                 sortDirections: ['ascend', 'descend']
             },
-            minWidth: 150
+            width: 150
         },
     ]
 });
@@ -104,6 +104,7 @@ const localeGet = (key) => {
     return localeData.value[key]
 }
 
+// let domains = ref("0001mg.com \n zikaow.com \n qyhyn168.com \n duxufeng.com \n yiyebaofu.com.cn \n allshebei.com \n linkedin.com \n youtube.com \n jimdo.com \n vistaprint.com \n goodreads.com \n blogarama.com \n steinberg.net");
 let domains = ref("");
 let xTable = ref(null);
 let isDownloadFile = ref(false);
@@ -118,15 +119,11 @@ function queryTableData() {
 }
 
 function exportRecordKeepingDomains() {
-    if (domains.value.trim().length === 0) {
-        showErrorNotification(localeGet('message1'));
+    if (xTable.value.table.tableCurrData.length === 0) {
+        showErrorNotification('未获取到查询结果');
         return;
     }
-    isDownloadFile.value = true;
-    let data = domains.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
-    download("/api/beian/export/logs", data, localeGet('title1') + ".xlsx", () => {
-        isDownloadFile.value = false
-    });
+    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns.value, '', 'csv')
 }
 
 </script>

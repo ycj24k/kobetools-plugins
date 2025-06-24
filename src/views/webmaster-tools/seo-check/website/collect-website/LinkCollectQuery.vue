@@ -21,8 +21,8 @@
                          text="立即查询"/>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" text="导出收录站点"/>
-                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="yellow" text="导出未收录站点"/>
+                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
+                    text="导出查询结果" />
                 <XButton color="pink" text="VIP查询通道"/>
             </div>
         </div>
@@ -39,6 +39,7 @@ import XTextarea from "@/components/common/XTextarea.vue";
 import {download} from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
+import { handleExport } from '@/utils';
 
 let searchEngines = [
     {code: "baidu", name: "百度", disabled: false},
@@ -110,24 +111,14 @@ function queryTableData() {
     xTable.value.queryTableData("/api/sites/query/indexhis", data);
 }
 
-function exportToLocation() {
-    if (queryParam.range.length === 0) {
-        showErrorNotification('请选择搜索引擎！');
+function exportRecordKeepingDomains() {
+    if (xTable.value.table.tableCurrData.length === 0) {
+        showErrorNotification('未获取到查询结果');
         return;
     }
-    if (queryParam.domains.trim().length === 0) {
-        showErrorNotification('请输入需要查询的网站域名！');
-        return;
-    }
-    let data = {
-        domains: queryParam.domains.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim()),
-        range: toRaw(queryParam.range)
-    };
-    isDownloadFile.value = true;
-    download("/api/sites/export/indexhis", data, "导出文件.xlsx", () => {
-        isDownloadFile.value = false;
-    });
+    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns.value, '', 'csv')
 }
+
 
 </script>
 
