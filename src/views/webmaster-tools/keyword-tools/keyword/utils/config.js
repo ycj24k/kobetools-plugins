@@ -418,10 +418,6 @@ export const excludeOptions = [
 export const supportOptions = [
   {
     label: '百度',
-    value: 1,
-  },
-  {
-    label: '手机百度',
     value: 2,
   },
   {
@@ -437,32 +433,12 @@ export const supportOptions = [
     value: 5,
   },
   {
-    label: '360',
+    label: '搜狗',
     value: 6,
   },
   {
-    label: '1688',
+    label: '360',
     value: 7,
-  },
-  {
-    label: '抖音',
-    value: 8,
-  },
-  {
-    label: '小红书',
-    value: 9,
-  },
-  {
-    label: '搜狗',
-    value: 10,
-  },
-  {
-    label: '淘宝',
-    value: 11,
-  },
-  {
-    label: '一淘',
-    value: 12,
   },
 ];
 // 挖掘来源

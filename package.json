@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "keyword-index-checker-tools": "npm run build --abc=/webmaster-tools/keyword-tools/keyword-checker-tools/keyword-index-checker-tools",
+    "keyword-form": "npm run build --abc=/webmaster-tools/keyword-tools/keyword/keyword-form",
     "keyword-rank-checker-serp-checker-tools": "npm run build --abc=/webmaster-tools/keyword-tools/keyword-checker-tools/keyword-rank-checker-serp-checker-tools",
     "run-build": "node run-build.js"
   },

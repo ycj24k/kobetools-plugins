@@ -7,7 +7,7 @@
         </a-form-item>
       </a-grid-item>
       <a-grid-item :span="18" class="form_right">
-        <div class="flex_box form_item form_item_radio">
+        <div class="flex_box form_item form_item_radio1">
           <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('title1') }}</div>
           <a-form-item no-style field="support" :rules="[{ required: true, message: localeGet('message1') }]" :validate-trigger="['change', 'blur']">
             <a-radio-group v-model="correlationForm.support" :options="supportOptions"></a-radio-group>
