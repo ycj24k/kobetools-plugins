@@ -137,7 +137,7 @@ function exportExcel(){
     let data = {
         domain: rowData.value.domain
     };
-    download("/api/sites/export/dnsinfo/detail", data, "导出文件.xlsx", () => {
+    download("/api/sites/export/dnsinfo/detail", data, `KB-results-${Date.now()}.xlsx`, () => {
         isDownloadFile.value = false;
     });
 }

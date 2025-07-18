@@ -27,7 +27,7 @@ import XTextarea from "@/components/common/XTextarea.vue";
 import { download } from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
-import { handleExport } from '@/utils';
+import { handleExport, validateDomains } from '@/utils';
 // 多语言
 const props = defineProps({
     locales: {
@@ -85,11 +85,11 @@ watch(() => props.locales, (newVal) => {
             },
             width: 150
         },
-        {
-            title: '网站名称',
-            dataIndex: 'website_name',
-            width: 150
-        },
+        // {
+        //     title: '网站名称',
+        //     dataIndex: 'website_name',
+        //     width: 150
+        // },
         {
             title: localeGet('domainColumns.label8'),
             dataIndex: 'icp_time',
@@ -110,11 +110,12 @@ let xTable = ref(null);
 let isDownloadFile = ref(false);
 
 function queryTableData() {
+    let data = validateDomains(domains.value)
+    domains.value = data.join("\n");
     if (domains.value.trim().length === 0) {
         showErrorNotification(localeGet('message1'));
         return;
     }
-    let data = domains.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
     xTable.value.queryTableData("/api/beian/query/logs", data);
 }
 

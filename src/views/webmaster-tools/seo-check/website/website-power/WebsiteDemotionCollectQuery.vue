@@ -121,7 +121,7 @@ function exportToLocation() {
         range: toRaw(queryParam.range)
     };
     isDownloadFile.value = true;
-    download("/api/sites/export/indexhis", data, "导出文件.xlsx", () => {
+    download("/api/sites/export/indexhis", data, `KB-results-${Date.now()}.xlsx`, () => {
         isDownloadFile.value = false;
     });
 }

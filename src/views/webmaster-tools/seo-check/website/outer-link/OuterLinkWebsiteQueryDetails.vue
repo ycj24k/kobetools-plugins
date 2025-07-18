@@ -147,7 +147,7 @@ function queryTableData(){
 function exportExcel(){
     isDownloadFile.value = true;
     let data = rowData.value.items;
-    download("/api/sites/export/backlinks/detail", data, "导出文件.xlsx", () => {
+    download("/api/sites/export/backlinks/detail", data, `KB-results-${Date.now()}.xlsx`, () => {
         isDownloadFile.value = false;
     });
 }

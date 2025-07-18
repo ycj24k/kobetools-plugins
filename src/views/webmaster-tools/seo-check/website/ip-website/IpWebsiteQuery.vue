@@ -9,14 +9,16 @@
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                 <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出查询列表"/>
-                <XButton color="yellow" text="导出网站列表"/>
                 <XButton color="pink" text="VIP查询通道"/>
             </div>
         </div>
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns">
                 <template #option="{ record }">
-                    <XButton size="small" shape="square" text="详情" @xClick="showDetail(record)"/>
+                    <a-space :size="15">
+                        <XButton size="small" shape="square" text="详情" @xClick="showDetail(record)"/>
+                        <XButton :loading="isDownloadFile" color="yellow" size="small" shape="square" text="导出" @xClick="exportDetail(record)"/>
+                    </a-space>
                 </template>
             </XTable>
         </div>
@@ -68,7 +70,7 @@ let columns = [
     {
         title: '操作',
         slotName: 'option',
-        width: 100
+        width: 180
     },
 ];
 
@@ -99,13 +101,22 @@ function exportTableData(){
     }
     isDownloadFile.value = true;
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
-    download("/api/sites/export/dnsinfo", data, "导出文件.xlsx", () => {
+    download("/api/sites/export/dnsinfo", data, `KB-results-${Date.now()}.xlsx`, () => {
         isDownloadFile.value = false;
     });
 }
 
 function showDetail(record) {
     ipWebsiteQueryDetails.value.show(record)
+}
+function exportDetail(record) {
+    isDownloadFile.value = true;
+    let data = {
+        domain: record.domain
+    };
+    download("/api/sites/export/dnsinfo/detail", data, `KB-results-${Date.now()}.xlsx`, () => {
+        isDownloadFile.value = false;
+    });
 }
 
 </script>

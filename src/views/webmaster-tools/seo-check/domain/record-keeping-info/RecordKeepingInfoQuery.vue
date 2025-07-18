@@ -17,16 +17,35 @@
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns" :locales="localeData" />
         </div>
+        <!-- 添加storage -->
+        <a-modal :mask-closable="false" l :esc-to-close="false" class="modal_box" v-model:visible="tipVisible" width="600px">
+        <template #title>
+            <div class="flex_box modal_title">
+            <div class="modal_title_icon">
+                <icon-info-circle-fill />
+            </div>
+            <div class="modal_title_text">温馨提示</div>
+            </div>
+        </template>
+        <div class="modal_content">您当前日查询额度上限为100个，当前已使用88，更多查询额度可通过升级VIP权限获取。</div>
+        <template #footer>
+            <div class="flex_box flex_row_center modal_footer">
+            <a-button style="color: #333" @click="tipVisible = false">返回查询页面</a-button>
+            <a-button class="form_btn3" @click="tipSubmit">升级VIP权限</a-button>
+            </div>
+        </template>
+        </a-modal>
     </div>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
+import { Message } from '@arco-design/web-vue';
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import XTable from "@/components/common/XTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
-import { handleExport } from '@/utils';
+import { handleExport, validateDomains } from '@/utils';
 
 // 多语言
 const props = defineProps({
@@ -42,7 +61,6 @@ const localeGet = (key) => {
 const columns = ref([]);
 // 监听 props 的变化
 watch(() => props.locales, (newVal) => {
-    console.log(newVal)
     localeData.value = newVal;
     columns.value = [
         {
@@ -112,14 +130,23 @@ watch(() => props.locales, (newVal) => {
 let domains = ref("");
 let xTable = ref({});
 let isDownloadFile = ref(false);
-
+const tipVisible = ref(false);
 function queryTableData() {
+    let data = validateDomains(domains.value)
+    domains.value = data.join("\n");
     if (domains.value.trim().length === 0) {
         showErrorNotification(localeGet('message1'));
         return;
     }
-    let data = domains.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
-    xTable.value.queryTableData("/api/beian/query/domains", data);
+    
+    xTable.value.queryTableData("/api/beian/query/domains", data, () => {
+        tipVisible.value = true;
+    });
+}
+
+function tipSubmit() {
+    Message.info('已点击升级VIP权限');
+    tipVisible.value = false;
 }
 
 function exportRecordKeepingDomains() {
@@ -132,4 +159,6 @@ function exportRecordKeepingDomains() {
 
 </script>
 
-<style scoped></style>
+<style lang="less" scoped>
+@import '@/assets/style/table.less';
+</style>

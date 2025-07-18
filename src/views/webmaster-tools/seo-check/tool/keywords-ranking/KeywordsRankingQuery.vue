@@ -137,7 +137,7 @@ function exportToLocation() {
     }
     isDownloadFile.value = true;
     let data = domains.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
-    download("/api/beian/export/intercept", data, "导出文件.xlsx", () => {
+    download("/api/beian/export/intercept", data, `KB-results-${Date.now()}.xlsx`, () => {
         isDownloadFile.value = false;
     });
 }

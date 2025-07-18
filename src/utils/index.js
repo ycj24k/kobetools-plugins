@@ -1,4 +1,4 @@
-import { utils, writeFile, read  } from 'xlsx';
+import { utils, writeFile, read } from 'xlsx';
 import { h } from 'vue';
 import { Modal, Button } from '@arco-design/web-vue';
 import JSZip from 'jszip';
@@ -20,10 +20,7 @@ export const openWindow = (url, opts) => {
   );
 };
 
-export const regexUrl = new RegExp(
-  '^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$',
-  'i'
-);
+export const regexUrl = new RegExp('^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$', 'i');
 // 导出excel
 export const cdnStorage = (data) => {
   let pattern = /<img.*?src="\/calfaiStorage\/.*?".*?>/gi;
@@ -37,22 +34,22 @@ export const cdnStorage = (data) => {
   return data;
 };
 export const handleExport = (dataList, selectList, columns, name, type) => {
-  let list = []
-  list[0] = columns.map(column => column.title);
+  let list = [];
+  list[0] = columns.map((column) => column.title);
   const selects = dataList.filter((item) => selectList.includes(item.serialNumber));
   let datas = selects.length > 0 ? selects : dataList;
-  datas.forEach(item => {
-      let row = [];
-      columns.forEach(column => {
-          row.push(item[column.dataIndex]);
-      });
-      list.push(row);
+  datas.forEach((item) => {
+    let row = [];
+    columns.forEach((column) => {
+      row.push(item[column.dataIndex]);
+    });
+    list.push(row);
   });
   // const widths = columns.map(column => column.colWidth);
   exportModal(list, [], '', type);
-}
+};
 export const exportModal = async (list, widths, name, type) => {
-  list = list ? list : []
+  list = list ? list : [];
   let title = type === 'txt' ? '导出.txt文本压缩包' : '导出Excel表格';
   Modal.info({
     title: title,
@@ -63,11 +60,7 @@ export const exportModal = async (list, widths, name, type) => {
     content: () =>
       h({
         setup() {
-          return () =>
-            h('div', { class: 'info-modal-content' }, [
-              h('div', { style: { marginBottom: '15px' } }, '是否导出当前页共计：' + (list.length - 1) + '条？'),
-              h('div', {}, name ? '提示：需要操作当前所有内容，请先点击“加载全部”后再进行操作！' : ''),
-            ]);
+          return () => h('div', { class: 'info-modal-content' }, [h('div', { style: { marginBottom: '15px' } }, '是否导出当前页共计：' + (list.length - 1) + '条？'), h('div', {}, name ? '提示：需要操作当前所有内容，请先点击“加载全部”后再进行操作！' : '')]);
         },
       }),
     onOk: async () => {
@@ -113,12 +106,7 @@ export const exportExcel = (data, title, widths) => {
   } else if (title === 'ArticleMine') {
     for (let i = 0; i < data.length; i += 1) {
       const content = cdnStorage(data[i].content);
-      arr.push([
-        data[i].title,
-        content,
-        data[i].json_extend?.keywords ? data[i].json_extend.keywords.join(',') : '',
-        data[i].json_extend?.description ? data[i].json_extend.description : '',
-      ]);
+      arr.push([data[i].title, content, data[i].json_extend?.keywords ? data[i].json_extend.keywords.join(',') : '', data[i].json_extend?.description ? data[i].json_extend.description : '']);
     }
   } else if (title === 'OtherInnerDetail') {
     for (let i = 0; i < data.length; i += 1) {
@@ -201,18 +189,18 @@ export const getListFromZip = async (file) => {
   if (!file) return [];
   const zip = new JSZip();
   const content = await zip.loadAsync(file);
-  let list = []
+  let list = [];
   // 假设所有.txt文件有相同的结构
   for (const [fileName, fileData] of Object.entries(content.files)) {
     if (fileName.endsWith('.txt')) {
       const textContent = await fileData.async('string');
       list.push({
         title: fileName.replace('.txt', ''),
-        content: textContent
-      })
+        content: textContent,
+      });
     }
   }
-  return list
+  return list;
 };
 export const parseTxtContent = (content) => {
   // 这里假设.txt文件是以换行符分隔的行，以逗号分隔的列
@@ -226,8 +214,8 @@ export const parseTxtContent = (content) => {
 
 export const getExportName = (name) => {
   const now = new Date();
-  const pad = n => n.toString().padStart(2, '0');
-  
+  const pad = (n) => n.toString().padStart(2, '0');
+
   const year = now.getFullYear();
   const month = pad(now.getMonth() + 1);
   const day = pad(now.getDate());
@@ -236,222 +224,38 @@ export const getExportName = (name) => {
   const seconds = pad(now.getSeconds());
 
   return `${year}${month}${day}${hours}${minutes}${seconds}-${name}`;
-}
+};
 
 // 跳转页面
-export const jumpPage = (path, query={}) => {
+export const jumpPage = (path, query = {}) => {
   if (window.microApp) {
-    window.microApp.dispatch({type: 'route', path, query})
+    window.microApp.dispatch({ type: 'route', path, query });
   } else {
     router.push({
       path,
       query,
     });
   }
-}
+};
 
+// 校验域名
+export const validateDomains = (data) => {
+  if (!data || typeof data !== 'string' || !data.trim()) return [];
+  const lines = data.split('\n');
 
-// {
-//   "meta": {
-//     "order": 1,
-//     "roles": [
-//       "*"
-//     ],
-//     "locale": "menu.apps",
-//     "requiresAuth": true
-//   },
-//   "name": "AIApps",
-//   "path": "/ai-apps",
-//   "children": [
-//     {
-//       "meta": {
-//         "roles": [
-//           "*"
-//         ],
-//         "locale": "menu.apps.tools",
-//         "requiresAuth": true
-//       },
-//       "name": "AITools",
-//       "path": "ai-tools",
-//       "children": [
-//         {
-//           "meta": {
-//             "roles": [
-//               "*"
-//             ],
-//             "locale": "menu.apps.tools.cms",
-//             "requiresAuth": true
-//           },
-//           "name": "CmsBox",
-//           "path": "cms",
-//           "children": [
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.cms.add",
-//                 "activeMenu": "AIApps",
-//                 "requiresAuth": true
-//               },
-//               "name": "CmsAdd",
-//               "path": "cms-add",
-//               "component": "@/views/apps/tools/cms/add/index.vue"
-//             }
-//           ],
-//           "component": "@/views/apps/tools/index.vue"
-//         },
-//         {
-//           "meta": {
-//             "roles": [
-//               "*"
-//             ],
-//             "locale": "menu.apps.tools.custom",
-//             "requiresAuth": true
-//           },
-//           "name": "CustomBox",
-//           "path": "custom",
-//           "children": [
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.custom.form",
-//                 "activeMenu": "AIApps",
-//                 "requiresAuth": true
-//               },
-//               "name": "CustomForm",
-//               "path": "custom-form",
-//               "component": "@/views/apps/tools/custom/form/index.vue"
-//             },
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.custom.group",
-//                 "activeMenu": "AIApps",
-//                 "requiresAuth": true
-//               },
-//               "name": "CustomGroup",
-//               "path": "custom-group",
-//               "component": "@/views/apps/tools/custom/group/index.vue"
-//             },
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.custom.sensitive",
-//                 "activeMenu": "AIApps",
-//                 "requiresAuth": true
-//               },
-//               "name": "CustomSensitive",
-//               "path": "custom-sensitive",
-//               "component": "@/views/apps/tools/custom/sensitive/index.vue"
-//             },
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.custom.synonym",
-//                 "activeMenu": "AIApps",
-//                 "requiresAuth": true
-//               },
-//               "name": "CustomSynonym",
-//               "path": "custom-synonym",
-//               "component": "@/views/apps/tools/custom/synonym/index.vue"
-//             }
-//           ],
-//           "component": "@/views/apps/tools/index.vue"
-//         },
-//         {
-//           "meta": {
-//             "roles": [
-//               "*"
-//             ],
-//             "locale": "menu.apps.tools.other",
-//             "requiresAuth": true
-//           },
-//           "name": "OtherBox",
-//           "path": "other",
-//           "children": [
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.other.illustration",
-//                 "activeMenu": "AIApps",
-//                 "requiresAuth": true
-//               },
-//               "name": "OtherIllustration",
-//               "path": "other-illustration",
-//               "component": "@/views/apps/tools/other/illustration/index.vue"
-//             },
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.other.illustration.detail",
-//                 "activeMenu": "AIApps",
-//                 "hideInMenu": true,
-//                 "requiresAuth": true
-//               },
-//               "name": "OtherIllustrationDetail",
-//               "path": "other-illustration-detail",
-//               "component": "@/views/apps/tools/other/illustration/detail.vue"
-//             },
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.other.inner",
-//                 "activeMenu": "AIApps",
-//                 "requiresAuth": true
-//               },
-//               "name": "OtherInner",
-//               "path": "other-inner",
-//               "component": "@/views/apps/tools/other/inner/index.vue"
-//             },
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.other.inner.detail",
-//                 "activeMenu": "AIApps",
-//                 "hideInMenu": true,
-//                 "requiresAuth": true
-//               },
-//               "name": "OtherInnerDetail",
-//               "path": "other-inner-detail",
-//               "component": "@/views/apps/tools/other/inner/detail.vue"
-//             },
-//             {
-//               "meta": {
-//                 "roles": [
-//                   "*"
-//                 ],
-//                 "locale": "menu.apps.tools.other.config",
-//                 "activeMenu": "AIApps",
-//                 "requiresAuth": true
-//               },
-//               "name": "OtherConfig",
-//               "path": "other-config",
-//               "component": "@/views/apps/tools/other/config/index.vue"
-//             }
-//           ],
-//           "component": "@/views/apps/tools/index.vue"
-//         }
-//       ],
-//       "component": "@/views/apps/index.vue"
-//     }
-//   ],
-//   "redirect": "/ai-apps/ai-tools/cms/cms-add",
-//   "component": "DEFAULT_LAYOUT"
-// }
+  // 正则表达式：验证标准域名格式
+  const domainPattern = /^(?!-)[a-z0-9-]{1,63}(?<!-)(\.[a-z0-9-]{1,63}(?<!-))*\.[a-z]{2,}$/i;
+  let output = [];
+  lines.forEach((line, index) => {
+    const domain = line.trim();
+    if (domain === '') return; // 跳过空行
+
+    // 验证域名长度（总长度<=253字符）和正则匹配
+    const isValid = domain.length <= 253 && domainPattern.test(domain);
+    if (isValid) {
+      output.push(domain);
+    }
+  });
+
+  return output || '无有效输入';
+};

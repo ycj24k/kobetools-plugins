@@ -76,7 +76,7 @@
                 </a-space>
               </a-form-item>
             </a-grid-item>
-            <a-grid-item :offset="2" :span="8" class="flex_box form_option">
+            <a-grid-item :offset="1" :span="9" class="flex_box form_option">
               <div class="form_label">{{ localeGet('label4') }}</div>
               <a-form-item no-style field="sensitiveFilter">
                 <a-space :size="20">

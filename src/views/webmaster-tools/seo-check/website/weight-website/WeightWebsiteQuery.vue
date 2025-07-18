@@ -249,7 +249,7 @@ function exportTableData() {
     }
     let data = queryParam.domains.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
     isDownloadFile.value = true;
-    download("/api/sites/export/weight", data, "导出文件.xlsx", () => {
+    download("/api/sites/export/weight", data, `KB-results-${Date.now()}.xlsx`, () => {
         isDownloadFile.value = false;
     });
 }

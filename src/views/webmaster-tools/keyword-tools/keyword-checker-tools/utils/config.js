@@ -347,7 +347,20 @@ export const ZZPlatformOptions2 = [
 ];
 
 // 关键词生成语音
-export const AILangOptions = [];
+export const AILangOptions = [
+  {
+    label: '汉语',
+    value: 'cn'
+  },
+  {
+    label: '英语',
+    value: 'en'
+  },
+  {
+    label: '日语',
+    value: 'jp'
+  },
+];
 // 挖掘数量
 export const AINumberOptions = [
   {

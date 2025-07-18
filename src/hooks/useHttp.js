@@ -31,7 +31,7 @@ function download(url, data, fileName, callback=()=>{}){
         .catch((error) => downloadFile(error.response, fileName, callback));
 }
 
-function downloadFile(response, fileName="导出文件.xlsx", callback){
+function downloadFile(response, fileName=`KB-results-${Date.now()}.xlsx`, callback){
     callback();
     const blob = new Blob([response.data]);
     const link = document.createElement('a');

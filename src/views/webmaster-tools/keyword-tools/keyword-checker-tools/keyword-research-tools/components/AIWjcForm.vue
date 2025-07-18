@@ -21,7 +21,7 @@
           </a-grid-item>
           <a-grid-item :span="12" class="flex_box form_option">
             <div class="flex_box" style="width: 100%">
-              <div class="form_title"><span style="color: #ff0000">*</span>输入语言</div>
+              <div class="form_title"><span style="color: #ff0000">*</span>输出语言</div>
               <a-select v-model="AIForm.lang" :options="AILangOptions" :style="{ width: '100%' }" placeholder="请选择关键词生成语言">
                 <!-- <template #label="{ data }">
                     <span>{{ localeGet(data?.label) }}</span>

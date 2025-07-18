@@ -2,6 +2,7 @@
 
 import { post } from "@/hooks/useHttp";
 import { ref, reactive, watch } from "vue";
+import { showErrorNotification } from "@/hooks/useNotification";
 
 const props = defineProps({
     columns: Array,
@@ -63,6 +64,18 @@ function queryTableData(url, data, callback = () => { }) {
                 }
                 return item;
             });
+        }
+        let errorNum = 0
+        result.data.forEach(item => {
+            for (let key in item) {
+                 if (item[key].toString().indexOf('错误') > -1) {
+                    errorNum++;
+                 }
+            }
+        });
+        if (errorNum) {
+            showErrorNotification('余额不足或网络错误，请稍后再试')
+            return
         }
         setData(result, callback);
     }, () => {
