@@ -259,3 +259,39 @@ export const validateDomains = (data) => {
 
   return output || '无有效输入';
 };
+// 处理textarea
+export const  processTextArea = (inputText) => {
+  if (!inputText.trim()) {
+    return []
+  }
+  // 1. 按 \n 分割成数组
+  const lines = inputText.split('\n');
+
+  // 处理每一行（保留原始大小写）
+  const processedLines = lines.map(line => {
+    // 2. 去掉开头和结尾的空格
+    let processedLine = line.trim();
+
+    // 3. 把中间的多个空格替换成单个空格
+    processedLine = processedLine.replace(/\s+/g, ' ');
+
+    // 4. 去掉结尾的标点符号（.,!?;:）
+    processedLine = processedLine.replace(/[.,!?;:]+$/, '');
+
+    return processedLine;
+  });
+
+  // 5. 去重（不区分大小写，但保留原始大小写）
+  const uniqueLines = [];
+  const seenLines = new Set();
+
+  for (const line of processedLines) {
+    const lowerCaseLine = line.toLowerCase();
+    if (!seenLines.has(lowerCaseLine)) {
+      seenLines.add(lowerCaseLine);
+      uniqueLines.push(line); // 保留原始大小写
+    }
+  }
+
+  return uniqueLines;
+}

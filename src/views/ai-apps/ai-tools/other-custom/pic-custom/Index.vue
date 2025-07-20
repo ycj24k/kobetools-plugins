@@ -70,7 +70,7 @@ import { Message } from '@arco-design/web-vue';
 import { storageList, storageDel, storageEdit } from '@/api/apps/tools/other';
 import { storageFormDefault, storageTableColumns } from '../utils/config';
 import localeConfig from './zh-CN.js';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;

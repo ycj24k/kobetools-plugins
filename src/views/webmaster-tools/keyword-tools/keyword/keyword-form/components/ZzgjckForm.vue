@@ -120,7 +120,7 @@
         <div class="flex_box form_item">
           <div class="form_title">{{ localeGet('title3') }}</div>
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
-            <a-grid-item :span="12" class="flex_box form_option">
+            <a-grid-item :span="14" class="flex_box form_option">
               <div class="form_label">字符长度</div>
               <a-form-item no-style field="lengthFilter">
                 <a-space :size="20">
@@ -151,7 +151,7 @@
                 </a-space>
               </a-form-item>
             </a-grid-item>
-            <a-grid-item :span="12" class="flex_box form_option">
+            <a-grid-item :span="10" class="flex_box form_option">
               <div class="form_label">{{ localeGet('label4') }}</div>
               <a-form-item no-style field="sensitiveFilter">
                 <a-space :size="20">
@@ -236,7 +236,7 @@ import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
 import { zhanzhangFormDefault, includeOptions, excludeOptions, depthOptions, ZZSourceOptions, ZZPlatformOptions1, ZZPlatformOptions2, lengthMinOptions, lengthMaxOptions, customOptions } from '../../utils/config';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({
@@ -279,20 +279,11 @@ const zhanzhangFormSubmit = async ({ errors, values }) => {
   if (!errors) {
     loading.value = true;
     try {
-      zhanzhangForm.value.keyword = keyword.value ? keyword.value.split('\n') : [];
+      zhanzhangForm.value.keyword = processTextArea(keyword.value);
+      keyword.value = zhanzhangForm.value.keyword.join('\n')
       if (zhanzhangForm.value.keyword.length === 0) {
         Message.warning(localeGet('message3'));
         return;
-      }
-      // 关键词去重
-      if (zhanzhangForm.value.removal) zhanzhangForm.value.keyword = [...new Set(zhanzhangForm.value.keyword)];
-      // 特殊字符过滤
-      if (zhanzhangForm.value.keyFilter) {
-        if (zhanzhangForm.value.keyFilterVal === 1) {
-          zhanzhangForm.value.keyword = zhanzhangForm.value.keyword.map((item) => item.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, ''));
-        } else if (zhanzhangForm.value.keyFilterVal === 2) {
-          zhanzhangForm.value.keyword = zhanzhangForm.value.keyword.map((item) => item.replace(/\s/g, ''));
-        }
       }
       // 保留原始词
       if (zhanzhangForm.value.reserve) {

@@ -5,7 +5,8 @@
         <a-grid :col-gap="24" :row-gap="24">
           <a-grid-item :span="4" class="flex_box">
             <a-form-item>
-              <a-select @change="getList" v-model="queryForm.tid" :options="taskList" allow-search :placeholder="localeGet('placeholder1')" />
+              <a-select @change="getList" v-model="queryForm.tid" :options="taskList" allow-search
+                :placeholder="localeGet('placeholder1')" />
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="4" class="flex_box">
@@ -26,7 +27,10 @@
         </a-grid>
       </a-form>
       <div class="table_box">
-        <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading || saveLoading" :columns="myTableColumns" :data="tableData" row-key="id" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange" :scroll="{ x: '100%', y: 500 }">
+        <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading || saveLoading"
+          :columns="myTableColumns" :data="tableData" row-key="id" :row-selection="rowSelection"
+          v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange"
+          :scroll="{ x: '100%', y: 500 }">
           <template #header="{ column }">
             <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
           </template>
@@ -50,7 +54,8 @@
           </template>
         </a-table>
         <a-space :size="20" class="table_save">
-          <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('button8') }}</a-button>
+          <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('button8')
+          }}</a-button>
           <a-button :loading="saveLoading" class="form_btn8" type="primary">批量删除</a-button>
           <a-button type="outline" @click="getListAll">{{ localeGet('button9') }}</a-button>
           <div class="table_save_total">{{ localeGet('total1') }}{{ tableDataAll.length }}{{ localeGet('total2') }}</div>
@@ -76,7 +81,7 @@
               </a-grid-item>
               <a-grid-item :span="18" class="form_right">
                 <div class="flex_box form_item">
-                  <div class="form_title">添加类型</div>
+                  <div class="form_title"><span style="color: #FF0000;">* </span>添加类型</div>
                   <a-grid :col-gap="20" :row-gap="10" class="form_content">
                     <a-grid-item :span="12" class="flex_box form_option">
                       <a-form-item no-style field="type">
@@ -93,14 +98,15 @@
                         <a-space :size="20">
                           <a-radio @click="addForm.type = 2" :model-value="addForm.type === 2">当前任务</a-radio>
                           <template v-if="addForm.type === 2">
-                            <a-select style="width: 320px;" v-model="addForm.tid" :options="taskList" placeholder="请选择任务" allow-search>
-                                <!-- <template #label="{ data }">
+                            <a-select style="width: 320px;" v-model="addForm.tid" :options="taskList" placeholder="请选择任务"
+                              allow-search>
+                              <!-- <template #label="{ data }">
                                   <span>{{ localeGet(data?.label) }}</span>
                                 </template>
                                 <template #option="{ data }">
                                   <span>{{ localeGet(data?.label) }}</span>
                                 </template> -->
-                              </a-select>
+                            </a-select>
                           </template>
                         </a-space>
                       </a-form-item>
@@ -118,7 +124,8 @@
                           <template v-if="addForm.lengthFilter === 1">
                             <a-space :size="20">
                               <span>最少</span>
-                              <a-select v-model="addForm.lengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
+                              <a-select v-model="addForm.lengthFilterVal.min" :options="lengthMinOptions"
+                                :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
                                 <!-- <template #label="{ data }">
                                   <span>{{ localeGet(data?.label) }}</span>
                                 </template>
@@ -128,7 +135,8 @@
                               </a-select>
                               <span>-</span>
                               <span>最多</span>
-                              <a-select v-model="addForm.lengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder4')">
+                              <a-select v-model="addForm.lengthFilterVal.max" :options="lengthMaxOptions"
+                                :style="{ width: '140px' }" :placeholder="localeGet('placeholder4')">
                                 <!-- <template #label="{ data }">
                                   <span>{{ localeGet(data?.label) }}</span>
                                 </template>
@@ -147,7 +155,8 @@
                         <a-space :size="20">
                           <a-switch v-model="addForm.sensitiveFilter" :checked-value="1" :unchecked-value="0" />
                           <template v-if="addForm.sensitiveFilter === 1">
-                            <a-select v-model="addForm.sensitiveFilterVal" :options="customOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')">
+                            <a-select v-model="addForm.sensitiveFilterVal" :options="customOptions"
+                              :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')">
                               <template #label="{ data }">
                                 <span>{{ localeGet(data?.label) }}</span>
                               </template>
@@ -198,12 +207,14 @@
                   <a-grid :col-gap="20" :row-gap="10" class="form_content">
                     <a-grid-item :span="12" class="flex_box form_content_item">
                       <div class="form_content_input">
-                        <a-textarea v-model="addForm.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                        <a-textarea v-model="addForm.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词"
+                          allow-clear />
                       </div>
                     </a-grid-item>
                     <a-grid-item :span="12" class="form_content_item">
                       <div class="form_content_input">
-                        <a-textarea v-model="addForm.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                        <a-textarea v-model="addForm.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词"
+                          allow-clear />
                       </div>
                     </a-grid-item>
                   </a-grid>
@@ -214,8 +225,8 @@
         </a-spin>
         <template #footer>
           <div class="flex_box flex_row_center modal_footer">
-            <a-button :loading="addLoading" style="color: #333" @click="addVisible = false">{{ localeGet('button10') }}</a-button>
-            <a-button :loading="addLoading" class="form_btn3" @click="addSubmit">{{ localeGet('button11') }}</a-button>
+            <a-button :loading="addLoading" style="color: #333" @click="addVisible = false">取消</a-button>
+            <a-button :loading="addLoading" class="form_btn3" @click="addSubmit">确定</a-button>
           </div>
         </template>
       </a-modal>
@@ -228,8 +239,8 @@ import { ref, reactive } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import dayjs from 'dayjs';
 import { keywordMyAdd, keywordMyList, keywordMySave, keywordMyDel, keywordTaskList, keywordMyListAll } from '@/api/apps/tools/keyword';
-import { includeOptions, excludeOptions, keyOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions, weightOptions, myTableColumns, addTypeOptions, addFormDefault } from '../utils/config';
-import { exportModal } from '@/utils';
+import { includeOptions, excludeOptions, lengthMinOptions, lengthMaxOptions, customOptions, weightOptions, myTableColumns, addFormDefault } from '../utils/config';
+import { exportModal, processTextArea } from '@/utils';
 import localeConfig from './zh-CN.js';
 import { useRouter } from 'vue-router';
 // 多语言
@@ -242,7 +253,7 @@ const localeGet = (key) => {
 // 监听函数
 function dataListener(data) {
   console.log('来自主应用的数据', data);
-  if (data&&data.locales) localeData.value = data.locales;
+  if (data && data.locales) localeData.value = data.locales;
 }
 // 监听数据变化，初始化时如果有数据则主动触发一次
 //@ts-ignore
@@ -367,7 +378,7 @@ const handleDelete = (rowIndex) => {
       Message.success(localeGet('message2'));
       getList();
     })
-    .catch(() => {});
+    .catch(() => { });
 };
 // 保存数据
 const saveForm = ref({
@@ -419,32 +430,19 @@ const handleAdd = () => {
   addVisible.value = true;
 };
 const addSubmit = () => {
-  addForm.value.keyword = keyword.value ? keyword.value.split('\n') : [];
+  addForm.value.keyword = processTextArea(keyword.value);
+  keyword.value = addForm.value.keyword.join('\n')
   if (addForm.value.keyword.length === 0) {
-    Message.warning(localeGet('message5'));
+    Message.warning('请添加关键词，一行一个');
     return;
   }
-  if (!addForm.value.taskName) {
-    Message.warning(localeGet('message6'));
+  if (addForm.value.type === 1 && !addForm.value.taskName.trim()) {
+    Message.warning('请设置任务名称');
     return;
   }
-  // if (!addForm.value.website) {
-  //   Message.warning('请输入应用站点');
-  //   return;
-  // }
-  // 关键词去重
-  if (addForm.value.removal) addForm.value.keyword = [...new Set(addForm.value.keyword)];
-  // 特殊字符过滤
-  if (addForm.value.keyFilter) {
-    if (addForm.value.keyFilterVal === 1) {
-      addForm.value.keyword = addForm.value.keyword.map((item) => item.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, ''));
-    } else if (addForm.value.keyFilterVal === 2) {
-      addForm.value.keyword = addForm.value.keyword.map((item) => item.replace(/\s/g, ''));
-    }
-  }
-  // 保留原始词
-  if (addForm.value.reserve) {
-    addForm.value.reserveKeyword = keyword.value;
+  if (addForm.value.type === 2 && !addForm.value.tid) {
+    Message.warning('请选择任务');
+    return;
   }
   // 字符长度过滤
   if (addForm.value.lengthFilter) {
@@ -470,13 +468,13 @@ const addSubmit = () => {
     }
   }
   if (addForm.value.keyword.length === 0) {
-    Message.warning(localeGet('message7'));
+    Message.warning('请添加关键词，一行一个');
     return;
   }
   addLoading.value = true;
   keywordMyAdd(addForm.value)
     .then((res) => {
-      Message.success(localeGet('message8'));
+      Message.success('添加成功');
       addVisible.value = false;
       getList();
       addLoading.value = false;
@@ -493,6 +491,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-@import '@/assets/style/table.less';
-</style>
+<style lang="less" scoped>@import '@/assets/style/table.less';</style>

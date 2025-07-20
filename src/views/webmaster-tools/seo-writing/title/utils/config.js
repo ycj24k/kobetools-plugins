@@ -1,4 +1,28 @@
 // AI智能生成标题初始表单
+export const AITitleFormDefault = {
+  // 产品或服务
+  keyword: '',
+  // 输出语言
+  lang: '',
+  // AI提示词
+  keyContent: '',
+  // AI模型
+  model: '',
+  // 标题数量
+  keyNum: '',
+  // 生成关键词描述信息开关：0：关闭，1：开启
+  isDesc: 0,
+  // 标题风格
+  style: '',
+  // 包含关键字开关：0：关闭，1：开启
+  include: 1,
+  // 包含关键字
+  includeKeyword: '',
+  // 不含关键字开关：0：关闭，1：开启
+  exclude: 1,
+  // 不含关键字
+  excludeKeyword: '',
+};
 export const titleFormDefault = {
   // 任务id
   taskId: '',
@@ -73,6 +97,34 @@ export const XlTitleFormDefault = {
   exclude: 1,
   // 不含关键字
   excludeKeyword: '',
+};
+// 标题组合初始表单
+export const orderingFormDefault = {
+  // 关键词
+  keyword: [],
+  // 任务类型：1：智能挖掘，2：在线组合，3：手动录入，4：智能清洗
+  type: 2,
+  // 组合方式
+  orderSelect: [],
+  // 是否智能加空格0：关闭，1：开启
+  spaceCheck: 0,
+  // 关键词去重开关：0：关闭，1：开启
+  removal: 1,
+  // 关键词过滤开关：0：关闭，1：开启
+  keyFilter: 0,
+  // 关键词过滤
+  keyFilterVal: 1,
+  // 字符长度过滤开关：0：关闭，1：开启
+  lengthFilter: 1,
+  // 字符长度过滤
+  lengthFilterVal: {
+    min: 0,
+    max: 0,
+  },
+  // 违禁词过滤开关：0：关闭，1：开启
+  sensitiveFilter: 0,
+  // 违禁词过滤
+  sensitiveFilterVal: 0,
 };
 // 挖掘来源
 export const supportOptions = [
@@ -150,6 +202,94 @@ export const XlSourceOptions = [
   {
     label: '头条',
     value: 6,
+  },
+];
+// 关键词生成语言
+export const AILangOptions = [
+  {
+    label: '汉语',
+    value: 'cn'
+  },
+  {
+    label: '英语',
+    value: 'en'
+  },
+  {
+    label: '日语',
+    value: 'jp'
+  },
+];
+// AI标题模型
+export const AIModelOptions = [
+  {
+    label: 'ChatGPT',
+    value: 1
+  },
+  {
+    label: 'DeepSeek',
+    value: 2
+  },
+  {
+    label: 'Claude',
+    value: 3
+  },
+];
+// AI标题关键词数
+export const AIKeyNumOptions = [
+  {
+    label: '2',
+    value: 2
+  },
+  {
+    label: '3',
+    value: 3
+  },
+  {
+    label: '4',
+    value: 4
+  },
+  {
+    label: '5',
+    value: 5
+  },
+  {
+    label: '6',
+    value: 6
+  },
+  {
+    label: '7',
+    value: 7
+  },
+  {
+    label: '随机',
+    value: 0
+  },
+];
+// AI标题风格
+export const AIStyleOptions = [
+  {
+    label: '时效性',
+    value: 1
+  },
+  {
+    label: '疑问式',
+    value: 2
+  },
+  {
+    label: '总结式',
+    value: 3
+  },
+  {
+    label: '对比式',
+    value: 4
+  },
+  {
+    label: '数字型',
+    value: 5
+  },
+  {
+    label: '随即风格',
+    value: 0
   },
 ];
 // 下拉标题风格
@@ -473,6 +613,42 @@ export const excludeOptions = [
     value: 0,
   },
 ];
+
+// 组合方式
+export const orderOptions = [
+  {
+    label: 'C',
+    value: 1,
+  },
+  {
+    label: 'A + C',
+    value: 2,
+  },
+  {
+    label: 'B + C',
+    value: 3,
+  },
+  {
+    label: 'C + D',
+    value: 4,
+  },
+  {
+    label: 'B + C + D',
+    value: 5,
+  },
+  {
+    label: 'A + B + C',
+    value: 6,
+  },
+  {
+    label: 'A + C + D',
+    value: 7,
+  },
+  {
+    label: 'A + B + C + D',
+    value: 8,
+  },
+];
 // 任务类型
 export const typeOptions = [
   {
@@ -591,6 +767,27 @@ export const addFormDefault = {
   sensitiveFilterVal: 0,
   // 违禁词过滤自定义词库
   sensitiveCustom: '',
+};
+
+export const AIMakeFormDefault = {
+  // 输出语言
+  lang: '',
+  // AI提示词
+  keyContent: '',
+  // AI模型
+  model: '',
+  // 关键词数
+  keyNum: '',
+  // 生成描述信息开关：0：关闭，1：开启
+  isDesc: 0,
+  // 包含关键字开关：0：关闭，1：开启
+  include: 1,
+  // 包含关键字
+  includeKeyword: '',
+  // 不含关键字开关：0：关闭，1：开启
+  exclude: 1,
+  // 不含关键字
+  excludeKeyword: '',
 };
 
 // 添加任务方式

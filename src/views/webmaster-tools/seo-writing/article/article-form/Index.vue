@@ -763,7 +763,7 @@ import { getListFromZip } from '@/utils';
 import { articleFormDefault, washDraftFormDefault, wayOptions, langOptions, sourceOptions, lengthOptions, titleNumOptions, titleNumMinOptions, titleNumMaxOptions, autoContentOptions, sensitiveOptions, customOptions, synonymOptions, synonymCustomOptions, disturbOptions, autoLinkOptions, autoImgOptions, watermarkOptions, titleImgOptions, imgPositionOptions, imgAlignOptions, formatOptions, includeOptions, excludeOptions } from '../utils/config';
 
 import localeConfig from './zh-CN.js';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;

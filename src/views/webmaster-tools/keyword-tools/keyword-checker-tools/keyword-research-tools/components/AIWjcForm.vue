@@ -137,7 +137,7 @@ import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
 import { AIFormDefault, includeOptions, excludeOptions, AISourceOptions, AILangOptions, AINumberOptions } from '../../utils/config';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({
@@ -181,20 +181,11 @@ const AIFormSubmit = async ({ errors, values }) => {
   if (!errors) {
     loading.value = true;
     try {
-      AIForm.value.keyword = keyword.value ? keyword.value.split('\n') : [];
+      AIForm.value.keyword = processTextArea(keyword.value);
+      keyword.value = AIForm.value.keyword.join('\n')
       if (AIForm.value.keyword.length === 0) {
         Message.warning(localeGet('message3'));
         return;
-      }
-      // 关键词去重
-      if (AIForm.value.removal) AIForm.value.keyword = [...new Set(AIForm.value.keyword)];
-      // 特殊字符过滤
-      if (AIForm.value.keyFilter) {
-        if (AIForm.value.keyFilterVal === 1) {
-          AIForm.value.keyword = AIForm.value.keyword.map((item) => item.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, ''));
-        } else if (AIForm.value.keyFilterVal === 2) {
-          AIForm.value.keyword = AIForm.value.keyword.map((item) => item.replace(/\s/g, ''));
-        }
       }
       // 保留原始词
       if (AIForm.value.reserve) {

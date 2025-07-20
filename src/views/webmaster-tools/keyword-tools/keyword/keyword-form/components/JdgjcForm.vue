@@ -120,7 +120,7 @@ import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
 import { jingduiFormDefault, includeOptions, excludeOptions, sourceOptions, engineOptions1, engineOptions2, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions } from '../../utils/config';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({
@@ -154,20 +154,11 @@ const jingduiFormSubmit = async ({ errors, values }) => {
   if (!errors) {
     loading.value = true;
     try {
-      jingduiForm.value.keyword = keyword.value ? keyword.value.split('\n') : [];
+      jingduiForm.value.keyword = processTextArea(keyword.value);
+      keyword.value = jingduiForm.value.keyword.join('\n')
       if (jingduiForm.value.keyword.length === 0) {
         Message.warning(localeGet('message3'));
         return;
-      }
-      // 关键词去重
-      if (jingduiForm.value.removal) jingduiForm.value.keyword = [...new Set(jingduiForm.value.keyword)];
-      // 特殊字符过滤
-      if (jingduiForm.value.keyFilter) {
-        if (jingduiForm.value.keyFilterVal === 1) {
-          jingduiForm.value.keyword = jingduiForm.value.keyword.map((item) => item.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, ''));
-        } else if (jingduiForm.value.keyFilterVal === 2) {
-          jingduiForm.value.keyword = jingduiForm.value.keyword.map((item) => item.replace(/\s/g, ''));
-        }
       }
       // 保留原始词
       if (jingduiForm.value.reserve) {

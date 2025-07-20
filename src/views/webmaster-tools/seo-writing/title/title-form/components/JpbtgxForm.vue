@@ -2,7 +2,7 @@
   <a-form class="form_box" ref="titleFormRef" layout="vertical" hide-label :model="titleForm" @submit="titleFormSubmit">
     <div>
       <a-grid :col-gap="20" :row-gap="10">
-        <a-grid-item :span="8">
+        <a-grid-item :span="7">
           <div class="flex_box form_item">
             <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('title1') }}</div>
             <a-form-item no-style field="taskId" :rules="[{ required: true, message: localeGet('message1') }]" :validate-trigger="['change', 'blur']">
@@ -10,8 +10,8 @@
             </a-form-item>
           </div>
         </a-grid-item>
-        <a-grid-item :span="16">
-          <div class="flex_box form_item form_item_radio">
+        <a-grid-item :span="17">
+          <div class="flex_box form_item">
             <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('title2') }}</div>
             <a-form-item no-style field="source" :rules="[{ required: true, message: localeGet('message2') }]" :validate-trigger="['change', 'blur']">
               <a-radio-group v-model="titleForm.source" :options="supportOptions">
@@ -42,7 +42,7 @@
             </a-form-item>
           </div>
         </a-grid-item>
-        <a-grid-item :span="12" :offset="2">
+        <a-grid-item :span="12" :offset="1">
           <div class="flex_box form_item form_item_radio">
             <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('title4') }}</div>
             <a-form-item no-style field="connector" :rules="[{ required: true, message: localeGet('message4') }]" :validate-trigger="['change', 'blur']">
@@ -190,7 +190,7 @@ import { supportList } from '@/api/apps/tools/keyword';
 import { keywordTaskList } from '@/api/apps/tools/keyword';
 import { titleTaskAdd } from '@/api/apps/tools/title';
 import { titleFormDefault, optionOptions, connectorOptions, ruleOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions, supportOptions } from '../../utils/config';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({

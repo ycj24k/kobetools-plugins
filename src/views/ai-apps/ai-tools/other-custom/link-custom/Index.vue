@@ -70,7 +70,7 @@ import { Message } from '@arco-design/web-vue';
 import { innerlinkList, innerlinkDel, innerlinkEdit } from '@/api/apps/tools/other';
 import { innerlinkFormDefault, innerlinkTableColumns } from '../utils/config';
 import localeConfig from './zh-CN.js';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;

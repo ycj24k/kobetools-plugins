@@ -159,7 +159,7 @@ import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
 import { correlationFormDefault, includeOptions, excludeOptions, depthOptions, supportOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions } from '../../utils/config';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({
@@ -202,20 +202,11 @@ const correlationFormSubmit = async ({ errors, values }) => {
   if (!errors) {
     loading.value = true;
     try {
-      correlationForm.value.keyword = keyword.value ? keyword.value.split('\n') : [];
+      correlationForm.value.keyword = processTextArea(keyword.value);
+      keyword.value = correlationForm.value.keyword.join('\n')
       if (correlationForm.value.keyword.length === 0) {
         Message.warning(localeGet('message3'));
         return;
-      }
-      // 关键词去重
-      if (correlationForm.value.removal) correlationForm.value.keyword = [...new Set(correlationForm.value.keyword)];
-      // 特殊字符过滤
-      if (correlationForm.value.keyFilter) {
-        if (correlationForm.value.keyFilterVal === 1) {
-          correlationForm.value.keyword = correlationForm.value.keyword.map((item) => item.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, ''));
-        } else if (correlationForm.value.keyFilterVal === 2) {
-          correlationForm.value.keyword = correlationForm.value.keyword.map((item) => item.replace(/\s/g, ''));
-        }
       }
       // 保留原始词
       if (correlationForm.value.reserve) {

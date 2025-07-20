@@ -159,7 +159,7 @@ import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
 import { XGSSFormDefault, includeOptions, excludeOptions, depthOptions, xgssSupportOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions } from '../../utils/config';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({
@@ -202,20 +202,11 @@ const XGSSFormSubmit = async ({ errors, values }) => {
   if (!errors) {
     loading.value = true;
     try {
-      XGSSForm.value.keyword = keyword.value ? keyword.value.split('\n') : [];
+      XGSSForm.value.keyword = processTextArea(keyword.value);
+      keyword.value = XGSSForm.value.keyword.join('\n')
       if (XGSSForm.value.keyword.length === 0) {
         Message.warning(localeGet('message3'));
         return;
-      }
-      // 关键词去重
-      if (XGSSForm.value.removal) XGSSForm.value.keyword = [...new Set(XGSSForm.value.keyword)];
-      // 特殊字符过滤
-      if (XGSSForm.value.keyFilter) {
-        if (XGSSForm.value.keyFilterVal === 1) {
-          XGSSForm.value.keyword = XGSSForm.value.keyword.map((item) => item.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, ''));
-        } else if (XGSSForm.value.keyFilterVal === 2) {
-          XGSSForm.value.keyword = XGSSForm.value.keyword.map((item) => item.replace(/\s/g, ''));
-        }
       }
       // 保留原始词
       if (XGSSForm.value.reserve) {

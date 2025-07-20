@@ -201,7 +201,7 @@ import dayjs from 'dayjs';
 import { titleTaskList, titleTaskClean, titleTaskDel, titleTaskOut, titleTaskSave } from '@/api/apps/tools/title';
 import { clearFormDefault, typeOptions, taskTableColumns, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions, includeOptions, excludeOptions } from '../utils/config';
 import localeConfig from './zh-CN.js';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;

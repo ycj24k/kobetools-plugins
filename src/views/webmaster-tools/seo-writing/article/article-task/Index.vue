@@ -80,7 +80,7 @@ import dayjs from 'dayjs';
 import { articleTaskList, articleTaskDel, articleTaskOut, articleTaskSave } from '@/api/apps/tools/article';
 import { typeOptions, taskTableColumns } from '../utils/config';
 import localeConfig from './zh-CN.js';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;

@@ -137,7 +137,7 @@ import { ref, watch, h } from 'vue';
 import { Message, Modal } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
 import { GLFormDefault, includeOptions, excludeOptions, GLEngineOptions, lengthMinOptions, lengthMaxOptions, customOptions } from '../../utils/config';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({
@@ -193,20 +193,11 @@ const GLFormSubmit = async ({ errors, values }) => {
     loading.value = true;
     try {
       GLForm.value.engine = engineList.value.length ? engineList.value.join(',') : '';
-      // GLForm.value.keyword = keyword.value ? keyword.value.split('\n') : [];
+      // GLForm.value.keyword = processTextArea(keyword.value);
+      // keyword.value = GLForm.value.keyword.join('\n')
       // if (GLForm.value.keyword.length === 0) {
       //   Message.warning(localeGet('message3'));
       //   return;
-      // }
-      // // 关键词去重
-      // if (GLForm.value.removal) GLForm.value.keyword = [...new Set(GLForm.value.keyword)];
-      // // 特殊字符过滤
-      // if (GLForm.value.keyFilter) {
-      //   if (GLForm.value.keyFilterVal === 1) {
-      //     GLForm.value.keyword = GLForm.value.keyword.map((item) => item.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, ''));
-      //   } else if (GLForm.value.keyFilterVal === 2) {
-      //     GLForm.value.keyword = GLForm.value.keyword.map((item) => item.replace(/\s/g, ''));
-      //   }
       // }
       // // 保留原始词
       // if (GLForm.value.reserve) {

@@ -234,7 +234,7 @@ import { supportList } from '@/api/apps/tools/keyword';
 import { keywordTaskList } from '@/api/apps/tools/keyword';
 import { titleTaskAdd } from '@/api/apps/tools/title';
 import { XlTitleFormDefault, XlStyleOptions, connectorOptions, XlRuleOptions, XlKeyRuleOptions, XlOrderOptions, XlSourceOptions, includeOptions, excludeOptions, lengthMinOptions, lengthMaxOptions } from '../../utils/config';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({

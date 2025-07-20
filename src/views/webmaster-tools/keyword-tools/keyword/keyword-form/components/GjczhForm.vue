@@ -124,7 +124,7 @@ import { keywordTaskAdd } from '@/api/apps/tools/keyword';
 import useClipboard from 'vue-clipboard3';
 import { orderingFormDefault, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions, orderOptions } from '../../utils/config';
 import { exportExcel } from '@/utils';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({

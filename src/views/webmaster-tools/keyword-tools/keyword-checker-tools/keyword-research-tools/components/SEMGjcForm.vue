@@ -131,7 +131,7 @@ import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
 import { SEMFormDefault, includeOptions, excludeOptions, depthOptions, ZZSourceOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions } from '../../utils/config';
-import { jumpPage } from '@/utils/index';
+import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言
 const props = defineProps({
@@ -174,20 +174,11 @@ const SEMFormSubmit = async ({ errors, values }) => {
   if (!errors) {
     loading.value = true;
     try {
-      SEMForm.value.keyword = keyword.value ? keyword.value.split('\n') : [];
+      SEMForm.value.keyword = processTextArea(keyword.value);
+      keyword.value = SEMForm.value.keyword.join('\n')
       if (SEMForm.value.keyword.length === 0) {
         Message.warning(localeGet('message3'));
         return;
-      }
-      // 关键词去重
-      if (SEMForm.value.removal) SEMForm.value.keyword = [...new Set(SEMForm.value.keyword)];
-      // 特殊字符过滤
-      if (SEMForm.value.keyFilter) {
-        if (SEMForm.value.keyFilterVal === 1) {
-          SEMForm.value.keyword = SEMForm.value.keyword.map((item) => item.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, ''));
-        } else if (SEMForm.value.keyFilterVal === 2) {
-          SEMForm.value.keyword = SEMForm.value.keyword.map((item) => item.replace(/\s/g, ''));
-        }
       }
       // 保留原始词
       if (SEMForm.value.reserve) {

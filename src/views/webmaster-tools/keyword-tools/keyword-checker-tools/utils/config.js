@@ -346,7 +346,7 @@ export const ZZPlatformOptions2 = [
   }
 ];
 
-// 关键词生成语音
+// 关键词生成语言
 export const AILangOptions = [
   {
     label: '汉语',
