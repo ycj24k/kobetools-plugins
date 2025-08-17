@@ -1,8 +1,9 @@
 import { utils, writeFile, read } from 'xlsx';
 import { h } from 'vue';
-import { Modal, Button } from '@arco-design/web-vue';
+import { Modal } from '@arco-design/web-vue';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import {showErrorNotification} from "@/hooks/useNotification";
 
 import router from '../router';
 
@@ -49,6 +50,10 @@ export const handleExport = (dataList, selectList, columns, name, type) => {
   exportModal(list, [], '', type);
 };
 export const exportModal = async (list, widths, name, type) => {
+  if (!list || !list.length) {
+    showErrorNotification('暂无数据可导出')
+    return
+  }
   list = list ? list : [];
   let title = type === 'txt' ? '导出.txt文本压缩包' : '导出Excel表格';
   Modal.info({
@@ -60,7 +65,7 @@ export const exportModal = async (list, widths, name, type) => {
     content: () =>
       h({
         setup() {
-          return () => h('div', { class: 'info-modal-content' }, [h('div', { style: { marginBottom: '15px' } }, '是否导出当前页共计：' + (list.length - 1) + '条？'), h('div', {}, name ? '提示：需要操作当前所有内容，请先点击“加载全部”后再进行操作！' : '')]);
+          return () => h('div', { class: 'info-modal-content' }, [h('div', { style: { marginBottom: '15px' } }, '是否导出当前页共计：' + list.length + '条？'), h('div', {}, name ? '提示：需要操作当前所有内容，请先点击“加载全部”后再进行操作！' : '')]);
         },
       }),
     onOk: async () => {

@@ -1,30 +1,24 @@
 // 关键词过滤初始表单
 export const GLFormDefault = {
   // 关键词
-  keyword: '',
-  // 任务类型：1：智能挖掘，2：在线组合，3：手动录入，4：智能清洗
-  type: 1,
-  // 原始词
-  reserveKeyword: '',
+  keywords: '',
   // 搜索引擎
-  engine: '',
-  // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  engineTypes: [],
+  // 包含关键字开关：0：任一项，1：所有项
+  includeType: 1,
   // 包含关键字
-  includeKeyword: '',
-  // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  includeKeywords: [],
+  // 不含关键字开关：0：任一项，1：所有项
+  excludeType: 1,
   // 不含关键字
-  excludeKeyword: '',
-  // 字符长度过滤开关：0：关闭，1：开启
-  lengthFilter: 1,
+  excludeKeywords: [],
+  // 字符长度过滤开关：false：关闭，true：开启
+  lengthFilterEnabled: true,
   // 字符长度过滤
-  lengthFilterVal: {
-    min: 0,
-    max: 0,
-  },
-  // 违禁词过滤开关：0：关闭，1：开启
-  sensitiveFilter: 0,
+  minLength: 0,
+  maxLength: 0,
+  // 违禁词过滤开关：false：关闭，true：开启
+  sensitiveFilter: false,
   // 违禁词过滤
   sensitiveFilterVal: 0,
 };
@@ -33,11 +27,11 @@ export const GLFormDefault = {
 export const includeOptions = [
   {
     label: '任一项',
-    value: 1,
+    value: 0,
   },
   {
     label: '所有项',
-    value: 0,
+    value: 1,
   },
 ];
 
@@ -45,11 +39,11 @@ export const includeOptions = [
 export const excludeOptions = [
   {
     label: '任一项',
-    value: 1,
+    value: 0,
   },
   {
     label: '所有项',
-    value: 0,
+    value: 1,
   },
 ];
 // 搜索引擎

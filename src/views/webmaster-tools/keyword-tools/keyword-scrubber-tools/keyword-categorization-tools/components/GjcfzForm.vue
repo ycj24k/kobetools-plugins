@@ -2,20 +2,20 @@
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div class="flex_box search_box">
             <div class="search_area1">
-              <XTextarea v-model="domains" placeholder=""/>
+              <XTextarea v-model="allKeywords" placeholder="请输入关键词，一行一个"/>
             </div>
             <div class="search_line1"></div>
             <div class="search_area2">
-              <XTextarea v-model="domains" placeholder="请输入单个关键词，一行一个"/>
+              <XTextarea v-model="singleMatchWords" placeholder="请输入单个关键词，一行一个"/>
             </div>
             <div class="search_line2"></div>
             <div class="search_area2">
-              <XTextarea v-model="domains" placeholder="请输入需要同时包含的文字或单词，一行一组，关键词之间用英文逗号隔开"/>
+              <XTextarea v-model="combinedMatchWords" placeholder="请输入需要同时包含的文字或单词，一行一组，关键词之间用英文逗号隔开"/>
             </div>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" text="立即分组"/>
+                <XButton :loading="xCustomTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" text="立即分组"/>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                 <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
@@ -23,7 +23,7 @@
             </div>
         </div>
         <div style="height: 400px;">
-            <XTable ref="xTable" :columns="columns" />
+            <x-custom-table ref="xCustomTable" />
         </div>
     </div>
 </template>
@@ -32,36 +32,49 @@
 import {ref} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
-import XTable from "@/components/common/XTable.vue";
+import XCustomTable from "@/components/common/XCustomTable.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
 import { handleExport } from '@/utils';
 
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        width: 100
-    },
-];
-
-let domains = ref("");
-let xTable = ref(null);
+// let allKeywords = ref("谷歌SEO公司\n谷歌SEO公司哪家好\n谷歌推广公司\n谷歌优化\n谷歌优化公司");
+// let singleMatchWords = ref("seo\n优化");
+// let combinedMatchWords = ref("谷歌,seo\n谷歌,哪家好");
+let allKeywords = ref("");
+let singleMatchWords = ref("");
+let combinedMatchWords = ref("");
+let xCustomTable = ref(null);
 let isDownloadFile = ref(false);
 
 function queryTableData() {
-    let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
-    // xTable.value.queryTableData("/api/beian/query/registers", data);
+    let data = {
+        allKeywords: [],
+        singleMatchWords: [],
+        combinedMatchWords: [],
+    }
+    data.allKeywords = allKeywords.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
+    data.singleMatchWords = singleMatchWords.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
+    data.combinedMatchWords = combinedMatchWords.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
+    if (data.allKeywords.length === 0) {
+        showErrorNotification('请输入关键词，一行一个');
+        return
+    }
+    if (data.singleMatchWords.length === 0) {
+        showErrorNotification('请输入单个关键词，一行一个');
+        return
+    }
+    if (data.combinedMatchWords.length === 0) {
+        showErrorNotification('请输入需要同时包含的文字或单词，一行一组');
+        return
+    }
+    xCustomTable.value.queryTableData("/api/front/keyword/filter/group", data);
 }
 
 function exportRecordKeepingDomains() {
-    if (xTable.value.table.tableCurrData.length === 0) {
+    if (xCustomTable.value.table.tableCurrData.length === 0) {
         showErrorNotification('未获取到查询结果');
         return;
     }
-    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns.value, '', 'csv')
+    handleExport(xCustomTable.value.table.tableCurrData, xCustomTable.value.selectedKeys, xCustomTable.value.columns, '', 'csv')
 }
 
 </script>

@@ -15,6 +15,10 @@ axios.interceptors.request.use(
         config.headers = {};
       }
       config.headers['access-token'] = `${token}`;
+      config.headers['Authori-zation'] = `${token}`;
+    }
+    if (config.url.indexOf('/api/front/') != -1) {
+      config.baseURL = 'http://39.108.112.20:20001';
     }
     return config;
   },
@@ -27,6 +31,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response) => {
     const res = response.data;
+    console.log(res);
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
       Message.error({

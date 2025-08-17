@@ -5,7 +5,7 @@
         <a-grid :col-gap="24" :row-gap="24">
           <a-grid-item :span="4" class="flex_box">
             <a-form-item>
-              <a-select @change="getList" v-model="queryForm.tid" :options="taskList" allow-search
+              <a-select @change="getList" v-model="queryForm.taskId" :options="taskList" allow-search
                 :placeholder="localeGet('placeholder1')" />
             </a-form-item>
           </a-grid-item>
@@ -41,9 +41,6 @@
             <template v-for="item in weightOptions" :key="item.value">
               <div v-if="item.value === tableData[rowIndex].weight">{{ localeGet(item.label) }}</div>
             </template>
-          </template>
-          <template #update_time="{ rowIndex }">
-            <div>{{ dayjs(tableData[rowIndex].update_time * 1000).format('YYYY-MM-DD hh:mm') }}</div>
           </template>
           <template #actions="{ rowIndex }">
             <div class="flex_box flex_row_between table_btns">
@@ -98,7 +95,7 @@
                         <a-space :size="20">
                           <a-radio @click="addForm.type = 2" :model-value="addForm.type === 2">当前任务</a-radio>
                           <template v-if="addForm.type === 2">
-                            <a-select style="width: 320px;" v-model="addForm.tid" :options="taskList" placeholder="请选择任务"
+                            <a-select style="width: 320px;" v-model="addForm.taskId" :options="taskList" placeholder="请选择任务"
                               allow-search>
                               <!-- <template #label="{ data }">
                                   <span>{{ localeGet(data?.label) }}</span>
@@ -268,7 +265,7 @@ const rowSelection = reactive({
 const pagination = ref({ pageSize: 100, showPageSize: true, pageSizeOptions: [100, 200, 500, 1000, 2000] });
 const queryFormRef = ref(null);
 const queryForm = ref({
-  tid: '',
+  taskId: '',
   title: '',
   weight: '',
   website: '',
@@ -279,8 +276,8 @@ const allForm = ref({
   tid: '',
   pages: 1,
 });
-if (router.currentRoute.value.query.tid) {
-  queryForm.value.tid = +router.currentRoute.value.query.tid;
+if (router.currentRoute.value.query.taskId) {
+  queryForm.value.taskId = +router.currentRoute.value.query.taskId;
 }
 const taskList = ref([]);
 const tableLoading = ref(false);
@@ -294,13 +291,13 @@ const getTaskList = async () => {
       page: 1,
       limit: 100,
     });
-    taskList.value = res.data.data.map((item) => {
+    taskList.value = res.data.list.map((item) => {
       return {
         label: item.name,
         value: item.id,
       };
     });
-    if (res.data.data.length > 0 && !queryForm.value.tid) queryForm.value.tid = res.data.data[0].id;
+    if (res.data.list.length > 0 && !queryForm.value.taskId) queryForm.value.taskId = res.data.list[0].id;
   } catch (error) {
     taskList.value = [];
   }
@@ -313,9 +310,9 @@ const getList = async () => {
   tableLoading.value = true;
   try {
     const res = await keywordMyList(queryForm.value);
-    tableData.value = res.data.data;
-    tableDataAll.value = res.data.data;
-    allForm.value.tid = queryForm.value.tid;
+    tableData.value = res.data.list;
+    tableDataAll.value = res.data.list;
+    allForm.value.tid = queryForm.value.taskId;
     allForm.value.pages = res.data.pages;
   } catch (error) {
     tableData.value = [];
@@ -371,8 +368,8 @@ const handleExport = (e) => {
 const handleDelete = (rowIndex) => {
   keywordMyDel({
     id: tableData.value[rowIndex].id,
-    tid: queryForm.value.tid,
-    page: tableData.value[rowIndex].page,
+    tid: queryForm.value.taskId,
+    page: 1,
   })
     .then((res) => {
       Message.success(localeGet('message2'));
@@ -383,7 +380,7 @@ const handleDelete = (rowIndex) => {
 // 保存数据
 const saveForm = ref({
   data: [],
-  tid: '',
+  taskId: '',
 });
 const saveLoading = ref(false);
 // 保存数据获取
@@ -407,7 +404,7 @@ const handleSave = () => {
   if (saveForm.value.data.length === 0) {
     return Message.warning(localeGet('message3'));
   }
-  saveForm.value.tid = queryForm.value.tid;
+  saveForm.value.taskId = queryForm.value.taskId;
   saveLoading.value = true;
   keywordMySave(saveForm.value)
     .then((res) => {
@@ -440,7 +437,7 @@ const addSubmit = () => {
     Message.warning('请设置任务名称');
     return;
   }
-  if (addForm.value.type === 2 && !addForm.value.tid) {
+  if (addForm.value.type === 2 && !addForm.value.taskId) {
     Message.warning('请选择任务');
     return;
   }

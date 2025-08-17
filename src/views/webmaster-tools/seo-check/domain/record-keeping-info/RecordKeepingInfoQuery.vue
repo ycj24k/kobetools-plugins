@@ -9,31 +9,31 @@
                     :text="localeGet('button1')" />
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
-                    text="导出查询结果" />
+                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" text="导出查询结果" />
                 <XButton color="pink" :text="localeGet('button4')" />
             </div>
         </div>
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns" :locales="localeData" />
         </div>
-        <!-- 添加storage -->
-        <a-modal :mask-closable="false" l :esc-to-close="false" class="modal_box" v-model:visible="tipVisible" width="600px">
-        <template #title>
-            <div class="flex_box modal_title">
-            <div class="modal_title_icon">
-                <icon-info-circle-fill />
-            </div>
-            <div class="modal_title_text">温馨提示</div>
-            </div>
-        </template>
-        <div class="modal_content">您当前日查询额度上限为100个，当前已使用88，更多查询额度可通过升级VIP权限获取。</div>
-        <template #footer>
-            <div class="flex_box flex_row_center modal_footer">
-            <a-button style="color: #333" @click="tipVisible = false">返回查询页面</a-button>
-            <a-button class="form_btn3" @click="tipSubmit">升级VIP权限</a-button>
-            </div>
-        </template>
+        <!-- 弹出提示 -->
+        <a-modal :mask-closable="false" l :esc-to-close="false" class="modal_box" v-model:visible="tipVisible"
+            width="600px">
+            <template #title>
+                <div class="flex_box modal_title">
+                    <div class="modal_title_icon">
+                        <icon-info-circle-fill />
+                    </div>
+                    <div class="modal_title_text">温馨提示</div>
+                </div>
+            </template>
+            <div class="modal_content">您当前日查询额度上限为100个，当前已使用88，更多查询额度可通过升级VIP权限获取。</div>
+            <template #footer>
+                <div class="flex_box flex_row_center modal_footer">
+                    <a-button style="color: #333" @click="tipVisible = false">返回查询页面</a-button>
+                    <a-button class="form_btn3" @click="tipSubmit">升级VIP权限</a-button>
+                </div>
+            </template>
         </a-modal>
     </div>
 </template>
@@ -138,7 +138,7 @@ function queryTableData() {
         showErrorNotification(localeGet('message1'));
         return;
     }
-    
+
     xTable.value.queryTableData("/api/beian/query/domains", data, () => {
         tipVisible.value = true;
     });

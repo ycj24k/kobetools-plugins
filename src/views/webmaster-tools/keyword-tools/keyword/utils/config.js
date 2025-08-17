@@ -234,27 +234,23 @@ export const SEMFormDefault = {
 // AI挖掘词初始表单
 export const AIFormDefault = {
   // 关键词
-  keyword: '',
-  // 任务类型：1：智能挖掘，2：在线组合，3：手动录入，4：智能清洗
-  type: 1,
-  // 原始词
-  reserveKeyword: '',
+  keywords: [],
   // AI提示词
-  keyContent: '',
+  prompt: '请输入AI提示词进行关键词挖掘，支持关键词、数量、语言通配符，用法：{keyword}、{number}、{language}，用法示例如下\n\n请帮我找出与{keyword}有关的{number}个关键词，关键词要满足用户商业搜索需求，要有一定的搜索热度，尽可能简短；关键词方向可以从价格、厂家、排行榜、推荐、费用、批发、热门地区、分类、使用场景等方向结合；只需要输入关键词，一行一个，不需要其他任何文本信息，输出{language}',
   // 输出语言
-  lang: '',
+  language: '',
   // 挖掘来源
-  support: '',
+  model: '',
   // 挖掘数量
-  number: '',
+  num: '',
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  includeType: 1,
   // 包含关键字
-  includeKeyword: '',
+  includeKeywords: [],
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  excludeType: 1,
   // 不含关键字
-  excludeKeyword: '',
+  excludeKeywords: [],
 };
 
 // 站长关键词库初始表单
@@ -351,16 +347,12 @@ export const ZZPlatformOptions2 = [
 // 关键词生成语言
 export const AILangOptions = [
   {
-    label: '汉语',
-    value: 'cn'
+    label: '中文',
+    value: '中文'
   },
   {
-    label: '英语',
-    value: 'en'
-  },
-  {
-    label: '日语',
-    value: 'jp'
+    label: '英文',
+    value: '英文'
   },
 ];
 // 挖掘数量
@@ -394,15 +386,15 @@ export const AINumberOptions = [
 export const AISourceOptions = [
   {
     label: 'ChatGPT',
-    value: 1,
+    value: 'chatgpt',
   },
   {
     label: 'DeepSeek',
-    value: 2,
+    value: 'deepseek',
   },
   {
     label: 'Claude',
-    value: 3,
+    value: 'claude',
   },
 ];
 
@@ -410,11 +402,11 @@ export const AISourceOptions = [
 export const includeOptions = [
   {
     label: '任一项',
-    value: 1,
+    value: 0,
   },
   {
     label: '所有项',
-    value: 0,
+    value: 1,
   },
 ];
 
@@ -422,11 +414,11 @@ export const includeOptions = [
 export const excludeOptions = [
   {
     label: '任一项',
-    value: 1,
+    value: 0,
   },
   {
     label: '所有项',
-    value: 0,
+    value: 1,
   },
 ];
 // 挖掘来源
@@ -793,20 +785,24 @@ export const orderOptions = [
 // 任务类型
 export const typeOptions = [
   {
-    label: 'typeOptions.label1',
+    label: '下拉关键词',
     value: 1,
   },
   {
-    label: 'typeOptions.label2',
+    label: '组合关键词',
     value: 2,
   },
   {
-    label: 'typeOptions.label3',
+    label: '手动录入',
     value: 3,
   },
   {
-    label: 'typeOptions.label4',
+    label: '智能清洗',
     value: 4,
+  },
+  {
+    label: 'AI挖掘词',
+    value: 7,
   },
 ];
 // 任务表格
@@ -847,8 +843,8 @@ export const taskTableColumns = [
   },
   {
     title: 'taskTableColumns.title6',
-    dataIndex: 'update_time',
-    slotName: 'update_time',
+    dataIndex: 'updateTime',
+    slotName: 'updateTime',
     width: 160,
     titleSlotName: 'header'
   },
@@ -985,8 +981,8 @@ export const myTableColumns = [
   },
   {
     title: 'myTableColumns.title5',
-    dataIndex: 'update_time',
-    slotName: 'update_time',
+    dataIndex: 'updateTime',
+    slotName: 'updateTime',
     width: 160,
     titleSlotName: 'header'
   },

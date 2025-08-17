@@ -6,12 +6,17 @@ export function keywordTaskAdd(data) {
   return axios.post('/api/tool/keyword/adds', data);
 }
 
+//AI挖词
+export function keywordTaskAdddiscover(data) {
+  return axios.post('/api/front/keywords/discover', data);
+}
+
 export function keywordTaskDel(data) {
   return axios.post('/api/tool/keywordTask/delete', data);
 }
 
-export function keywordTaskList(params) {
-  return axios.get('/api/tool/keywordTask/list', {params});
+export function keywordTaskList(data) {
+  return axios.post('/api/front/keywords/list', data);
 }
 
 export function keywordTaskClean(data) {
@@ -27,7 +32,7 @@ export function keywordTaskSave(data) {
 }
 
 export function keywordMyList(params) {
-  return axios.get('/api/tool/keywordMy/list', {params});
+  return axios.get(`/api/front/keywords/detail/${params.taskId}`, params);
 }
 
 export function keywordMyListAll(params) {

@@ -2,8 +2,8 @@
   <a-form class="form_box" ref="AIFormRef" layout="vertical" hide-label :model="AIForm" @submit="AIFormSubmit">
     <a-grid class="form_main">
       <a-grid-item :span="6" class="form_left">
-        <a-form-item no-style field="keyword">
-          <a-textarea v-model="keyword" class="form_area" placeholder="请输入需要挖掘关键词的产品或服务名称，一行一个，如：SEO公司" allow-clear />
+        <a-form-item no-style field="keywords">
+          <a-textarea v-model="keywords" class="form_area" placeholder="请输入需要挖掘关键词的产品或服务名称，一行一个，如：SEO公司" allow-clear />
         </a-form-item>
       </a-grid-item>
       <a-grid-item :span="18" class="form_right">
@@ -20,21 +20,23 @@
             </div>
           </a-grid-item>
           <a-grid-item :span="12" class="flex_box form_option">
-            <div class="flex_box" style="width: 100%">
-              <div class="form_title"><span style="color: #ff0000">*</span>输出语言</div>
-              <a-select v-model="AIForm.lang" :options="AILangOptions" :style="{ width: '100%' }" placeholder="请选择关键词生成语言">
-                <!-- <template #label="{ data }">
-                    <span>{{ localeGet(data?.label) }}</span>
-                  </template>
-                  <template #option="{ data }">
-                    <span>{{ localeGet(data?.label) }}</span>
-                  </template> -->
-              </a-select>
-            </div>
+            <a-form-item no-style field="language" :rules="[{ required: true, message: '请选择关键词生成语言' }]" :validate-trigger="['change', 'blur']">
+              <div class="flex_box" style="width: 100%">
+                <div class="form_title"><span style="color: #ff0000">*</span>输出语言</div>
+                <a-select v-model="AIForm.language" :options="AILangOptions" :style="{ width: '100%' }" placeholder="请选择关键词生成语言">
+                  <!-- <template #label="{ data }">
+                      <span>{{ localeGet(data?.label) }}</span>
+                    </template>
+                    <template #option="{ data }">
+                      <span>{{ localeGet(data?.label) }}</span>
+                    </template> -->
+                </a-select>
+              </div>
+            </a-form-item>
           </a-grid-item>
           <a-grid-item :span="24" class="ai_tip">
-            <a-form-item no-style field="keyword">
-              <a-textarea v-model="aiTip" class="form_area" placeholder="请输入AI提示词" allow-clear />
+            <a-form-item no-style field="prompt">
+              <a-textarea v-model="AIForm.prompt" class="form_area" placeholder="请输入AI提示词" allow-clear />
             </a-form-item>
           </a-grid-item>
         </a-grid>
@@ -43,8 +45,8 @@
             <a-grid-item :span="12">
               <div class="flex_box form_item_radio form_item_radio_flex">
                 <div class="form_title"><span style="color: #ff0000">*</span>挖掘来源</div>
-                <a-form-item no-style field="depth" :rules="[{ required: true, message: localeGet('message2') }]" :validate-trigger="['change', 'blur']">
-                  <a-radio-group v-model="AIForm.support" :options="AISourceOptions">
+                <a-form-item no-style field="model" :rules="[{ required: true, message: '请选择挖掘来源' }]" :validate-trigger="['change', 'blur']">
+                  <a-radio-group v-model="AIForm.model" :options="AISourceOptions">
                     <!-- <template #label="{ data }">
                       <span>{{ localeGet(data?.label) }}</span>
                     </template>
@@ -58,8 +60,8 @@
             <a-grid-item :span="12">
               <div class="flex_box form_item_radio form_item_radio_flex">
                 <div class="form_title"><span style="color: #ff0000">*</span>挖掘数量</div>
-                <a-form-item no-style field="depth" :rules="[{ required: true, message: localeGet('message2') }]" :validate-trigger="['change', 'blur']">
-                  <a-radio-group v-model="AIForm.number" :options="AINumberOptions">
+                <a-form-item no-style field="num" :rules="[{ required: true, message: '请选择挖掘数量' }]" :validate-trigger="['change', 'blur']">
+                  <a-radio-group v-model="AIForm.num" :options="AINumberOptions">
                     <!-- <template #label="{ data }">
                       <span>{{ localeGet(data?.label) }}</span>
                     </template>
@@ -78,8 +80,8 @@
               <div class="form_title">{{ localeGet('title4') }}</div>
               <div class="flex_box form_content_top">
                 <div class="form_label">结果包含</div>
-                <a-form-item no-style field="include">
-                  <a-radio-group v-model="AIForm.include" :options="includeOptions">
+                <a-form-item no-style field="includeType">
+                  <a-radio-group v-model="AIForm.includeType" :options="includeOptions">
                     <template #label="{ data }">
                       <span>{{ data?.label }}</span>
                     </template>
@@ -93,8 +95,8 @@
             <a-grid-item :span="12" class="form_content_item">
               <div class="flex_box form_content_top">
                 <div class="form_label">结果不包含</div>
-                <a-form-item no-style field="exclude">
-                  <a-radio-group v-model="AIForm.exclude" :options="excludeOptions">
+                <a-form-item no-style field="excludeType">
+                  <a-radio-group v-model="AIForm.excludeType" :options="excludeOptions">
                     <template #label="{ data }">
                       <span>{{ data?.label }}</span>
                     </template>
@@ -109,12 +111,12 @@
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="AIForm.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="includeKeywords" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="AIForm.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="excludeKeywords" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
               </div>
             </a-grid-item>
           </a-grid>
@@ -135,7 +137,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
-import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
+import { keywordTaskAdddiscover, supportList } from '@/api/apps/tools/keyword';
 import { AIFormDefault, includeOptions, excludeOptions, AISourceOptions, AILangOptions, AINumberOptions } from '../../utils/config';
 import { jumpPage, processTextArea } from '@/utils/index';
 
@@ -162,8 +164,9 @@ const localeGet = (key) => {
 // 关键词挖掘
 // const supportOptions = ref([]);
 const AIFormRef = ref(null);
-const keyword = ref('');
-const aiTip = ref('请输入AI提示词进行关键词挖掘，支持关键词、数量、语言通配符，用法：{keyword}、{number}、{language}，用法示例如下\n\n请帮我找出与{keyword}有关的{number}个关键词，关键词要满足用户商业搜索需求，要有一定的搜索热度，尽可能简短；关键词方向可以从价格、厂家、排行榜、推荐、费用、批发、热门地区、分类、使用场景等方向结合；只需要输入关键词，一行一个，不需要其他任何文本信息，输出{language}');
+const keywords = ref('');
+const includeKeywords = ref('');
+const excludeKeywords = ref('');
 const AIForm = ref({ ...AIFormDefault });
 const loading = ref(false);
 
@@ -181,51 +184,46 @@ const AIFormSubmit = async ({ errors, values }) => {
   if (!errors) {
     loading.value = true;
     try {
-      AIForm.value.keyword = processTextArea(keyword.value);
-      keyword.value = AIForm.value.keyword.join('\n')
-      if (AIForm.value.keyword.length === 0) {
+      AIForm.value.keywords = processTextArea(keywords.value);
+      keywords.value = AIForm.value.keywords.join('\n')
+      if (AIForm.value.keywords.length === 0) {
         Message.warning(localeGet('message3'));
         return;
       }
       // 保留原始词
       if (AIForm.value.reserve) {
-        AIForm.value.reserveKeyword = keyword.value;
-      }
-      // 字符长度过滤
-      if (AIForm.value.lengthFilter) {
-        const { min, max } = AIForm.value.lengthFilterVal;
-        if (min > 0 || max > 0) {
-          AIForm.value.keyword = AIForm.value.keyword.filter((item) => (min === 0 && max > 0 && item.length <= max) || (min > 0 && max === 0 && item.length >= min) || (min > 0 && max > 0 && item.length >= min && item.length <= max));
-        }
+        AIForm.value.reserveKeyword = keywords.value;
       }
       // 包含关键词
-      if (AIForm.value.includeKeyword.length) {
-        const includeKeyword = AIForm.value.includeKeyword.split('\n');
+      if (includeKeywords.value.length) {
+        AIForm.value.includeKeywords = includeKeywords.value.split('\n');
         if (AIForm.value.include) {
-          AIForm.value.keyword = AIForm.value.keyword.filter((item) => includeKeyword.some((char) => item.includes(char)));
+          AIForm.value.keywords = AIForm.value.keywords.filter((item) => AIForm.value.includeKeywords.some((char) => item.includes(char)));
         } else {
-          AIForm.value.keyword = AIForm.value.keyword.filter((item) => includeKeyword.every((char) => item.includes(char)));
+          AIForm.value.keywords = AIForm.value.keywords.filter((item) => AIForm.value.includeKeywords.every((char) => item.includes(char)));
         }
       }
       // 不包含关键词
-      if (AIForm.value.excludeKeyword.length) {
-        const excludeKeyword = AIForm.value.excludeKeyword.split('\n');
+      if (excludeKeywords.value.length) {
+        AIForm.value.excludeKeywords = excludeKeywords.value.split('\n');
         if (AIForm.value.exclude) {
-          AIForm.value.keyword = AIForm.value.keyword.filter((item) => !excludeKeyword.some((char) => item.includes(char)));
+          AIForm.value.keywords = AIForm.value.keywords.filter((item) => !AIForm.value.excludeKeywords.some((char) => item.includes(char)));
         } else {
-          AIForm.value.keyword = AIForm.value.keyword.filter((item) => !excludeKeyword.every((char) => item.includes(char)));
+          AIForm.value.keywords = AIForm.value.keywords.filter((item) => !AIForm.value.excludeKeywords.every((char) => item.includes(char)));
         }
       }
-      console.log(AIForm.value.keyword);
-      if (AIForm.value.keyword.length === 0) {
+      console.log(AIForm.value.keywords);
+      if (AIForm.value.keywords.length === 0) {
         Message.warning(localeGet('message4'));
         return;
       }
-      keywordTaskAdd(AIForm.value)
+      keywordTaskAdddiscover(AIForm.value)
         .then((res) => {
           Message.success(localeGet('message5'));
           AIForm.value = { ...AIFormDefault };
-          keyword.value = '';
+          keywords.value = '';
+          includeKeywords.value = '';
+          excludeKeywords.value = '';
           jumpPage('/webmaster-tools/keyword-tools/keyword/keyword-task');
         })
         .catch(() => {});

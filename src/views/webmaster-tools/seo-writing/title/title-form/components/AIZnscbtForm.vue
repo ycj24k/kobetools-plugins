@@ -3,7 +3,7 @@
     <a-grid class="form_main">
       <a-grid-item :span="6" class="form_left">
         <a-form-item no-style field="keyword">
-          <a-textarea v-model="keyword" class="form_area" placeholder="请输入您的产品或服务，一行一个" allow-clear />
+          <a-textarea v-model="keyword" class="form_area" placeholder="请输入您的标题，一行一个" allow-clear />
         </a-form-item>
       </a-grid-item>
       <a-grid-item :span="18" class="form_right">
@@ -22,7 +22,7 @@
           <a-grid-item :span="12" class="flex_box form_option">
             <div class="flex_box" style="width: 100%">
               <div class="form_title"><span style="color: #ff0000">*</span>输出语言</div>
-              <a-select v-model="AITitleForm.lang" :options="AILangOptions" :style="{ width: '100%' }" placeholder="请选择关键词生成语言">
+              <a-select v-model="AITitleForm.lang" :options="AILangOptions" :style="{ width: '100%' }" placeholder="请选择标题生成语言">
                 <!-- <template #label="{ data }">
                     <span>{{ localeGet(data?.label) }}</span>
                   </template>
@@ -71,7 +71,7 @@
               </div>
             </a-grid-item>
             <a-grid-item :span="5" class="flex_box form_option">
-              <div class="form_label form_label1">同时生成关键词描述</div>
+              <div class="form_label form_label1">同时生成关键词和描述</div>
               <a-form-item no-style field="isDesc">
                 <a-space :size="20">
                   <a-switch v-model="AITitleForm.isDesc" :checked-value="1" :unchecked-value="0" />
@@ -190,7 +190,7 @@ const localeGet = (key) => {
 // const supportOptions = ref([]);
 const AITitleFormRef = ref(null);
 const keyword = ref('');
-const aiTip = ref('请输入AI提示词进行标题生成，支持关键词、数量、语言通配符，用法：{keyword}、{number}、{language}，用法示例如下\n\n请帮我找出与{keyword}有关的{number}个关键词，关键词要满足用户商业搜索需求，要有一定的搜索热度，尽可能简短；关键词方向可以从价格、厂家、排行榜、推荐、费用、批发、热门地区、分类、使用场景等方向结合；只需要输入关键词，一行一个，不需要其他任何文本信息，输出{language}');
+const aiTip = ref('请输入AI提示词进行标题生成，支持标题、数量、语言通配符，用法：{keyword}、{number}、{language}，用法示例如下\n\n请帮我找出与{keyword}有关的{number}个标题，标题要满足用户商业搜索需求，要有一定的搜索热度，尽可能简短；标题方向可以从价格、厂家、排行榜、推荐、费用、批发、热门地区、分类、使用场景等方向结合；只需要输入标题，一行一个，不需要其他任何文本信息，输出{language}');
 const AITitleForm = ref({ ...AITitleFormDefault });
 const loading = ref(false);
 

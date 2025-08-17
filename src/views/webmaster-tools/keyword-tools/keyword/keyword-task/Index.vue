@@ -6,12 +6,12 @@
           <a-grid-item :span="4" class="flex_box">
             <a-form-item field="type">
               <a-select v-model="queryForm.type" :options="typeOptions" allow-search :placeholder="localeGet('placeholder1')">
-                <template #label="{ data }">
+                <!-- <template #label="{ data }">
                   <span>{{ localeGet(data?.label) }}</span>
                 </template>
                 <template #option="{ data }">
                   <span>{{ localeGet(data?.label) }}</span>
-                </template>
+                </template> -->
               </a-select>
             </a-form-item>
           </a-grid-item>
@@ -47,11 +47,8 @@
           </template>
           <template #type="{ rowIndex }">
             <template v-for="item in typeOptions" :key="item.value">
-              <div v-if="item.value === tableData[rowIndex].type">{{ localeGet(item.label) }}</div>
+              <div v-if="item.value == tableData[rowIndex].type">{{ item.label }}</div>
             </template>
-          </template>
-          <template #update_time="{ rowIndex }">
-            <div>{{ dayjs(tableData[rowIndex].update_time * 1000).format('YYYY-MM-DD hh:mm') }}</div>
           </template>
           <template #actions="{ rowIndex }">
             <div class="flex_box flex_row_between table_btns">
@@ -173,12 +170,12 @@
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="clearForm.form.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="clearForm.form.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
               </div>
             </a-grid-item>
           </a-grid>
@@ -231,7 +228,7 @@ const queryForm = ref({
   name: '',
   website: '',
   page: 1,
-  limit: 100,
+  pageSize: 100,
 });
 const tableLoading = ref(false);
 const tableData = ref([]);
@@ -246,8 +243,8 @@ const getList = async () => {
   tableLoading.value = true;
   try {
     const res = await keywordTaskList(queryForm.value);
-    tableData.value = res.data.data;
-    tableDataAll.value = res.data.data;
+    tableData.value = res.data.list;
+    tableDataAll.value = res.data.list;
   } catch (error) {
     tableData.value = [];
     tableDataAll.value = [];
@@ -259,7 +256,7 @@ getList();
 // 分页发生改变
 const handlePageSizeChange = (pageSize) => {
   queryForm.value.page = 1;
-  queryForm.value.limit = pageSize;
+  queryForm.value.pageSize = pageSize;
   pagination.value.pageSize = pageSize;
   getList();
 };
@@ -312,7 +309,7 @@ const handleSave = () => {
 
 // 详情
 const handleDetail = (rowIndex) => {
-  jumpPage('/webmaster-tools/keyword-tools/keyword/keyword-mine', { tid: tableData.value[rowIndex].id })
+  jumpPage('/webmaster-tools/keyword-tools/keyword/keyword-mine', { taskId: tableData.value[rowIndex].id })
 };
 // 清洗
 const clearVisible = ref(false);
@@ -320,6 +317,8 @@ const clearForm = ref({
   id: '',
   form: { ...clearFormDefault },
 });
+const includeKeyword = ref('');
+const excludeKeyword = ref('');
 
 const handleClear = (rowIndex) => {
   clearForm.value = {
@@ -331,10 +330,9 @@ const handleClear = (rowIndex) => {
 };
 
 const clearSubmit = () => {
-  let params = {...clearForm.value}
-  params.form.includeKeyword = clearForm.value.form.includeKeyword ? clearForm.value.form.includeKeyword.split('\n') : [];
-  params.form.excludeKeyword = clearForm.value.form.excludeKeyword ? clearForm.value.form.excludeKeyword.split('\n') : [];
-  keywordTaskClean(params)
+  clearForm.value.form.includeKeyword = includeKeyword.value ? includeKeyword.value.split('\n') : [];
+  clearForm.value.form.excludeKeyword = excludeKeyword.value ? excludeKeyword.value.split('\n') : [];
+  keywordTaskClean(clearForm.value)
     .then((res) => {
       Message.success(localeGet('message3'));
       clearVisible.value = false;

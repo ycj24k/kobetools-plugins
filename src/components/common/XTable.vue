@@ -83,10 +83,6 @@ function queryTableData(url, data, callback = () => { }) {
     });
 }
 
-setTimeout(() => {
-    console.log(props.columns)
-}, 5000);
-
 /**
  * 批量设置表字段内容居中
  * @param columns
@@ -158,7 +154,7 @@ defineExpose({ queryTableData, table, setData, onPageIndexChange, selectedKeys }
             <a-table column-resizable :loading="table.isLoadTable" :scroll="{ y: '100%' }" :scrollbar="true"
                 :columns="dealColumns(columns)" :data="table.tableCurrData" :bordered="{ cell: true }" row-key="serialNumber"
                 :row-selection="rowSelection" :spanMethod="spanMethod" :pagination="false" v-model:selectedKeys="selectedKeys">
-                <template v-for="(slot, slotName) in $slots" #[slotName]="slotProps">
+                <template v-for="(slot, slotName) in $slots" :key="slotName" #[slotName]="slotProps">
                     <slot :name="slotName" v-bind="slotProps" />
                 </template>
                 <template #empty>

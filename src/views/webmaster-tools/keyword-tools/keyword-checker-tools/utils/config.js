@@ -349,16 +349,12 @@ export const ZZPlatformOptions2 = [
 // 关键词生成语言
 export const AILangOptions = [
   {
-    label: '汉语',
-    value: 'cn'
+    label: '中文',
+    value: '中文'
   },
   {
-    label: '英语',
-    value: 'en'
-  },
-  {
-    label: '日语',
-    value: 'jp'
+    label: '英文',
+    value: '英文'
   },
 ];
 // 挖掘数量

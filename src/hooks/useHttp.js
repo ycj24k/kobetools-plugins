@@ -1,28 +1,37 @@
-import axios from "axios";
-import {Message} from "@arco-design/web-vue";
-import {showErrorNotification} from "@/hooks/useNotification";
+import axios from 'axios';
+import { Message } from '@arco-design/web-vue';
+import { showErrorNotification } from '@/hooks/useNotification';
 
+let host = 'http://hw.izbw.net';
 
-const host = "http://hw.izbw.net";
-
-function post(url, data, callback=()=>{}, errCallback=()=>{}){
-    axios.post(host+url, data).then((res) => {
-        if (res.code === 200 && res.hasOwnProperty("data")){
-            callback(res);
-        }else{
-            showErrorNotification(res.msg)
+function post(url, data, callback = () => { }, errCallback = () => { }) {
+    if (url.indexOf('/api/front/') != -1) {
+        host = 'http://39.108.112.20:20001';
+    }
+    axios
+        .post(host + url, data)
+        .then((res) => {
+            if (res.code === 200 && res.hasOwnProperty('data')) {
+                callback(res);
+            } else {
+                showErrorNotification(res.msg || res.message);
+                errCallback();
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+            Message.error(error.response.data.msg || error.response.data.message);
             errCallback();
-        }
-    }).catch(error => {
-        Message.error(error.response.data.msg);
-        errCallback();
-    })
+        });
 }
 
-function download(url, data, fileName, callback=()=>{}){
+function download(url, data, fileName, callback = () => { }) {
+    if (url.indexOf('/api/front/') != -1) {
+        host = 'http://39.108.112.20:20001';
+    }
     let config = {
         method: 'post',
-        url: host+url,
+        url: host + url,
         data: data,
         responseType: 'blob',
     };
@@ -31,7 +40,7 @@ function download(url, data, fileName, callback=()=>{}){
         .catch((error) => downloadFile(error.response, fileName, callback));
 }
 
-function downloadFile(response, fileName=`KB-results-${Date.now()}.xlsx`, callback){
+function downloadFile(response, fileName = `KB-results-${Date.now()}.xlsx`, callback) {
     callback();
     const blob = new Blob([response.data]);
     const link = document.createElement('a');
@@ -41,6 +50,4 @@ function downloadFile(response, fileName=`KB-results-${Date.now()}.xlsx`, callba
     window.URL.revokeObjectURL(link.href);
 }
 
-export {
-    post, download
-}
+export { post, download };
