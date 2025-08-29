@@ -17,7 +17,7 @@
                 <template #option="{ record }">
                     <a-space :size="15">
                         <XButton size="small" shape="square" text="详情" @xClick="outerLinkWebsiteQueryDetails.show(record)"/>
-                        <XButton :loading="isDownloadFile" color="yellow" size="small" shape="square" text="导出" @xClick="exportDetail(record)"/>
+                        <XButton color="yellow" size="small" shape="square" text="导出" @xClick="exportDetail(record)"/>
                     </a-space>
                 </template>
             </XTable>
@@ -110,10 +110,9 @@ function exportTableData(){
     });
 }
 function exportDetail(record) {
-    isDownloadFile.value = true;
     let data = record.items;
     download("/api/sites/export/backlinks/detail", data, `KB-results-${Date.now()}.xlsx`, () => {
-        isDownloadFile.value = false;
+        
     });
 }
 

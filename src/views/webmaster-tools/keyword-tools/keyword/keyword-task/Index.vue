@@ -45,16 +45,22 @@
           <template #website="{ rowIndex }">
             <a-input @change="handleSaveChange(rowIndex, 'website')" v-model="tableData[rowIndex].website" />
           </template>
+          <template #number="{ rowIndex }">
+            <div>{{ tableData[rowIndex].number == -1 ? '暂停中' : tableData[rowIndex].number == 0 ? '生成中' : tableData[rowIndex].number }}</div>
+          </template>
+          <template #updateTime="{ rowIndex }">
+            <div>{{ dayjs(tableData[rowIndex].updateTime * 1000).format('YYYY-MM-DD hh:mm') }}</div>
+          </template>
           <template #type="{ rowIndex }">
             <template v-for="item in typeOptions" :key="item.value">
               <div v-if="item.value == tableData[rowIndex].type">{{ item.label }}</div>
             </template>
           </template>
           <template #actions="{ rowIndex }">
-            <div class="flex_box flex_row_between table_btns">
+            <div class="flex_box table_btns">
               <a-button size="mini" class="form_btn3" @click="handleDetail(rowIndex)">{{ localeGet('button4') }}</a-button>
               <a-button size="mini" class="form_btn4" @click="handleClear(rowIndex)">{{ localeGet('button5') }}</a-button>
-              <a-popconfirm position="left" :content="localeGet('content1')" @ok="handlePause(rowIndex)">
+              <a-popconfirm v-if="tableData[rowIndex].number == 0" position="left" :content="localeGet('content1')" @ok="handlePause(rowIndex)">
                 <a-button size="mini" class="form_btn5">{{ localeGet('button6') }}</a-button>
               </a-popconfirm>
               <a-popconfirm position="left" :content="localeGet('content2')" @ok="handleDelete(rowIndex)">
@@ -135,6 +141,18 @@
         </div>
         <div class="form_item">
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
+            <a-grid-item :span="24" class="flex_box form_content_item">
+              <div class="form_title">AI过滤</div>
+              <div class="flex_box form_content_top">
+                <a-form-item no-style field="engineTypes">
+                  <a-checkbox-group v-model="clearForm.form.engineTypes" :options="GLEngineOptions"></a-checkbox-group>
+                </a-form-item>
+              </div>
+            </a-grid-item>
+          </a-grid>
+        </div>
+        <div class="form_item">
+          <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_title">{{ localeGet('title3') }}</div>
               <div class="flex_box form_content_top">
@@ -196,7 +214,7 @@ import { ref, reactive } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import dayjs from 'dayjs';
 import { keywordTaskList, keywordTaskClean, keywordTaskDel, keywordTaskOut, keywordTaskSave } from '@/api/apps/tools/keyword';
-import { includeOptions, excludeOptions, keyOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions, typeOptions, taskTableColumns, clearFormDefault } from '../utils/config';
+import { includeOptions, excludeOptions, keyOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions, typeOptions, taskTableColumns, clearFormDefault, GLEngineOptions } from '../utils/config';
 import localeConfig from './zh-CN.js';
 import { jumpPage, processTextArea } from '@/utils/index';
 // 多语言
@@ -299,7 +317,7 @@ const handleSave = () => {
   if (saveForm.value.data.length === 0) {
     return Message.warning(localeGet('message1'));
   }
-  keywordTaskSave(saveForm.value)
+  keywordTaskSave(saveForm.value.data)
     .then((res) => {
       Message.success(localeGet('message2'));
       getList();
@@ -330,8 +348,8 @@ const handleClear = (rowIndex) => {
 };
 
 const clearSubmit = () => {
-  clearForm.value.form.includeKeyword = includeKeyword.value ? includeKeyword.value.split('\n') : [];
-  clearForm.value.form.excludeKeyword = excludeKeyword.value ? excludeKeyword.value.split('\n') : [];
+  clearForm.value.form.includeKeyword = processTextArea(includeKeyword.value);
+  clearForm.value.form.excludeKeyword = processTextArea(excludeKeyword.value);
   keywordTaskClean(clearForm.value)
     .then((res) => {
       Message.success(localeGet('message3'));
@@ -349,7 +367,9 @@ const handlePause = (rowIndex) => {
       Message.success(localeGet('message4'));
       getList();
     })
-    .catch(() => {});
+    .catch(() => {
+      getList();
+    });
 };
 // 删除
 const handleDelete = (rowIndex) => {

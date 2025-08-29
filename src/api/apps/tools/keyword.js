@@ -28,7 +28,7 @@ export function keywordTaskOut(data) {
 }
 
 export function keywordTaskSave(data) {
-  return axios.post('/api/tool/keywordTask/save', data);
+  return axios.post('/api/front/keywords/save', data);
 }
 
 export function keywordMyList(params) {
@@ -39,12 +39,12 @@ export function keywordMyListAll(params) {
   return axios.get('/api/tool/keywordMy/all', {params});
 }
 
-export function keywordMySave(data) {
-  return axios.post('/api/tool/keywordMy/save', data);
+export function keywordMySave(taskId, data) {
+  return axios.post(`/api/front/keywords/${taskId}/detail/save`, data);
 }
 
-export function keywordMyDel(data) {
-  return axios.post('/api/tool/keywordMy/delete', data);
+export function keywordMyDel(taskId, detailId) {
+  return axios.post(`/api/front/keywords/${taskId}/delete/${detailId}`, {});
 }
 
 export function keywordMyAdd(data) {

@@ -170,7 +170,7 @@ defineExpose({ queryTableData, table, setData, onPageIndexChange, selectedKeys }
                     style="color: red;font-weight: bold;">{{ table.failCount }}</span>&nbsp;条
             </div>
             <div style="flex: 1; text-align: right">
-                <a-pagination style="display: inline-block" v-model="table.pageIndex" :page-size="table.pageSize"
+                <a-pagination show-total style="display: inline-block" v-model="table.pageIndex" :page-size="table.pageSize"
                     :total="table.total" show-page-size @change="onPageIndexChange"
                     @page-size-change="onPageSizeChange" />
             </div>

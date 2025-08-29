@@ -11,11 +11,11 @@ export const correlationFormDefault = {
   // 挖掘深度
   depth: 1,
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -80,11 +80,11 @@ export const XGSSFormDefault = {
   // 挖掘深度
   depth: 1,
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -120,11 +120,11 @@ export const DJDZSFormDefault = {
   // 挖掘深度
   depth: 1,
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -161,11 +161,11 @@ export const jingduiFormDefault = {
   // 搜索引擎
   engine: [],
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -203,11 +203,11 @@ export const SEMFormDefault = {
   // 挖掘深度
   depth: 1,
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -246,11 +246,11 @@ export const AIFormDefault = {
   // 挖掘数量
   number: '',
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
 };
@@ -283,11 +283,11 @@ export const zhanzhangFormDefault = {
     max: 0,
   },
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -348,14 +348,36 @@ export const ZZPlatformOptions2 = [
 
 // 关键词生成语言
 export const AILangOptions = [
-  {
-    label: '中文',
-    value: '中文'
-  },
-  {
-    label: '英文',
-    value: '英文'
-  },
+  { label: '简体中文', value: '简体中文' },
+  { label: '英文', value: '英文' },
+  { label: '繁体中文', value: '繁体中文' },
+  { label: '俄语', value: '俄语' },
+  { label: '日语', value: '日语' },
+  { label: '法语', value: '法语' },
+  { label: '德语', value: '德语' },
+  { label: '葡萄牙语', value: '葡萄牙语' },
+  { label: '阿拉伯语', value: '阿拉伯语' },
+  { label: '西班牙语', value: '西班牙语' },
+  { label: '意大利语', value: '意大利语' },
+  { label: '越南语', value: '越南语' },
+  { label: '韩语', value: '韩语' },
+  { label: '印地语', value: '印地语' },
+  { label: '孟加拉语', value: '孟加拉语' },
+  { label: '印尼语', value: '印尼语' },
+  { label: '土耳其语', value: '土耳其语' },
+  { label: '泰语', value: '泰语' },
+  { label: '泰卢固语', value: '泰卢固语' },
+  { label: '泰米尔语', value: '泰米尔语' },
+  { label: '马来语', value: '马来语' },
+  { label: '捷克语', value: '捷克语' },
+  { label: '荷兰语', value: '荷兰语' },
+  { label: '菲律宾语', value: '菲律宾语' },
+  { label: '芬兰语', value: '芬兰语' },
+  { label: '瑞典语', value: '瑞典语' },
+  { label: '希腊语', value: '希腊语' },
+  { label: '印度尼西亚语', value: '印度尼西亚语' },
+  { label: '匈牙利语', value: '匈牙利语' },
+  { label: '乌克兰语', value: '乌克兰语' },
 ];
 // 挖掘数量
 export const AINumberOptions = [
@@ -384,22 +406,41 @@ export const AINumberOptions = [
     value: 500
   }
 ];
-// AI挖掘来源
-export const AISourceOptions = [
+// AI模型
+export const AIModelOptions = [
   {
     label: 'ChatGPT',
-    value: 1,
+    value: 'ChatGPT'
   },
   {
     label: 'DeepSeek',
-    value: 2,
+    value: 'DeepSeek'
   },
   {
     label: 'Claude',
-    value: 3,
+    value: 'Claude'
+  },
+  {
+    label: ' Gemini',
+    value: ' Gemini'
+  },
+  {
+    label: 'Qwen',
+    value: 'Qwen'
+  },
+  {
+    label: 'BaiduAI',
+    value: 'BaiduAI'
+  },
+  {
+    label: 'DouBao',
+    value: 'DouBao'
+  },
+  {
+    label: 'Kimi',
+    value: 'Kimi'
   },
 ];
-
 // 包含关键词
 export const includeOptions = [
   {
@@ -811,20 +852,44 @@ export const orderOptions = [
 // 任务类型
 export const typeOptions = [
   {
-    label: 'typeOptions.label1',
+    label: '手动录入',
+    value: 0,
+  },
+  {
+    label: '智能清洗',
+    value: -1,
+  },
+  {
+    label: '下拉关键词',
     value: 1,
   },
   {
-    label: 'typeOptions.label2',
+    label: '组合关键词',
     value: 2,
   },
   {
-    label: 'typeOptions.label3',
+    label: '相关搜索词',
     value: 3,
   },
   {
-    label: 'typeOptions.label4',
+    label: '大家都在搜',
     value: 4,
+  },
+  {
+    label: '竞对关键词',
+    value: 5,
+  },
+  {
+    label: 'SEM关键词',
+    value: 6,
+  },
+  {
+    label: 'AI挖掘词',
+    value: 7,
+  },
+  {
+    label: '站长关键词库',
+    value: 8,
   },
 ];
 // 任务表格
@@ -882,11 +947,11 @@ export const taskTableColumns = [
 // 清洗任务初始表单
 export const clearFormDefault = {
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 关键词去重开关：0：关闭，1：开启
@@ -921,11 +986,11 @@ export const addFormDefault = {
   // 预计应用站点
   website: '',
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 关键词去重开关：0：关闭，1：开启

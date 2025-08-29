@@ -11,11 +11,11 @@ export const correlationFormDefault = {
   // 挖掘深度
   depth: 1,
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -80,11 +80,11 @@ export const XGSSFormDefault = {
   // 挖掘深度
   depth: 1,
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -120,11 +120,11 @@ export const DJDZSFormDefault = {
   // 挖掘深度
   depth: 1,
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -161,11 +161,11 @@ export const jingduiFormDefault = {
   // 搜索引擎
   engine: [],
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -203,11 +203,11 @@ export const SEMFormDefault = {
   // 挖掘深度
   depth: 1,
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -232,11 +232,29 @@ export const SEMFormDefault = {
 };
 
 // AI挖掘词初始表单
+/**
+ * 判断字符串是否只包含 {keyword}、{number}、{language} 三个通配符
+ * @param {string} str
+ * @returns {boolean}
+ */
+export function isPromptDefaultValid(str) {
+  // 匹配所有 {xxx} 通配符
+  const matches = str.match(/\{(.*?)\}/g) || [];
+  // 提取通配符名
+  const keys = matches.map(m => m.replace(/[{}]/g, ''));
+  // 允许的通配符
+  const allowed = ['keyword', 'number', 'language'];
+  // 必须有且仅有这三个通配符
+  if (keys.length !== 3) return false;
+  // 检查是否包含且只包含这三个通配符
+  return allowed.every(a => keys.includes(a)) && keys.every(k => allowed.includes(k));
+}
+export const promptDefault = '请帮我找出与{keyword}有关的{number}个关键词，关键词要满足用户商业搜索需求，要有一定的搜索热度，尽可能简短；关键词方向可以从价格、厂家、排行榜、推荐、费用、批发、热门地区、分类、使用场景等方向结合；只需要输入关键词，一行一个，不需要其他任何文本信息，输出{language}'
 export const AIFormDefault = {
   // 关键词
   keywords: [],
   // AI提示词
-  prompt: '请输入AI提示词进行关键词挖掘，支持关键词、数量、语言通配符，用法：{keyword}、{number}、{language}，用法示例如下\n\n请帮我找出与{keyword}有关的{number}个关键词，关键词要满足用户商业搜索需求，要有一定的搜索热度，尽可能简短；关键词方向可以从价格、厂家、排行榜、推荐、费用、批发、热门地区、分类、使用场景等方向结合；只需要输入关键词，一行一个，不需要其他任何文本信息，输出{language}',
+  prompt: '请输入AI提示词进行关键词挖掘，支持关键词、数量、语言通配符，用法：{keyword}、{number}、{language}，用法示例如下\n\n'+promptDefault,
   // 输出语言
   language: '',
   // 挖掘来源
@@ -244,11 +262,11 @@ export const AIFormDefault = {
   // 挖掘数量
   num: '',
   // 包含关键字开关：0：关闭，1：开启
-  includeType: 1,
+  includeType: 0,
   // 包含关键字
   includeKeywords: [],
   // 不含关键字开关：0：关闭，1：开启
-  excludeType: 1,
+  excludeType: 0,
   // 不含关键字
   excludeKeywords: [],
 };
@@ -281,11 +299,11 @@ export const zhanzhangFormDefault = {
     max: 0,
   },
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 保留原始词开关：0：关闭，1：开启
@@ -346,14 +364,36 @@ export const ZZPlatformOptions2 = [
 
 // 关键词生成语言
 export const AILangOptions = [
-  {
-    label: '中文',
-    value: '中文'
-  },
-  {
-    label: '英文',
-    value: '英文'
-  },
+  { label: '简体中文', value: '简体中文' },
+  { label: '英文', value: '英文' },
+  { label: '繁体中文', value: '繁体中文' },
+  { label: '俄语', value: '俄语' },
+  { label: '日语', value: '日语' },
+  { label: '法语', value: '法语' },
+  { label: '德语', value: '德语' },
+  { label: '葡萄牙语', value: '葡萄牙语' },
+  { label: '阿拉伯语', value: '阿拉伯语' },
+  { label: '西班牙语', value: '西班牙语' },
+  { label: '意大利语', value: '意大利语' },
+  { label: '越南语', value: '越南语' },
+  { label: '韩语', value: '韩语' },
+  { label: '印地语', value: '印地语' },
+  { label: '孟加拉语', value: '孟加拉语' },
+  { label: '印尼语', value: '印尼语' },
+  { label: '土耳其语', value: '土耳其语' },
+  { label: '泰语', value: '泰语' },
+  { label: '泰卢固语', value: '泰卢固语' },
+  { label: '泰米尔语', value: '泰米尔语' },
+  { label: '马来语', value: '马来语' },
+  { label: '捷克语', value: '捷克语' },
+  { label: '荷兰语', value: '荷兰语' },
+  { label: '菲律宾语', value: '菲律宾语' },
+  { label: '芬兰语', value: '芬兰语' },
+  { label: '瑞典语', value: '瑞典语' },
+  { label: '希腊语', value: '希腊语' },
+  { label: '印度尼西亚语', value: '印度尼西亚语' },
+  { label: '匈牙利语', value: '匈牙利语' },
+  { label: '乌克兰语', value: '乌克兰语' },
 ];
 // 挖掘数量
 export const AINumberOptions = [
@@ -382,19 +422,39 @@ export const AINumberOptions = [
     value: 500
   }
 ];
-// AI挖掘来源
-export const AISourceOptions = [
+// AI模型
+export const AIModelOptions = [
   {
     label: 'ChatGPT',
-    value: 'chatgpt',
+    value: 'ChatGPT'
   },
   {
     label: 'DeepSeek',
-    value: 'deepseek',
+    value: 'DeepSeek'
   },
   {
     label: 'Claude',
-    value: 'claude',
+    value: 'Claude'
+  },
+  {
+    label: ' Gemini',
+    value: ' Gemini'
+  },
+  {
+    label: 'Qwen',
+    value: 'Qwen'
+  },
+  {
+    label: 'BaiduAI',
+    value: 'BaiduAI'
+  },
+  {
+    label: 'DouBao',
+    value: 'DouBao'
+  },
+  {
+    label: 'Kimi',
+    value: 'Kimi'
   },
 ];
 
@@ -785,6 +845,14 @@ export const orderOptions = [
 // 任务类型
 export const typeOptions = [
   {
+    label: '手动录入',
+    value: 0,
+  },
+  {
+    label: '智能清洗',
+    value: -1,
+  },
+  {
     label: '下拉关键词',
     value: 1,
   },
@@ -793,16 +861,28 @@ export const typeOptions = [
     value: 2,
   },
   {
-    label: '手动录入',
+    label: '相关搜索词',
     value: 3,
   },
   {
-    label: '智能清洗',
+    label: '大家都在搜',
     value: 4,
+  },
+  {
+    label: '竞对关键词',
+    value: 5,
+  },
+  {
+    label: 'SEM关键词',
+    value: 6,
   },
   {
     label: 'AI挖掘词',
     value: 7,
+  },
+  {
+    label: '站长关键词库',
+    value: 8,
   },
 ];
 // 任务表格
@@ -824,6 +904,7 @@ export const taskTableColumns = [
   {
     title: 'taskTableColumns.title3',
     dataIndex: 'number',
+    slotName: 'number',
     width: 100,
     titleSlotName: 'header'
   },
@@ -853,18 +934,54 @@ export const taskTableColumns = [
     dataIndex: 'actions',
     slotName: 'actions',
     fixed: 'right',
-    width: 300,
+    width: 260,
     titleSlotName: 'header'
+  },
+];
+
+// 搜索引擎
+export const GLEngineOptions = [
+  {
+    label: '无效关键词',
+    value: 1,
+  },
+  {
+    label: '疑似品牌词',
+    value: 2,
+  },
+  {
+    label: '联系方式词',
+    value: 3,
+  },
+  {
+    label: '违禁敏感词',
+    value: 4,
+  },
+  {
+    label: '知识科普词',
+    value: 5,
+  },
+  {
+    label: '疑问解答词',
+    value: 6,
+  },
+  {
+    label: '图片视频词',
+    value: 7,
+  },
+  {
+    label: '低价值词',
+    value: 8,
   },
 ];
 // 清洗任务初始表单
 export const clearFormDefault = {
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 关键词去重开关：0：关闭，1：开启
@@ -886,6 +1003,8 @@ export const clearFormDefault = {
   sensitiveFilterVal: 0,
   // 违禁词过滤自定义词库
   sensitiveCustom: '',
+  // AI过滤
+  engineTypes: []
 };
 
 // 手动加词初始表单
@@ -899,11 +1018,11 @@ export const addFormDefault = {
   // 预计应用站点
   website: '',
   // 包含关键字开关：0：关闭，1：开启
-  include: 1,
+  include: 0,
   // 包含关键字
   includeKeyword: '',
   // 不含关键字开关：0：关闭，1：开启
-  exclude: 1,
+  exclude: 0,
   // 不含关键字
   excludeKeyword: '',
   // 关键词去重开关：0：关闭，1：开启

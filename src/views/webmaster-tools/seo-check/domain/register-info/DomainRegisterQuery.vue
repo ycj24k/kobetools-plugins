@@ -14,7 +14,11 @@
             </div>
         </div>
         <div style="height: 400px;">
-            <XTable ref="xTable" :columns="columns" />
+            <XTable ref="xTable" :columns="columns">
+                <template #age="{ record }">
+                    <div>{{ record.age.replace('0个月','') }}</div>
+                </template>
+            </XTable>
         </div>
     </div>
 </template>
@@ -78,6 +82,7 @@ let columns = [
     {
         title: '域名年龄',
         dataIndex: 'age',
+        slotName: 'age',
         sortable: {
             sortDirections: ['ascend', 'descend']
         },
@@ -103,7 +108,7 @@ function exportRecordKeepingDomains() {
         showErrorNotification('未获取到查询结果');
         return;
     }
-    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns.value, '', 'csv')
+    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns, '', 'csv')
 }
 
 </script>

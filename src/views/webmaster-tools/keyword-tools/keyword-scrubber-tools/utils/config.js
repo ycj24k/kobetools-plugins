@@ -1,15 +1,19 @@
+import { file } from "jszip";
+
 // 关键词过滤初始表单
 export const GLFormDefault = {
+  // 文件
+  file: null,
   // 关键词
   keywords: '',
   // 搜索引擎
   engineTypes: [],
   // 包含关键字开关：0：任一项，1：所有项
-  includeType: 1,
+  includeType: 0,
   // 包含关键字
   includeKeywords: [],
   // 不含关键字开关：0：任一项，1：所有项
-  excludeType: 1,
+  excludeType: 0,
   // 不含关键字
   excludeKeywords: [],
   // 字符长度过滤开关：false：关闭，true：开启
@@ -46,6 +50,17 @@ export const excludeOptions = [
     value: 1,
   },
 ];
+// 选择方式
+export const uploadTypeOptions = [
+  {
+    label: '手动录入',
+    value: 1,
+  },
+  {
+    label: '文件上传',
+    value: 2,
+  },
+];
 // 搜索引擎
 export const GLEngineOptions = [
   {
@@ -53,7 +68,7 @@ export const GLEngineOptions = [
     value: 1,
   },
   {
-    label: '企业品牌词',
+    label: '疑似品牌词',
     value: 2,
   },
   {
@@ -61,7 +76,7 @@ export const GLEngineOptions = [
     value: 3,
   },
   {
-    label: '敏感违禁词',
+    label: '违禁敏感词',
     value: 4,
   },
   {
@@ -69,12 +84,16 @@ export const GLEngineOptions = [
     value: 5,
   },
   {
-    label: '商业意图词',
+    label: '疑问解答词',
     value: 6,
   },
   {
-    label: '疑问提问词',
+    label: '图片视频词',
     value: 7,
+  },
+  {
+    label: '低价值词',
+    value: 8,
   },
 ];
 // 违禁词过滤

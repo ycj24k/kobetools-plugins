@@ -17,7 +17,7 @@
                 <template #option="{ record }">
                     <a-space :size="15">
                         <XButton size="small" shape="square" text="详情" @xClick="showDetail(record)"/>
-                        <XButton :loading="isDownloadFile" color="yellow" size="small" shape="square" text="导出" @xClick="exportDetail(record)"/>
+                        <XButton color="yellow" size="small" shape="square" text="导出" @xClick="exportDetail(record)"/>
                     </a-space>
                 </template>
             </XTable>
@@ -96,7 +96,7 @@ function queryTableData() {
 
 function exportTableData(){
     if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的域名或IP地址！');
+        showErrorNotification('请选择需要导出的数据');
         return;
     }
     isDownloadFile.value = true;
@@ -110,12 +110,11 @@ function showDetail(record) {
     ipWebsiteQueryDetails.value.show(record)
 }
 function exportDetail(record) {
-    isDownloadFile.value = true;
     let data = {
         domain: record.domain
     };
     download("/api/sites/export/dnsinfo/detail", data, `KB-results-${Date.now()}.xlsx`, () => {
-        isDownloadFile.value = false;
+        
     });
 }
 

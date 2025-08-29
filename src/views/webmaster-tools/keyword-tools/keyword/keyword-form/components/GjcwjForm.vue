@@ -131,12 +131,12 @@
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="correlationForm.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="includeKeywords" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="correlationForm.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="excludeKeywords" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
               </div>
             </a-grid-item>
           </a-grid>
@@ -159,7 +159,7 @@ import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
 import { correlationFormDefault, includeOptions, excludeOptions, depthOptions, supportOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions } from '../../utils/config';
-import { jumpPage, processTextArea } from '@/utils/index';
+import { jumpPage, processTextArea, filterByLength, filterByInclude, filterByExclude } from '@/utils/index';
 
 // 多语言
 const props = defineProps({
@@ -185,6 +185,8 @@ const localeGet = (key) => {
 // const supportOptions = ref([]);
 const correlationFormRef = ref(null);
 const keyword = ref('');
+const includeKeywords = ref('');
+const excludeKeywords = ref('');
 const correlationForm = ref({ ...correlationFormDefault });
 const loading = ref(false);
 
@@ -216,26 +218,20 @@ const correlationFormSubmit = async ({ errors, values }) => {
       if (correlationForm.value.lengthFilter) {
         const { min, max } = correlationForm.value.lengthFilterVal;
         if (min > 0 || max > 0) {
-          correlationForm.value.keyword = correlationForm.value.keyword.filter((item) => (min === 0 && max > 0 && item.length <= max) || (min > 0 && max === 0 && item.length >= min) || (min > 0 && max > 0 && item.length >= min && item.length <= max));
+          correlationForm.value.keyword = filterByLength(correlationForm.value.keyword, min, max);
         }
       }
       // 包含关键词
-      if (correlationForm.value.includeKeyword.length) {
-        const includeKeyword = correlationForm.value.includeKeyword.split('\n');
-        if (correlationForm.value.include) {
-          correlationForm.value.keyword = correlationForm.value.keyword.filter((item) => includeKeyword.some((char) => item.includes(char)));
-        } else {
-          correlationForm.value.keyword = correlationForm.value.keyword.filter((item) => includeKeyword.every((char) => item.includes(char)));
-        }
+      if (includeKeywords.value.length) {
+        correlationForm.value.includeKeywords = processTextArea(includeKeywords.value);
+        includeKeywords.value = correlationForm.value.includeKeywords.join('\n')
+        correlationForm.value.keyword = filterByInclude(correlationForm.value.keyword, correlationForm.value.includeKeywords, correlationForm.value.include);
       }
       // 不包含关键词
-      if (correlationForm.value.excludeKeyword.length) {
-        const excludeKeyword = correlationForm.value.excludeKeyword.split('\n');
-        if (correlationForm.value.exclude) {
-          correlationForm.value.keyword = correlationForm.value.keyword.filter((item) => !excludeKeyword.some((char) => item.includes(char)));
-        } else {
-          correlationForm.value.keyword = correlationForm.value.keyword.filter((item) => !excludeKeyword.every((char) => item.includes(char)));
-        }
+      if (excludeKeywords.value.length) {
+        correlationForm.value.excludeKeywords = processTextArea(excludeKeywords.value);
+        excludeKeywords.value = correlationForm.value.excludeKeywords.join('\n')
+        correlationForm.value.keyword = filterByExclude(correlationForm.value.keyword, correlationForm.value.excludeKeywords, correlationForm.value.exclude);
       }
       if (correlationForm.value.keyword.length === 0) {
         Message.warning(localeGet('message4'));

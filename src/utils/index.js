@@ -65,7 +65,7 @@ export const exportModal = async (list, widths, name, type) => {
     content: () =>
       h({
         setup() {
-          return () => h('div', { class: 'info-modal-content' }, [h('div', { style: { marginBottom: '15px' } }, '是否导出当前页共计：' + list.length + '条？'), h('div', {}, name ? '提示：需要操作当前所有内容，请先点击“加载全部”后再进行操作！' : '')]);
+          return () => h('div', { class: 'info-modal-content' }, [h('div', { style: { marginBottom: '15px' } }, '是否导出当前页共计：' + (list.length - 1) + '条？'), h('div', {}, name ? '提示：需要操作当前所有内容，请先点击“加载全部”后再进行操作！' : '')]);
         },
       }),
     onOk: async () => {
@@ -265,7 +265,7 @@ export const validateDomains = (data) => {
   return output || '无有效输入';
 };
 // 处理textarea
-export const  processTextArea = (inputText) => {
+export const  processTextArea = (inputText, isDeep = true) => {
   if (!inputText.trim()) {
     return []
   }
@@ -285,18 +285,50 @@ export const  processTextArea = (inputText) => {
 
     return processedLine;
   });
+  let newList = processedLines.filter(line => line !== '');
+  if (isDeep) {
+    // 5. 去重（不区分大小写，但保留原始大小写）
+    let uniqueLines = [];
+    let seenLines = new Set();
 
-  // 5. 去重（不区分大小写，但保留原始大小写）
-  const uniqueLines = [];
-  const seenLines = new Set();
-
-  for (const line of processedLines) {
-    const lowerCaseLine = line.toLowerCase();
-    if (!seenLines.has(lowerCaseLine)) {
-      seenLines.add(lowerCaseLine);
-      uniqueLines.push(line); // 保留原始大小写
+    for (const line of newList) {
+      const lowerCaseLine = line.toLowerCase();
+      if (!seenLines.has(lowerCaseLine)) {
+        seenLines.add(lowerCaseLine);
+        uniqueLines.push(line); // 保留原始大小写
+      }
     }
+    newList = uniqueLines;
   }
 
-  return uniqueLines;
+  return newList;
 }
+// 处理字符长度过滤
+export const filterByLength = (inputList, minLength = 0, maxLength = 0) => {
+  if (!Array.isArray(inputList)) {
+    return [];
+  }
+  return inputList.filter((item) => (min === 0 && max > 0 && item.length <= max) || (min > 0 && max === 0 && item.length >= min) || (min > 0 && max > 0 && item.length >= min && item.length <= max));
+};
+// 处理包含关键词
+export const filterByInclude = (inputList, includeKeywords = [], isAll = false) => {
+  if (!Array.isArray(inputList) || !Array.isArray(includeKeywords) || includeKeywords.length === 0) {
+    return inputList;
+  }
+  if (isAll) {
+    return inputList.filter((item) => includeKeywords.some((char) => item.includes(char)));
+  } else {
+    return inputList.filter((item) => includeKeywords.every((char) => item.includes(char)));
+  }
+};
+// 处理不包含关键词
+export const filterByExclude = (inputList, excludeKeywords = [], isAll = false) => {
+  if (!Array.isArray(inputList) || !Array.isArray(excludeKeywords) || excludeKeywords.length === 0) {
+    return inputList;
+  }
+  if (isAll) {
+    return inputList.filter((item) => !excludeKeywords.some((char) => item.includes(char)));
+  } else {
+    return inputList.filter((item) => !excludeKeywords.every((char) => item.includes(char)));
+  }
+};

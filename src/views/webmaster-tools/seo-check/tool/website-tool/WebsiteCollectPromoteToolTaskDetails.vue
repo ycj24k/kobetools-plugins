@@ -58,7 +58,7 @@
                     <span>共计：10 条</span>
                 </div>
                 <div style="flex: 1; justify-items: right">
-                    <a-pagination :total="50" show-page-size/>
+                    <a-pagination show-total :total="50" show-page-size/>
                 </div>
             </div>
         </div>

@@ -211,7 +211,7 @@ function queryTableData() {
         .split('\n')
         .filter((domain) => domain.trim().length > 0)
         .map((domain) => domain.trim());
-    xTable.value.queryTableData('/api/beian/query/intercept', data);
+    xTable.value.queryTableData('/api/beian/query/intercept', {domains: data, checkFlag: querys.value});
 }
 
 function exportRecordKeepingDomains() {

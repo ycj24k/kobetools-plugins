@@ -19,12 +19,38 @@ const localeGet = (key) => {
   return localeData.value[key]
 }
 
+const typeOptions = [
+    {
+        label: '完全相同',
+        value: 'EXACT_SAME'
+    },
+    {
+        label: '完全不同',
+        value: 'COMPLETELY_DIFFERENT'
+    },
+    {
+        label: '必须包含',
+        value: 'MUST_CONTAIN'
+    },
+    {
+        label: '不能包含',
+        value: 'CANNOT_CONTAIN'
+    },
+    {
+        label: '合并去重',
+        value: 'MERGE_DEDUPLICATE'
+    },
+]
+
 /**
  * 表的基本数据
  */
 let table = reactive({
     isLoadTable: false,
+    tableAllData: [],
     tableCurrData: [],
+    pageIndex: 1,
+    pageSize: 20,
     total: 0,
     successCount: 0,
     failCount: 0
@@ -63,7 +89,7 @@ function queryTableData(url, data, callback = () => { }) {
         //     showErrorNotification('余额不足或网络错误，请稍后再试')
         //     return
         // }
-        setData(result, callback);
+        setData(result, url, callback);
     }, () => {
         table.isLoadTable = false;
     });
@@ -74,31 +100,130 @@ function queryTableData(url, data, callback = () => { }) {
  * @param result
  * @param callback
  */
-function setData(result, callback = () => { }) {
+function setData(result, url, callback = () => { }) {
     table.isLoadTable = false;
-    columns.value = result.data.tableHeaders.map(item => {
-        return {
-            title: item,
-            dataIndex: item,
-        }
-    })
+    let resData = result.data
     let list = []
-    result.data.originalKeywords.forEach((item, index) => {
-        let json = {}
-        result.data.tableHeaders.forEach((child, idx) => {
-            if (idx === 0) {
-                json[child] = index+1
-            } else if (idx === 1) {
-                json[child] = item
-            } else {
-                json[child] = result.data.groupColumns[child][index]?result.data.groupColumns[child][index]:''
+    if (url === '/api/front/keyword/filter/group') {
+        columns.value = resData.tableHeaders.map(item => {
+            return {
+                title: item,
+                dataIndex: item,
             }
+        })
+        resData.originalKeywords.forEach((item, index) => {
+            let json = {}
+            resData.tableHeaders.forEach((child, idx) => {
+                if (idx === 0) {
+                    json[child] = index+1
+                } else if (idx === 1) {
+                    json[child] = item
+                } else {
+                    json[child] = resData.groupColumns[child][index]?resData.groupColumns[child][index]:''
+                }
+            });
+            list.push(json);
         });
-        list.push(json);
-    });
-    table.tableCurrData = list;
+    }
+    if (url === '/api/front/keyword-compare/compare') {
+        let max = resData.compareResults.length
+        if (resData.group1Words&&resData.group1Words.length > max) max = resData.group1Words.length
+        if (resData.group2Words&&resData.group2Words.length > max) max = resData.group2Words.length
+        if (resData.group3Words&&resData.group3Words.length > max) max = resData.group3Words.length
+        let columnData = [
+            {
+                title: '序号',
+                dataIndex: 'number',
+                width: 80,
+                align: 'center'
+            },
+        ]
+        if (resData.compareGroups.includes(1)) {
+            columnData = [...columnData,
+                {
+                    title: '第一组',
+                    dataIndex: 'group1',
+                    align: 'center'
+                },
+            ]
+        }
+        if (resData.compareGroups.includes(2)) {
+            columnData = [...columnData,
+                {
+                    title: '第二组',
+                    dataIndex: 'group2',
+                    align: 'center'
+                },
+            ]
+        }
+        if (resData.compareGroups.includes(3)) {
+            columnData = [...columnData,
+                {
+                    title: '第三组',
+                    dataIndex: 'group3',
+                    align: 'center'
+                },
+            ]
+        }
+        columns.value = [...columnData,
+            {
+                title: '对比结果',
+                dataIndex: 'compare',
+                align: 'center'
+            },
+        ]
+        let columnsJson = columns.value.map(item => item.dataIndex)
+        for (let i = 0; i < max; i++) {
+            let json = {}
+            columnsJson.forEach(item => {
+                if (item === 'number') {
+                    json[item] = i+1
+                }
+                if (item === 'group1') {
+                    json[item] = resData.group1Words[i] || ''
+                }
+                if (item === 'group2') {
+                    json[item] = resData.group2Words[i] || ''
+                }
+                if (item === 'group3') {
+                    json[item] = resData.group3Words[i] || ''
+                }
+                if (item === 'sequence') {
+                    json[item] = typeOptions.find(item => item.value === resData.compareType).label
+                }
+                if (item === 'compare') {
+                    json[item] = resData.compareResults[i]
+                }
+            });
+            list.push(json);
+        }
+    }
+    
+    table.tableAllData = list
+    table.total = table.tableAllData.length;
     // 外面可能要调整数据格式
     callback(result);
+    onPageIndexChange(1);
+}
+/**
+ * 监听页码发生变化
+ * @param pageIndex
+ */
+function onPageIndexChange(pageIndex) {
+    table.pageIndex = pageIndex;
+    table.tableCurrData.length = 0;
+    const startIndex = (table.pageIndex - 1) * table.pageSize; // 当前页起始索引
+    const endIndex = startIndex + table.pageSize; // 当前页结束索引
+    table.tableCurrData.push(...table.tableAllData.slice(startIndex, endIndex));
+}
+
+/**
+ * 监听每页大小发生变化
+ * @param pageSize
+ */
+function onPageSizeChange(pageSize) {
+    table.pageSize = pageSize;
+    onPageIndexChange(table.pageIndex);
 }
 
 /**
@@ -122,27 +247,25 @@ defineExpose({ queryTableData, table, setData, selectedKeys, columns })
                 </template>
             </a-table>
         </div>
-        <!-- <div style="height: 32px; display: flex;" v-if="table.total">
-            <div style="width: 400px; display: flex; align-items: center">
-                查询数量：<span style="color: blue;font-weight: bold;">{{ table.total }}</span>&nbsp;条，
-                成功：<span style="color: green;font-weight: bold;">{{ table.successCount }}</span>&nbsp;条，失败：<span
-                    style="color: red;font-weight: bold;">{{ table.failCount }}</span>&nbsp;条
-            </div>
-            <div style="flex: 1; text-align: right">
-                <a-pagination style="display: inline-block" v-model="table.pageIndex" :page-size="table.pageSize"
+        <div class="flex_box flex_row_end table_footer" v-if="table.total">
+            <div class="table_page">
+                <a-pagination show-total v-model="table.pageIndex" :page-size="table.pageSize"
                     :total="table.total" show-page-size @change="onPageIndexChange"
                     @page-size-change="onPageSizeChange" />
             </div>
-        </div> -->
+        </div>
     </div>
 </template>
 
 <style scoped lang="less">
 .custom_table {
     height: 100%;
-    padding: 20px;
+    padding: 0 20px;
     .table_box {
-        height: 100%;
+        height: calc(100% - 60px);
+    }
+    .table_footer {
+        height: 60px;
     }
 }
 </style>

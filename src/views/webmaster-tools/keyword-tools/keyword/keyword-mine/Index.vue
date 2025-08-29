@@ -42,6 +42,9 @@
               <div v-if="item.value === tableData[rowIndex].weight">{{ localeGet(item.label) }}</div>
             </template>
           </template>
+          <template #updateTime="{ rowIndex }">
+            <div>{{ dayjs(tableData[rowIndex].updateTime * 1000).format('YYYY-MM-DD hh:mm') }}</div>
+          </template>
           <template #actions="{ rowIndex }">
             <div class="flex_box flex_row_between table_btns">
               <a-popconfirm position="left" :content="localeGet('content1')" @ok="handleDelete(rowIndex)">
@@ -366,11 +369,7 @@ const handleExport = (e) => {
 };
 // 删除
 const handleDelete = (rowIndex) => {
-  keywordMyDel({
-    id: tableData.value[rowIndex].id,
-    tid: queryForm.value.taskId,
-    page: 1,
-  })
+  keywordMyDel(queryForm.value.taskId, tableData.value[rowIndex].id)
     .then((res) => {
       Message.success(localeGet('message2'));
       getList();
@@ -406,7 +405,7 @@ const handleSave = () => {
   }
   saveForm.value.taskId = queryForm.value.taskId;
   saveLoading.value = true;
-  keywordMySave(saveForm.value)
+  keywordMySave(saveForm.value.taskId, saveForm.value.data)
     .then((res) => {
       Message.success(localeGet('message4'));
       getList();

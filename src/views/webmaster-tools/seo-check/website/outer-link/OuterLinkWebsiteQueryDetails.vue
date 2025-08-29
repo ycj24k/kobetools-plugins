@@ -7,7 +7,7 @@
                 </div>
                 <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                     <XButton :loading="isDownloadFile" @xClick="exportExcel" color="yellow" text="导出站点信息"/>
-                    <XButton color="pink" text="查询站点信息"/>
+                    <XButton :loading="isQuery" @xClick="handleQuery" color="pink" text="查询站点权重"/>
                 </div>
             </div>
             <div style="height: calc(100% - 65px)">
@@ -44,10 +44,12 @@
 
 <script setup>
 import {ref} from "vue";
+import { post } from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
 import XButton from "@/components/common/XButton.vue";
 import {download} from "@/hooks/useHttp";
 import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
+import {showErrorNotification} from "@/hooks/useNotification";
 
 let visible = ref(false);
 let columns = [
@@ -119,6 +121,7 @@ let columns = [
 ];
 let xTable = ref(null);
 let isDownloadFile = ref(false);
+let isQuery = ref(false);
 let rowData = ref({});
 let innerHeight = ref(0);
 
@@ -149,6 +152,30 @@ function exportExcel(){
     let data = rowData.value.items;
     download("/api/sites/export/backlinks/detail", data, `KB-results-${Date.now()}.xlsx`, () => {
         isDownloadFile.value = false;
+    });
+}
+// 查询权重
+function handleQuery(){
+    if (!xTable.value.table.tableAllData.length) {
+        showErrorNotification('请选择需要查询的域名！');
+        return
+    }
+    isQuery.value = true;
+    let data = []
+    if (xTable.value.selectedKeys.length) {
+        data = xTable.value.table.tableAllData.filter((item, index) => xTable.value.selectedKeys.includes(index+1)).map(item => item.domain)
+    } else {
+        data = xTable.value.table.tableAllData.map(item => item.domain)
+    }
+    post("/api/sites/query/backlinks/weight", data, (result) => {
+        isQuery.value = false;
+        data.forEach((item, index) => {
+            let idx = xTable.value.selectedKeys.length ? xTable.value.selectedKeys[index] - 1 : index
+            xTable.value.table.tableAllData[idx] = { ...xTable.value.table.tableAllData[idx], ...result.data[index] }
+        })
+        xTable.value.onPageIndexChange(xTable.value.table.pageIndex)
+    }, () => {
+        isQuery.value = false;
     });
 }
 

@@ -82,7 +82,7 @@ function exportRecordKeepingDomains() {
         showErrorNotification('未获取到查询结果');
         return;
     }
-    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns.value, '', 'csv')
+    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns, '', 'csv')
 }
 
 </script>

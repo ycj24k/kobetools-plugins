@@ -31,35 +31,31 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response) => {
     const res = response.data;
-    console.log(res);
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
       Message.error({
-        content: res.msg || 'Error',
-        duration: 5 * 1000,
+        content: res.msg || res.message || 'Error',
+        duration: 3 * 1000,
       });
-      if (
-        ['token error', '401'].includes(res.msg) &&
-        response.config.url !== '/api/user/info'
-      ) {
+      if (res.code === 401) {
         Modal.error({
           title: 'reminder',
           content:
             'Your login has expired, would you like to log in again?',
           okText: 'Login again',
           async onOk() {
-            
+            window.microApp.dispatch({ type: 'logout' });
           },
         });
       }
-      return Promise.reject(new Error(res.msg || 'Error'));
+      return Promise.reject(new Error(res.msg || res.message || 'Error'));
     }
     return res;
   },
   (error) => {
     Message.error({
       content: error.message || 'Request Error',
-      duration: 5 * 1000,
+      duration: 3 * 1000,
     });
     return Promise.reject(error);
   }

@@ -595,20 +595,44 @@ export const excludeOptions = [
 // 任务类型
 export const typeOptions = [
   {
-    label: 'typeOptions.label1',
+    label: '手动录入',
+    value: 0,
+  },
+  {
+    label: '智能清洗',
+    value: -1,
+  },
+  {
+    label: '下拉关键词',
     value: 1,
   },
   {
-    label: 'typeOptions.label2',
+    label: '组合关键词',
     value: 2,
   },
   {
-    label: 'typeOptions.label3',
+    label: '相关搜索词',
     value: 3,
   },
   {
-    label: 'typeOptions.label4',
+    label: '大家都在搜',
     value: 4,
+  },
+  {
+    label: '竞对关键词',
+    value: 5,
+  },
+  {
+    label: 'SEM关键词',
+    value: 6,
+  },
+  {
+    label: 'AI挖掘词',
+    value: 7,
+  },
+  {
+    label: '站长关键词库',
+    value: 8,
   },
 ];
 // 任务表格

@@ -7,7 +7,7 @@
                 </div>
                 <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                     <XButton :loading="isDownloadFile" @xClick="exportExcel" color="yellow" text="导出站点信息"/>
-                    <XButton color="pink" text="查询站点信息"/>
+                    <XButton :loading="isQuery" @xClick="handleQuery" color="pink" text="查询站点权重"/>
                 </div>
             </div>
             <div style="height: calc(100% - 65px)" v-if="visible">
@@ -46,10 +46,12 @@
 
 <script setup>
 import {ref} from "vue";
+import { post } from "@/hooks/useHttp";
 import XTable from "@/components/common/XTable.vue";
 import XButton from "@/components/common/XButton.vue";
 import {download} from "@/hooks/useHttp";
 import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
+import {showErrorNotification} from "@/hooks/useNotification";
 
 let visible = ref(false);
 let columns = [
@@ -103,6 +105,7 @@ let columns = [
 ];
 let detailTable = ref(null);
 let isDownloadFile = ref(false);
+let isQuery = ref(false);
 let rowData = ref({});
 let innerHeight = ref(0);
 
@@ -141,7 +144,30 @@ function exportExcel(){
         isDownloadFile.value = false;
     });
 }
-
+// 查询权重
+function handleQuery(){
+    if (!detailTable.value.table.tableAllData.length) {
+        showErrorNotification('请选择需要查询的域名！');
+        return
+    }
+    isQuery.value = true;
+    let data = []
+    if (detailTable.value.selectedKeys.length) {
+        data = detailTable.value.table.tableAllData.filter((item, index) => detailTable.value.selectedKeys.includes(index+1)).map(item => item.domain)
+    } else {
+        data = detailTable.value.table.tableAllData.map(item => item.domain)
+    }
+    post("/api/sites/query/dnsinfo/weight", data, (result) => {
+        isQuery.value = false;
+        data.forEach((item, index) => {
+            let idx = detailTable.value.selectedKeys.length ? detailTable.value.selectedKeys[index] - 1 : index
+            detailTable.value.table.tableAllData[idx] = { ...detailTable.value.table.tableAllData[idx], ...result.data[index] }
+        })
+        detailTable.value.onPageIndexChange(detailTable.value.table.pageIndex)
+    }, () => {
+        isQuery.value = false;
+    });
+}
 defineExpose({show})
 
 </script>

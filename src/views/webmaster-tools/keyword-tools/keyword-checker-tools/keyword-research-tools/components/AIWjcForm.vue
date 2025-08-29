@@ -44,7 +44,7 @@
               <div class="flex_box form_item_radio form_item_radio_flex">
                 <div class="form_title"><span style="color: #ff0000">*</span>挖掘来源</div>
                 <a-form-item no-style field="depth" :rules="[{ required: true, message: localeGet('message2') }]" :validate-trigger="['change', 'blur']">
-                  <a-radio-group v-model="AIForm.support" :options="AISourceOptions">
+                  <a-radio-group v-model="AIForm.support" :options="AIModelOptions">
                     <!-- <template #label="{ data }">
                       <span>{{ localeGet(data?.label) }}</span>
                     </template>
@@ -136,7 +136,7 @@
 import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
-import { AIFormDefault, includeOptions, excludeOptions, AISourceOptions, AILangOptions, AINumberOptions } from '../../utils/config';
+import { AIFormDefault, includeOptions, excludeOptions, AIModelOptions, AILangOptions, AINumberOptions } from '../../utils/config';
 import { jumpPage, processTextArea } from '@/utils/index';
 
 // 多语言

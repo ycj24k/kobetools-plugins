@@ -11,7 +11,7 @@
           <a-grid-item :span="12">
             <div class="flex_box">
               <div class="form_title"><span style="color: #ff0000">*</span>AI提示词</div>
-              <a-button type="outline" shape="round">
+              <a-button @click="AIForm.prompt = promptDefault" type="outline" shape="round">
                 <div>一键插入AI提示词</div>
                 <div style="transform: rotate(15deg)">
                   <icon-arrow-down />
@@ -42,11 +42,11 @@
         </a-grid>
         <div class="form_item">
           <a-grid :col-gap="20">
-            <a-grid-item :span="12">
+            <a-grid-item :span="19">
               <div class="flex_box form_item_radio form_item_radio_flex">
                 <div class="form_title"><span style="color: #ff0000">*</span>挖掘来源</div>
                 <a-form-item no-style field="model" :rules="[{ required: true, message: '请选择挖掘来源' }]" :validate-trigger="['change', 'blur']">
-                  <a-radio-group v-model="AIForm.model" :options="AISourceOptions">
+                  <a-radio-group v-model="AIForm.model" :options="AIModelOptions">
                     <!-- <template #label="{ data }">
                       <span>{{ localeGet(data?.label) }}</span>
                     </template>
@@ -57,18 +57,18 @@
                 </a-form-item>
               </div>
             </a-grid-item>
-            <a-grid-item :span="12">
+            <a-grid-item :span="5">
               <div class="flex_box form_item_radio form_item_radio_flex">
                 <div class="form_title"><span style="color: #ff0000">*</span>挖掘数量</div>
                 <a-form-item no-style field="num" :rules="[{ required: true, message: '请选择挖掘数量' }]" :validate-trigger="['change', 'blur']">
-                  <a-radio-group v-model="AIForm.num" :options="AINumberOptions">
+                  <a-select v-model="AIForm.num" :options="AINumberOptions" placeholder="请选择挖掘数量">
                     <!-- <template #label="{ data }">
                       <span>{{ localeGet(data?.label) }}</span>
                     </template>
                     <template #option="{ data }">
                       <span>{{ localeGet(data?.label) }}</span>
                     </template> -->
-                  </a-radio-group>
+                  </a-select>
                 </a-form-item>
               </div>
             </a-grid-item>
@@ -138,8 +138,9 @@
 import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdddiscover, supportList } from '@/api/apps/tools/keyword';
-import { AIFormDefault, includeOptions, excludeOptions, AISourceOptions, AILangOptions, AINumberOptions } from '../../utils/config';
+import { isPromptDefaultValid, promptDefault, AIFormDefault, includeOptions, excludeOptions, AIModelOptions, AILangOptions, AINumberOptions } from '../../utils/config';
 import { jumpPage, processTextArea } from '@/utils/index';
+import { showErrorNotification } from "@/hooks/useNotification";
 
 // 多语言
 const props = defineProps({
@@ -184,6 +185,10 @@ const AIFormSubmit = async ({ errors, values }) => {
   if (!errors) {
     loading.value = true;
     try {
+      if (!isPromptDefaultValid(AIForm.value.prompt)) {
+        showErrorNotification('AI提示词中有且仅有{keyword}、{number}、{language}三个通配符')
+        return
+      }
       AIForm.value.keywords = processTextArea(keywords.value);
       keywords.value = AIForm.value.keywords.join('\n')
       if (AIForm.value.keywords.length === 0) {

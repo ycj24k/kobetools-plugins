@@ -18,7 +18,7 @@
         </div>
         <div class="photo_scroll">
           <div class="flex_box flex_wrap photo_list">
-            <div class="photo_item" v-for="(item, index) in tableData" :key="index"">
+            <div class="photo_item" v-for="(item, index) in tableData" :key="index">
               <a-image width="200" src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp" />
               <div class="flex_box flex_row_between photo_content">
                 <div class="photo_name u-line-1">bbg-sasjadada</div>
@@ -32,7 +32,7 @@
           </div>
         </div>
         <div class="flex_box flex_row_end photo_page">
-          <a-pagination @change="handlePageChange" @page-size-change="handlePageSizeChange" :current="queryForm.page" :page-size="queryForm.limit" :page-size-options="[24, 48]" :total="pagination.total" show-page-size/>
+          <a-pagination show-total @change="handlePageChange" @page-size-change="handlePageSizeChange" :current="queryForm.page" :page-size="queryForm.limit" :page-size-options="[24, 48]" :total="pagination.total" show-page-size/>
         </div>
       </div>
       <!-- 上传图片 -->

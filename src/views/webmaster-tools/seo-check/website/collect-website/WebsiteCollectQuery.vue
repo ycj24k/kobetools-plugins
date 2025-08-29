@@ -78,7 +78,6 @@ let columns = computed(()=>{
         })
     ]
 });
-
 let xTable = ref({});
 let isDownloadFile = ref(false);
 
