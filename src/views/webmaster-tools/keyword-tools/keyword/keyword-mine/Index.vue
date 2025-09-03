@@ -56,7 +56,7 @@
         <a-space :size="20" class="table_save">
           <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('button8')
           }}</a-button>
-          <a-button :loading="saveLoading" class="form_btn8" type="primary">批量删除</a-button>
+          <a-button :loading="delLoading" class="form_btn8" type="primary" @click="handleDels">批量删除</a-button>
           <a-button type="outline" @click="getListAll">{{ localeGet('button9') }}</a-button>
           <div class="table_save_total">{{ localeGet('total1') }}{{ tableDataAll.length }}{{ localeGet('total2') }}</div>
         </a-space>
@@ -238,7 +238,7 @@
 import { ref, reactive } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import dayjs from 'dayjs';
-import { keywordMyAdd, keywordMyList, keywordMySave, keywordMyDel, keywordTaskList, keywordMyListAll } from '@/api/apps/tools/keyword';
+import { keywordMyAdd, keywordMyList, keywordMySave, keywordMyDel, keywordMyDels, keywordTaskList, keywordMyListAll } from '@/api/apps/tools/keyword';
 import { includeOptions, excludeOptions, lengthMinOptions, lengthMaxOptions, customOptions, weightOptions, myTableColumns, addFormDefault } from '../utils/config';
 import { exportModal, processTextArea } from '@/utils';
 import localeConfig from './zh-CN.js';
@@ -273,11 +273,14 @@ const queryForm = ref({
   weight: '',
   website: '',
   page: 1,
+  loadAll: 0,
   limit: 100,
 });
 const allForm = ref({
-  tid: '',
+  taskId: '',
+  loadAll: 1,
   pages: 1,
+  limit: 100,
 });
 if (router.currentRoute.value.query.taskId) {
   queryForm.value.taskId = +router.currentRoute.value.query.taskId;
@@ -315,7 +318,7 @@ const getList = async () => {
     const res = await keywordMyList(queryForm.value);
     tableData.value = res.data.list;
     tableDataAll.value = res.data.list;
-    allForm.value.tid = queryForm.value.taskId;
+    allForm.value.taskId = queryForm.value.taskId;
     allForm.value.pages = res.data.pages;
   } catch (error) {
     tableData.value = [];
@@ -326,12 +329,12 @@ const getList = async () => {
 
 // 获取全部列表
 const getListAll = async () => {
-  if (allForm.value.pages === 1) {
-    Message.success(localeGet('message1'));
-    return;
-  }
+  // if (allForm.value.pages === 1) {
+  //   Message.success(localeGet('message1'));
+  //   return;
+  // }
   tableLoading.value = true;
-  const res = await keywordMyListAll(allForm.value);
+  const res = await keywordMyList(allForm.value);
   tableData.value = res.data;
   tableDataAll.value = res.data;
   tableLoading.value = false;
@@ -382,6 +385,23 @@ const saveForm = ref({
   taskId: '',
 });
 const saveLoading = ref(false);
+const delLoading = ref(false);
+// 批量删除
+const handleDels = () => {
+  if (selectedKeys.value.length === 0) {
+    return Message.warning('请选择需要删除的数据');
+  }
+  delLoading.value = true;
+  keywordMyDels(queryForm.value.taskId, selectedKeys.value)
+    .then((res) => {
+      Message.success(localeGet('message2'));
+      getList();
+      delLoading.value = false;
+    })
+    .catch(() => {
+      delLoading.value = false;
+    });
+};
 // 保存数据获取
 const handleSaveChange = (rowIndex, type) => {
   let list = saveForm.value.data;

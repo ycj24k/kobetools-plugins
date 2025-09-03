@@ -10,13 +10,13 @@
             <div style="display: flex; gap: 12px; width: 300px;">
                 <div style="font-weight: bold">站长平台</div>
                 <a-radio-group v-model="queryParam.platforms">
-                    <a-radio v-for="platform in platforms" :value="platform.code">{{platform.name}}</a-radio>
+                    <a-radio v-for="platform in platforms" :key="platform.code" :value="platform.code">{{platform.name}}</a-radio>
                 </a-radio-group>
             </div>
             <div style="display: flex; gap: 12px; flex: 1">
                 <div style="font-weight: bold">搜索引擎</div>
                 <a-radio-group v-model="queryParam.searchEngines">
-                    <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-radio>
+                    <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :key="sEngines.code" :value="sEngines.code">{{ sEngines.name }}</a-radio>
                 </a-radio-group>
             </div>
         </div>

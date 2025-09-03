@@ -304,6 +304,72 @@
                     "children": []
                 }
             ]
+        },
+        {
+            "title": "我的空间",
+            "name": "workspace",
+            "children": [
+                {
+                    "title": "我的空间",
+                    "name": "my-workspace",
+                    "children": [
+                        {
+                            "title": "我的空间",
+                            "name": "workspace-list",
+                            "children": [
+                                {
+                                    "title": "我的文档",
+                                    "name": "my-document"
+                                },
+                                {
+                                    "title": "我的图片",
+                                    "name": "my-image"
+                                },
+                                {
+                                    "title": "我的视频",
+                                    "name": "my-video"
+                                },
+                                {
+                                    "title": "我的音频",
+                                    "name": "my-audio"
+                                },
+                                {
+                                    "title": "在线文件",
+                                    "name": "online-file"
+                                },
+                                {
+                                    "title": "API KEY",
+                                    "name": "api-key"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "共享空间",
+                            "name": "shared-workspace",
+                            "children": [
+                            ]
+                        },
+                        {
+                            "title": "知识库",
+                            "name": "knowledge-base",
+                            "children": [
+                            ]
+                        },
+                        {
+                            "title": "收藏",
+                            "name": "collect",
+                            "children": [
+                            ]
+                        },
+                        {
+                            "title": "回收站",
+                            "name": "recycle-bin",
+                            "children": [
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

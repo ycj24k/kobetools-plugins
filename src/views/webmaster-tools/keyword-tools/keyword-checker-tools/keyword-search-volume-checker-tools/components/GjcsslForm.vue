@@ -4,7 +4,7 @@
     <div style="display: flex; gap: 12px;">
       <div style="display: flex; gap: 12px; width: 300px;">
         <a-radio-group v-model="queryParam.language">
-          <a-radio v-for="language in languages" :value="language.code">{{ language.name }}</a-radio>
+          <a-radio v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</a-radio>
         </a-radio-group>
       </div>
     </div>
@@ -23,7 +23,7 @@
     </div>
     <div style="height: 400px;">
       <XTable ref="xTable" :columns="columns" :spanMethod="spanMethod">
-        <template #option="{ record }">
+        <template>
           详情|未开发
         </template>
       </XTable>

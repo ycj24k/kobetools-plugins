@@ -10,13 +10,13 @@
             <div style="display: flex; gap: 12px; width: 300px;">
                 <div style="font-weight: bold">站长平台</div>
                 <a-checkbox-group v-model="queryParam.platforms">
-                    <a-checkbox v-for="platform in platforms" :value="platform.code">{{platform.name}}</a-checkbox>
+                    <a-checkbox v-for="platform in platforms" :key="platform.code" :value="platform.code">{{platform.name}}</a-checkbox>
                 </a-checkbox-group>
             </div>
             <div style="display: flex; gap: 12px; flex: 1">
                 <div style="font-weight: bold">搜索引擎</div>
                 <a-checkbox-group v-model="queryParam.searchEngines">
-                    <a-checkbox style="margin-left: 30px" v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
+                    <a-checkbox style="margin-left: 30px" v-for="sEngines in searchEngines" :key="sEngines.code" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
                 </a-checkbox-group>
             </div>
         </div>
@@ -66,7 +66,7 @@
                     <XCapsuleTag type="bing" :text="record.BingBR" />
                 </template>
 
-                <template #option="{ record }">
+                <template>
                     详情|未开发
                 </template>
             </XTable>

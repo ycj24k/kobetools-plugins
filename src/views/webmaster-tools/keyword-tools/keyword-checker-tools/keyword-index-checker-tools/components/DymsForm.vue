@@ -4,7 +4,7 @@
         <div style="display: flex; gap: 8px; align-items: center">
             <div style="font-weight: bold">搜索引擎</div>
             <a-radio-group>
-                <a-radio style="margin-left: 20px" v-for="sEngines in searchEngines" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.name }}</a-radio>
+                <a-radio style="margin-left: 20px" v-for="sEngines in searchEngines" :key="sEngines.code" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.name }}</a-radio>
             </a-radio-group>
         </div>
         <div style="height: 25px;"></div>

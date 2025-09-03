@@ -332,3 +332,123 @@ export const filterByExclude = (inputList, excludeKeywords = [], isAll = false) 
     return inputList.filter((item) => !excludeKeywords.every((char) => item.includes(char)));
   }
 };
+
+export const removeTrailingSlash = (str) => {
+  // 检查字符串是否以 / 结尾
+  if (str.endsWith('/')) {
+    // 去掉最后一位
+    return str.slice(0, -1);
+  }
+  // 如果不是以 / 结尾，返回原字符串
+  return str;
+};
+
+export const getDateTime = (time, t = 0) => {
+  let date = new Date(time);
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+  let day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+  let hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+  let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+  let seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+  if (t === 0) {
+    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+  }
+  if (t === 1) {
+    return year + '-' + month + '-' + day;
+  }
+  if (t === 2) {
+    return month + '月' + day + '日';
+  }
+  if (t === 3) {
+    return year + month + day;
+  }
+};
+
+export const getFileExtension = (key) => {
+  const lastDotIndex = key.lastIndexOf('.');
+  if (lastDotIndex === -1) return '';
+  const extension = key.substring(lastDotIndex + 1).toLowerCase();
+  const fileTypes = {
+    image: new Set(['jpg', 'jpeg', 'png', 'webp']),
+    code: new Set(['htm', 'html', 'json']),
+    js: new Set(['js', 'ts']),
+    css: new Set(['css']),
+    py: new Set(['py']),
+    txt: new Set(['txt', 'md']),
+    video: new Set(['mp4']),
+    audio: new Set(['mp3']),
+    pdf: new Set(['pdf']),
+  };
+  for (const [type, extensions] of Object.entries(fileTypes)) {
+    if (extensions.has(extension)) {
+      return type;
+    }
+  }
+  return 'default';
+};
+
+const ossUrl = 'https://kobetools.oss-us-east-1.aliyuncs.com/lib/oss';
+
+export const getFileIcon = (fileExtension) => {
+  if (fileExtension === '') {
+    return `${ossUrl}/images/5555.png`;
+  }
+  if (fileExtension === 'folder') {
+    return `${ossUrl}/images/555.png`;
+  }
+  if (fileExtension === 'prev') {
+    return `${ossUrl}/images/666.png`;
+  }
+  if (fileExtension === 'image') {
+    return `${ossUrl}/images/222.png`;
+  }
+  if (fileExtension === 'code') {
+    return `${ossUrl}/images/666.png`;
+  }
+  if (fileExtension === 'js') {
+    return `${ossUrl}/images/777.png`;
+  }
+  if (fileExtension === 'css') {
+    return `${ossUrl}/images/888.png`;
+  }
+  if (fileExtension === 'py') {
+    return `${ossUrl}/images/999.png`;
+  }
+  if (fileExtension === 'txt') {
+    return `${ossUrl}/images/5555.png`;
+  }
+  if (fileExtension === 'video') {
+    return `${ossUrl}/images/444.png`;
+  }
+  if (fileExtension === 'audio') {
+    return `${ossUrl}/images/6666.png`;
+  }
+  if (fileExtension === 'pdf') {
+    return `${ossUrl}/images/4444.png`;
+  }
+  return `${ossUrl}/images/5555.png`;
+};
+
+// export const getFileIcon = (fileExtension) => {
+//   if (fileExtension === '') {
+//     return `<path d="M10 44H38C39.1046 44 40 43.1046 40 42V14H30V4H10C8.89543 4 8 4.89543 8 6V42C8 43.1046 8.89543 44 10 44Z" fill="#ffffff" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 4L40 14" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 31V28C26.2091 28 28 25.9853 28 23.5C28 21.0147 26.2091 19 24 19C21.7909 19 20 21.0147 20 23.5" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M24 39C25.3807 39 26.5 37.8807 26.5 36.5C26.5 35.1193 25.3807 34 24 34C22.6193 34 21.5 35.1193 21.5 36.5C21.5 37.8807 22.6193 39 24 39Z" fill="#94bfff"/>`;
+//   }
+//   if (fileExtension === 'folder') {
+//     return `<path d="M5 8C5 6.89543 5.89543 6 7 6H19L24 12H41C42.1046 12 43 12.8954 43 14V40C43 41.1046 42.1046 42 41 42H7C5.89543 42 5 41.1046 5 40V8Z" fill="#94bfff" stroke="#94bfff" stroke-width="2" stroke-linejoin="round"/><path d="M14 22L19 27L14 32" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 32H34" stroke="#FFF" stroke-width="2" stroke-linecap="round"/>`;
+//   }
+//   if (fileExtension === 'prev') {
+//     return `<path d="M43 23V14C43 12.8954 42.1046 12 41 12H24L19 6H7C5.89543 6 5 6.89543 5 8V40C5 41.1046 5.89543 42 7 42H22" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 33L27 38L32 43" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 38H43V30" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+//   }
+//   if (fileExtension === 'image') {
+//     return `<path d="M10 44H38C39.1046 44 40 43.1046 40 42V14H30V4H10C8.89543 4 8 4.89543 8 6V42C8 43.1046 8.89543 44 10 44Z" fill="#ffffff" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 4L40 14" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="17" r="4" fill="#ffb65d" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 28V37H33V21L23.4894 31.5L15 28Z" fill="#ffb65d" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+//   }
+//   if (fileExtension === 'code') {
+//     return `<path d="M10 44H38C39.1046 44 40 43.1046 40 42V14H30V4H10C8.89543 4 8 4.89543 8 6V42C8 43.1046 8.89543 44 10 44Z" fill="#ffffff" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 4L40 14" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 24L32 29L27 34" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 24L16 29L21 34" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+//   }
+//   if (fileExtension === 'txt') {
+//     return `<path d="M10 44H38C39.1046 44 40 43.1046 40 42V14H30V4H10C8.89543 4 8 4.89543 8 6V42C8 43.1046 8.89543 44 10 44Z" fill="#ffffff" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 4L40 14" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 22V36" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 22H24L30 22" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+//   }
+//   return `<path d="M10 44H38C39.1046 44 40 43.1046 40 42V14H30V4H10C8.89543 4 8 4.89543 8 6V42C8 43.1046 8.89543 44 10 44Z" fill="#ffffff" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 4L40 14" stroke="#e5e6eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 22V36" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 22H24L30 22" stroke="#94bfff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+// };
+

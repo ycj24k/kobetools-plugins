@@ -9,7 +9,7 @@
             </div>
             <div style="display: flex; gap: 12px; width: 300px;">
                 <a-checkbox-group v-model="queryParam.platforms">
-                    <a-checkbox v-for="platform in platforms" :value="platform.code">{{platform.name}}</a-checkbox>
+                    <a-checkbox v-for="platform in platforms" :key="platform.code" :value="platform.code">{{platform.name}}</a-checkbox>
                 </a-checkbox-group>
             </div>
         </div>
@@ -40,7 +40,7 @@
                     <XCapsuleTag type="wx" :text="record.WxBR" />
                 </template>
 
-                <template #option="{ record }">
+                <template>
                     详情|未开发
                 </template>
             </XTable>

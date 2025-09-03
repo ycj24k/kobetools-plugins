@@ -12,7 +12,7 @@
             <div style="display: flex; gap: 12px; flex: 1">
                 <div style="font-weight: bold">搜索引擎</div>
                 <a-radio-group v-model="queryParam.searchEngines">
-                    <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :value="sEngines.code">{{ sEngines.name }}</a-radio>
+                    <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :key="sEngines.code" :value="sEngines.code">{{ sEngines.name }}</a-radio>
                 </a-radio-group>
             </div>
         </div>
@@ -43,7 +43,7 @@
                 <template #sum="{ record }">
                     <span style="font-weight: bold; color: #6f1ef6">{{record.sum}}</span>
                 </template>
-                <template #option="{ record }">
+                <template>
                     详情|未开发
                 </template>
             </XTable>

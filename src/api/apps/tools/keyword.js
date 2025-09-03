@@ -47,6 +47,10 @@ export function keywordMyDel(taskId, detailId) {
   return axios.post(`/api/front/keywords/${taskId}/delete/${detailId}`, {});
 }
 
+export function keywordMyDels(taskId, detailIds) {
+  return axios.post(`/api/front/keywords/${taskId}/batch-delete`, detailIds);
+}
+
 export function keywordMyAdd(data) {
   return axios.post('/api/tool/keywordMy/adds', data);
 }

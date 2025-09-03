@@ -14,7 +14,7 @@ const props = defineProps({
 .textarea{
     border-radius: .41667vw;
 }
-/deep/ .arco-textarea-clear-btn{
+:deep(.arco-textarea-clear-btn){
     bottom: 0 !important;
 }
 </style>

@@ -4,7 +4,7 @@
         <div style="display: flex; gap: 20px;">
             <div style="font-weight: bold">搜索引擎</div>
             <a-checkbox-group v-model="queryParam.range">
-                <a-checkbox style="margin-left: 30px" v-for="sEngines in searchEngines" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
+                <a-checkbox style="margin-left: 30px" v-for="sEngines in searchEngines" :key="sEngines.code" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.name }}</a-checkbox>
             </a-checkbox-group>
         </div>
         <div style="height: 25px;"></div>

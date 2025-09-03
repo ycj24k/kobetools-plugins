@@ -21,8 +21,8 @@
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="4" class="flex_box">
-            <a-form-item field="website">
-              <a-input v-model="queryForm.website" placeholder="输入备注信息关键字" />
+            <a-form-item field="remark">
+              <a-input v-model="queryForm.remark" placeholder="输入备注信息关键字" />
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="4">
@@ -244,7 +244,7 @@ const queryFormRef = ref(null);
 const queryForm = ref({
   type: '',
   name: '',
-  website: '',
+  remark: '',
   page: 1,
   pageSize: 100,
 });
