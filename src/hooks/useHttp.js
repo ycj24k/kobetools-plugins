@@ -20,7 +20,7 @@ function post(url, data, callback = () => { }, errCallback = () => { }) {
         })
         .catch((error) => {
             console.log(error)
-            Message.error(error.response.data.msg || error.response.data.message);
+            Message.error(error.msg || error.message);
             errCallback();
         });
 }
@@ -37,7 +37,7 @@ function download(url, data, fileName, callback = () => { }) {
     };
     axios(config)
         .then((response) => downloadFile(response, fileName, callback))
-        .catch((error) => downloadFile(error.response, fileName, callback));
+        .catch((error) => downloadFile(error, fileName, callback));
 }
 
 function downloadFile(response, fileName = `KB-results-${Date.now()}.xlsx`, callback) {

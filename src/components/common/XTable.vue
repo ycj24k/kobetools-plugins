@@ -68,7 +68,7 @@ function queryTableData(url, data, callback = () => { }) {
         let errorNum = 0
         result.data.forEach(item => {
             for (let key in item) {
-                 if (item[key].toString().indexOf('错误') > -1) {
+                 if (item[key]&&item[key].toString().indexOf('错误') > -1) {
                     errorNum++;
                  }
             }

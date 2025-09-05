@@ -23,34 +23,34 @@
         </div>
         <div style="height: 400px">
             <XTable ref="xTable" :columns="columns">
-                <template #bqRes="{ record }">
+                <template #isBlocked="{ record }">
                     <div
-                        :style="{ color: record.bqRes === '是' ? 'red' : '', fontWeight: record.bqRes === '是' ? 700 : 500 }">
-                        {{ record.bqRes }}
+                        :style="{ color: record.isBlocked === '是' ? 'red' : '', fontWeight: record.isBlocked === '是' ? 700 : 500 }">
+                        {{ record.isBlocked }}
                     </div>
                 </template>
-                <template #qqRes="{ record }">
+                <template #qqSecurity="{ record }">
                     <div
-                        :style="{ color: record.qqRes === '风险网站' ? 'red' : '', fontWeight: record.qqRes === '风险网站' ? 700 : 500 }">
-                        {{ record.qqRes }}
+                        :style="{ color: record.qqSecurity === '风险网站' ? 'red' : '', fontWeight: record.qqSecurity === '风险网站' ? 700 : 500 }">
+                        {{ record.qqSecurity }}
                     </div>
                 </template>
-                <template #wxRes="{ record }">
+                <template #wxSecurity="{ record }">
                     <div
-                        :style="{ color: record.wxRes === '风险网站' ? 'red' : '', fontWeight: record.wxRes === '风险网站' ? 700 : 500 }">
-                        {{ record.wxRes }}
+                        :style="{ color: record.wxSecurity === '风险网站' ? 'red' : '', fontWeight: record.wxSecurity === '风险网站' ? 700 : 500 }">
+                        {{ record.wxSecurity }}
                     </div>
                 </template>
-                <template #bdMessage="{ record }">
+                <template #baiduBlock="{ record }">
                     <div
-                        :style="{ color: record.bdMessage === '风险网站' ? 'red' : '', fontWeight: record.bdMessage === '风险网站' ? 700 : 500 }">
-                        {{ record.bdMessage }}
+                        :style="{ color: record.baiduBlock === '风险网站' ? 'red' : '', fontWeight: record.baiduBlock === '风险网站' ? 700 : 500 }">
+                        {{ record.baiduBlock }}
                     </div>
                 </template>
-                <template #baRes="{ record }">
+                <template #beianSecurity="{ record }">
                     <div
-                        :style="{ color: record.baRes === '黑名单' ? 'red' : '', fontWeight: record.baRes === '黑名单' ? 700 : 500 }">
-                        {{ record.baRes }}
+                        :style="{ color: record.beianSecurity === '黑名单' ? 'red' : '', fontWeight: record.beianSecurity === '黑名单' ? 700 : 500 }">
+                        {{ record.beianSecurity }}
                     </div>
                 </template>
             </XTable>
@@ -65,55 +65,55 @@ import XTextarea from '@/components/common/XTextarea.vue';
 import XTable from '@/components/common/XTable.vue';
 import { showErrorNotification } from '@/hooks/useNotification';
 import { handleExport } from '@/utils';
-const querys = ref(['bqRes', 'wxRes', 'qqRes', 'bdMessage']);
+const querys = ref(['isBlocked', 'wxSecurity', 'qqSecurity', 'baiduBlock']);
 const queryOptions = [
     {
         label: '是否被墙',
-        value: 'bqRes',
+        value: 'isBlocked',
     },
     {
         label: '微信安全',
-        value: 'wxRes',
+        value: 'wxSecurity',
     },
     {
         label: 'QQ安全',
-        value: 'qqRes',
+        value: 'qqSecurity',
     },
     {
-        label: 'DNS污染',
-        value: 'dnsRes',
+        label: '移动DNS污染',
+        value: 'ydDnsPollution',
     },
     {
         label: '备案安全',
-        value: 'baRes',
+        value: 'beianSecurity',
     },
     {
         label: '百度拦截',
-        value: 'bdMessage',
+        value: 'baiduBlock',
     },
     {
         label: '谷歌拦截',
-        value: 'googleMessage',
+        value: 'googleBlock',
     },
     {
         label: '360拦截',
-        value: '360Message',
+        value: 'qihu360Block',
     },
     {
         label: '搜狗拦截',
-        value: 'sougouMessage',
+        value: 'sougouBlock',
     },
     {
         label: '头条拦截',
-        value: 'ttMessage',
+        value: 'toutiaoBlock',
     },
     {
         label: '抖音拦截',
-        value: 'dyMessage',
+        value: 'douyinBlock',
     },
     {
         label: '微软Edge拦截',
-        value: 'edgeMessage',
+        value: 'microsoftEdgeBlock',
     },
 ];
 let columnsDefault = [
@@ -138,8 +138,8 @@ const columns = ref([
     ...columnsDefault,
     {
         title: '是否被墙',
-        dataIndex: 'bqRes',
-        slotName: 'bqRes',
+        dataIndex: 'isBlocked',
+        slotName: 'isBlocked',
         sortable: {
             sortDirections: ['ascend', 'descend'],
         },
@@ -147,8 +147,8 @@ const columns = ref([
     },
     {
         title: '微信安全',
-        dataIndex: 'wxRes',
-        slotName: 'wxRes',
+        dataIndex: 'wxSecurity',
+        slotName: 'wxSecurity',
         sortable: {
             sortDirections: ['ascend', 'descend'],
         },
@@ -156,8 +156,8 @@ const columns = ref([
     },
     {
         title: 'QQ安全',
-        dataIndex: 'qqRes',
-        slotName: 'qqRes',
+        dataIndex: 'qqSecurity',
+        slotName: 'qqSecurity',
         sortable: {
             sortDirections: ['ascend', 'descend'],
         },
@@ -165,8 +165,8 @@ const columns = ref([
     },
     {
         title: '百度拦截',
-        dataIndex: 'bdMessage',
-        slotName: 'bdMessage',
+        dataIndex: 'baiduBlock',
+        slotName: 'baiduBlock',
         sortable: {
             sortDirections: ['ascend', 'descend'],
         },
