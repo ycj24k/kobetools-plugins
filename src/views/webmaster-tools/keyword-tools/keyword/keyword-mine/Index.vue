@@ -29,8 +29,8 @@
       <div class="table_box">
         <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading || saveLoading"
           :columns="myTableColumns" :data="tableData" row-key="id" :row-selection="rowSelection"
-          v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange"
-          :scroll="{ x: '100%', y: 500 }">
+          v-model:selectedKeys="selectedKeys" :pagination="isAll ? false : pagination" @page-size-change="handlePageSizeChange"
+          :scroll="{ x: '100%', y: 'calc(100vh - 300px)' }">
           <template #header="{ column }">
             <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
           </template>
@@ -53,7 +53,7 @@
             </div>
           </template>
         </a-table>
-        <a-space :size="20" class="table_save">
+        <a-space :size="20" class="table_save" :style="{ bottom: isAll ? '32px' : '80px' }">
           <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('button8')
           }}</a-button>
           <a-button :loading="delLoading" class="form_btn8" type="primary" @click="handleDels">批量删除</a-button>
@@ -279,14 +279,13 @@ const queryForm = ref({
 const allForm = ref({
   taskId: '',
   loadAll: 1,
-  pages: 1,
-  limit: 100,
 });
 if (router.currentRoute.value.query.taskId) {
   queryForm.value.taskId = +router.currentRoute.value.query.taskId;
 }
 const taskList = ref([]);
 const tableLoading = ref(false);
+const isAll = ref(false);
 const tableDataAll = ref([]);
 const tableData = ref([]);
 // 获取任务列表
@@ -324,6 +323,7 @@ const getList = async () => {
     tableData.value = [];
     tableDataAll.value = [];
   }
+  isAll.value = false;
   tableLoading.value = false;
 };
 
@@ -335,9 +335,10 @@ const getListAll = async () => {
   // }
   tableLoading.value = true;
   const res = await keywordMyList(allForm.value);
-  tableData.value = res.data;
-  tableDataAll.value = res.data;
+  tableData.value = res.data.list;
+  tableDataAll.value = res.data.list;
   tableLoading.value = false;
+  isAll.value = true;
 };
 // 分页发生改变
 const handlePageSizeChange = (pageSize) => {

@@ -2,17 +2,22 @@
   <a-form class="form_box" ref="GLFormRef" layout="vertical" hide-label :model="GLForm" @submit="GLFormSubmit">
     <a-grid class="form_main">
       <a-grid-item :span="6" class="form_left">
-        <div class="flex_box form_item form_item_radio">
+        <div class="flex_box">
           <div class="form_title">选择方式</div>
           <a-form-item no-style field="engineTypes">
             <a-radio-group v-model="uploadType" :options="uploadTypeOptions"></a-radio-group>
           </a-form-item>
         </div>
-        <a-form-item v-if="uploadType === 1" no-style field="keywords">
-          <a-textarea v-model="keywords" class="form_area" placeholder="请输入需要过滤的关键词，一行一个" allow-clear />
-        </a-form-item>
+        <div v-if="uploadType === 1" style="height: calc(100% - 40px);">
+          <a-form-item no-style field="keywords">
+            <a-textarea v-model="keywords" class="form_area" placeholder="请输入需要过滤的关键词，一行一个" allow-clear />
+          </a-form-item>
+        </div>
         <div v-if="uploadType === 2" class="upload_box">
-          <div class="upload_tip">支持 .csv 格式文件，每行一个关键词</div>
+          <div class="flex_box flex_row_between">
+              <a target="_blank" href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-filter.csv">点击下载示例文件</a>
+              <div class="upload_tip">支持 .csv 格式文件，每行一个关键词</div>
+          </div>
           <a-upload 
             ref="uploadRef" 
             :show-cancel-button="false" 
@@ -21,7 +26,7 @@
             :auto-upload="false" 
             :limit="1" 
             action="/"
-            accept=".txt,.xlsx,.xls,.csv"
+            accept=".csv"
             :file-list="fileList"
             :show-file-list="true"
             :show-upload-button="true"
@@ -226,18 +231,18 @@ watch(uploadType, (newType) => {
 const uploadChange = (res) => {
   fileList.value = res;
   if (res[0]) {
-    // 检查文件大小（限制为10MB）
-    // const maxSize = 10 * 1024 * 1024; // 10MB
-    // if (res[0].file && res[0].file.size > maxSize) {
-    //   Message.error('文件大小不能超过10MB');
-    //   fileList.value = [];
-    //   GLForm.value.file = null;
-    //   return;
-    // }
-    
+    // 基础文件验证
+    const file = res[0].file;
+    if (!file) {
+      Message.error('文件读取失败，请重新选择');
+      fileList.value = [];
+      GLForm.value.file = null;
+      return;
+    }
+
     // 检查文件类型
     const allowedTypes = ['.csv'];
-    const fileName = res[0].file.name.toLowerCase();
+    const fileName = file.name.toLowerCase();
     const isValidType = allowedTypes.some(type => fileName.endsWith(type));
     
     if (!isValidType) {
@@ -310,6 +315,7 @@ const GLFormSubmit = async ({ errors, values }) => {
         loading.value = false;
         return;
       }
+      console.log(GLForm.value)
       if (uploadType.value === 1) {
         console.log('开始处理关键词:', GLForm.value.keywords.length, '个关键词');
         keywordfiltertext(GLForm.value)
@@ -324,42 +330,72 @@ const GLFormSubmit = async ({ errors, values }) => {
           })
           .catch((error) => { 
             console.error('关键词过滤失败:', error);
-            Message.error('关键词过滤失败，请重试');
+            // 错误信息已经在拦截器中处理，这里不需要重复显示
+          })
+          .finally(() => {
+            loading.value = false;
           });
       }
       if (uploadType.value === 2) {
+        // 验证文件
+        if (!GLForm.value.file || !GLForm.value.file.file) {
+          Message.error('请选择要上传的文件');
+          loading.value = false;
+          return;
+        }
+
+        // 检查文件大小（限制为10MB）
+        // const maxSize = 10 * 1024 * 1024; // 10MB
+        // if (GLForm.value.file.file.size > maxSize) {
+        //   Message.error('文件大小不能超过10MB');
+        //   loading.value = false;
+        //   return;
+        // }
+
+        // 检查文件类型
+        const allowedTypes = ['.csv'];
+        const fileName = GLForm.value.file.file.name.toLowerCase();
+        const isValidType = allowedTypes.some(type => fileName.endsWith(type));
+        
+        if (!isValidType) {
+          Message.error('只支持 .csv 格式的文件');
+          loading.value = false;
+          return;
+        }
+
         // 创建 FormData 对象用于文件上传
         const formData = new FormData();
         
         // 添加文件
-        if (GLForm.value.file && GLForm.value.file.file) {
-          formData.append('file', GLForm.value.file.file);
-          console.log('文件信息:', {
-            name: GLForm.value.file.file.name,
-            size: GLForm.value.file.file.size,
-            type: GLForm.value.file.file.type
-          });
-        } else {
-          Message.error('文件上传失败，请重新选择文件');
-          loading.value = false;
-          return;
-        }
+        formData.append('file', GLForm.value.file.file);
         
         // 添加其他表单数据
-        formData.append('engineTypes', JSON.stringify(GLForm.value.engineTypes));
-        formData.append('includeType', GLForm.value.includeType);
-        formData.append('excludeType', GLForm.value.excludeType);
-        formData.append('lengthFilterEnabled', GLForm.value.lengthFilterEnabled);
-        formData.append('minLength', GLForm.value.minLength);
-        formData.append('maxLength', GLForm.value.maxLength);
-        formData.append('sensitiveFilter', GLForm.value.sensitiveFilter);
-        formData.append('sensitiveFilterVal', GLForm.value.sensitiveFilterVal);
+        const formFields = {
+          engineTypes: GLForm.value.engineTypes,
+          includeType: GLForm.value.includeType,
+          includeKeywords: GLForm.value.includeKeywords,
+          excludeType: GLForm.value.excludeType,
+          excludeKeywords: GLForm.value.excludeKeywords,
+          lengthFilterEnabled: GLForm.value.lengthFilterEnabled,
+          minLength: GLForm.value.minLength,
+          maxLength: GLForm.value.maxLength,
+          sensitiveFilterEnabled: GLForm.value.sensitiveFilterEnabled,
+          sensitiveFilterVal: GLForm.value.sensitiveFilterVal
+        };
+
+        // 批量添加表单字段
+        Object.entries(formFields).forEach(([key, value]) => {
+          if (value !== null && value !== undefined) {
+            formData.append(key, typeof value === 'object' ? JSON.stringify(value) : value);
+          }
+        });
         
-        console.log('开始上传文件:', GLForm.value.file?.file?.name);
-        console.log('FormData 内容:', Array.from(formData.entries()));
+        console.log('开始上传文件:', GLForm.value.file.file.name, '大小:', GLForm.value.file.file.size);
+        
         keywordfiltertextfile(formData)
           .then((res) => {
-            Message.success('提交成功');
+            Message.success('文件上传成功');
+            // 重置表单
             GLForm.value = { ...GLFormDefault };
             keywords.value = '';
             includeKeywords.value = '';
@@ -369,7 +405,10 @@ const GLFormSubmit = async ({ errors, values }) => {
           })
           .catch((error) => { 
             console.error('文件上传失败:', error);
-            Message.error('文件上传失败，请重试');
+            // 错误信息已经在拦截器中处理，这里不需要重复显示
+          })
+          .finally(() => {
+            loading.value = false;
           });
       }
       // 弹出提示

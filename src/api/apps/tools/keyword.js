@@ -32,7 +32,7 @@ export function keywordTaskSave(data) {
 }
 
 export function keywordMyList(params) {
-  return axios.get(`/api/front/keywords/detail/${params.taskId}`, params);
+  return axios.get(`/api/front/keywords/detail/${params.taskId}`, {params});
 }
 
 export function keywordMyListAll(params) {

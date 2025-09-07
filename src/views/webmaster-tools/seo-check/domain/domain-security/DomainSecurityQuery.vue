@@ -29,22 +29,22 @@
                         {{ record.isBlocked }}
                     </div>
                 </template>
-                <template #qqSecurity="{ record }">
+                <template #qqRes="{ record }">
                     <div
-                        :style="{ color: record.qqSecurity === '风险网站' ? 'red' : '', fontWeight: record.qqSecurity === '风险网站' ? 700 : 500 }">
-                        {{ record.qqSecurity }}
+                        :style="{ color: record.qqRes === '风险网站' ? 'red' : '', fontWeight: record.qqRes === '风险网站' ? 700 : 500 }">
+                        {{ record.qqRes }}
                     </div>
                 </template>
-                <template #wxSecurity="{ record }">
+                <template #wxRes="{ record }">
                     <div
-                        :style="{ color: record.wxSecurity === '风险网站' ? 'red' : '', fontWeight: record.wxSecurity === '风险网站' ? 700 : 500 }">
-                        {{ record.wxSecurity }}
+                        :style="{ color: record.wxRes === '风险网站' ? 'red' : '', fontWeight: record.wxRes === '风险网站' ? 700 : 500 }">
+                        {{ record.wxRes }}
                     </div>
                 </template>
-                <template #baiduBlock="{ record }">
+                <template #baiduMessage="{ record }">
                     <div
-                        :style="{ color: record.baiduBlock === '风险网站' ? 'red' : '', fontWeight: record.baiduBlock === '风险网站' ? 700 : 500 }">
-                        {{ record.baiduBlock }}
+                        :style="{ color: record.baiduMessage === '风险网站' ? 'red' : '', fontWeight: record.baiduMessage === '风险网站' ? 700 : 500 }">
+                        {{ record.baiduMessage }}
                     </div>
                 </template>
                 <template #beianSecurity="{ record }">
@@ -70,50 +70,62 @@ const queryOptions = [
     {
         label: '是否被墙',
         value: 'isBlocked',
+        column: 'isBlocked',
     },
     {
         label: '微信安全',
         value: 'wxSecurity',
+        column: 'wxRes',
     },
     {
         label: 'QQ安全',
         value: 'qqSecurity',
+        column: 'qqRes',
     },
     {
         label: '移动DNS污染',
         value: 'ydDnsPollution',
+        column: 'ydDnsMessage',
     },
     {
         label: '备案安全',
         value: 'beianSecurity',
+        column: 'baRes',
     },
     {
         label: '百度拦截',
         value: 'baiduBlock',
+        column: 'baiduMessage',
     },
     {
         label: '谷歌拦截',
         value: 'googleBlock',
+        column: 'googleMessage',
     },
     {
         label: '360拦截',
         value: 'qihu360Block',
+        column: 'qh360Message',
     },
     {
         label: '搜狗拦截',
         value: 'sougouBlock',
+        column: 'sougouMessage',
     },
     {
         label: '头条拦截',
         value: 'toutiaoBlock',
+        column: 'toutiaoMessage',
     },
     {
         label: '抖音拦截',
         value: 'douyinBlock',
+        column: 'douyinMessage',
     },
     {
         label: '微软Edge拦截',
         value: 'microsoftEdgeBlock',
+        column: 'weiruanMessage',
     },
 ];
 let columnsDefault = [
@@ -123,7 +135,7 @@ let columnsDefault = [
         sortable: {
             sortDirections: ['ascend', 'descend'],
         },
-        width: 80,
+        width: 90,
     },
     {
         title: '域名信息',
@@ -147,8 +159,8 @@ const columns = ref([
     },
     {
         title: '微信安全',
-        dataIndex: 'wxSecurity',
-        slotName: 'wxSecurity',
+        dataIndex: 'wxRes',
+        slotName: 'wxRes',
         sortable: {
             sortDirections: ['ascend', 'descend'],
         },
@@ -156,8 +168,8 @@ const columns = ref([
     },
     {
         title: 'QQ安全',
-        dataIndex: 'qqSecurity',
-        slotName: 'qqSecurity',
+        dataIndex: 'qqRes',
+        slotName: 'qqRes',
         sortable: {
             sortDirections: ['ascend', 'descend'],
         },
@@ -165,8 +177,8 @@ const columns = ref([
     },
     {
         title: '百度拦截',
-        dataIndex: 'baiduBlock',
-        slotName: 'baiduBlock',
+        dataIndex: 'baiduMessage',
+        slotName: 'baiduMessage',
         sortable: {
             sortDirections: ['ascend', 'descend'],
         },
@@ -175,15 +187,14 @@ const columns = ref([
 ]);
 
 watch(querys, (newValue) => {
-    console.log(newValue);
     let list = [...columnsDefault]
     for  (let i = 0; i < queryOptions.length; i++) {
         const element = queryOptions[i];
         if (querys.value.includes(element.value)) {
             list.push({
                 title: element.label,
-                dataIndex: element.value,
-                slotName: element.value,
+                dataIndex: element.column,
+                slotName: element.column,
                 sortable: {
                     sortDirections: ['ascend', 'descend'],
                 },

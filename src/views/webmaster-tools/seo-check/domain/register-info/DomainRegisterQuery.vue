@@ -16,7 +16,7 @@
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns">
                 <template #age="{ record }">
-                    <div>{{ record.age.replace('0个月','') }}</div>
+                    <div>{{ record.age }}</div>
                 </template>
             </XTable>
         </div>

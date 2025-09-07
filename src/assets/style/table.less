@@ -25,6 +25,17 @@
 .table_box {
   padding: 20px 0;
   position: relative;
+  height: calc(100vh - 200px); // 动态高度，减去头部和底部固定元素的高度
+  display: flex;
+  flex-direction: column;
+  // 表格内容区域
+  .table_content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
   .table_btns {
     padding: 0 10px;
     gap: 10px;
@@ -42,7 +53,7 @@
   }
   .table_save {
     position: absolute;
-    bottom: 20px;
+    bottom: 80px;
     left: 0;
     .arco-btn {
       flex-shrink: 0;

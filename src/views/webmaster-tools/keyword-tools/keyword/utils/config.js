@@ -254,7 +254,7 @@ export const AIFormDefault = {
   // 关键词
   keywords: [],
   // AI提示词
-  prompt: '请输入AI提示词进行关键词挖掘，支持关键词、数量、语言通配符，用法：{keyword}、{number}、{language}，用法示例如下\n\n'+promptDefault,
+  prompt: promptDefault,
   // 输出语言
   language: '',
   // 挖掘来源

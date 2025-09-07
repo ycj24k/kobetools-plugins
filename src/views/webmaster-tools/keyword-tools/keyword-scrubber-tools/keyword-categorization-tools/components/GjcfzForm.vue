@@ -2,18 +2,20 @@
     <div>
         <div class="flex_box search_box">
             <div class="search_area1">
-                <div class="flex_box form_item">
+                <div class="flex_box">
                     <div class="form_title">选择方式</div>
                     <a-radio-group v-model="uploadType" :options="uploadTypeOptions"></a-radio-group>
                 </div>
-                <XTextarea v-if="uploadType === 1" v-model="allKeywords" placeholder="请输入关键词，一行一个" />
+                <div v-if="uploadType === 1" style="height: calc(100% - 40px);">
+                    <XTextarea v-model="allKeywords" placeholder="请输入关键词，一行一个" />
+                </div>
                 <div v-if="uploadType === 2" class="upload_box">
                     <div class="flex_box flex_row_between">
                         <a target="_blank" href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-comparison-tools.csv">点击下载示例文件</a>
                         <div class="upload_tip">支持 .csv 格式文件，每行一个关键词</div>
                     </div>
                     <a-upload ref="uploadRef" :show-cancel-button="false" @change="uploadChange" draggable
-                        :auto-upload="false" :limit="1" action="/" accept=".txt,.xlsx,.xls,.csv" :file-list="fileList"
+                        :auto-upload="false" :limit="1" action="/" accept=".csv" :file-list="fileList"
                         :show-file-list="true" :show-upload-button="true" :custom-request="() => { }" />
                 </div>
             </div>
@@ -43,6 +45,7 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { Message } from '@arco-design/web-vue';
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import XCustomTable from "@/components/common/XCustomTable.vue";
@@ -81,18 +84,25 @@ watch(uploadType, (newType) => {
 const uploadChange = (res) => {
   fileList.value = res;
   if (res[0]) {
+    // 基础文件验证
+    const file = res[0].file;
+    if (!file) {
+      Message.error('文件读取失败，请重新选择');
+      fileList.value = [];
+      return;
+    }
+
     // 检查文件大小（限制为10MB）
     // const maxSize = 10 * 1024 * 1024; // 10MB
-    // if (res[0].file && res[0].file.size > maxSize) {
+    // if (file.size > maxSize) {
     //   Message.error('文件大小不能超过10MB');
     //   fileList.value = [];
-    //   GLForm.value.file = null;
     //   return;
     // }
     
     // 检查文件类型
     const allowedTypes = ['.csv'];
-    const fileName = res[0].file.name.toLowerCase();
+    const fileName = file.name.toLowerCase();
     const isValidType = allowedTypes.some(type => fileName.endsWith(type));
     
     if (!isValidType) {
@@ -101,40 +111,67 @@ const uploadChange = (res) => {
       return;
     }
     
-  } else {
-    
+    console.log('文件验证通过:', {
+      name: file.name,
+      size: file.size,
+      type: file.type
+    });
   }
 };
 
 function queryTableData() {
-    let data = {
+    // 准备基础数据
+    const data = {
         allKeywords: [],
         singleMatchWords: [],
         combinedMatchWords: [],
-    }
-    data.allKeywords = allKeywords.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
-    data.singleMatchWords = singleMatchWords.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
-    data.combinedMatchWords = combinedMatchWords.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
+    };
+    
+    // 处理关键词数据
+    data.allKeywords = allKeywords.value.split("\n").filter(keyword => keyword.trim().length > 0).map(keyword => keyword.trim());
+    data.singleMatchWords = singleMatchWords.value.split("\n").filter(keyword => keyword.trim().length > 0).map(keyword => keyword.trim());
+    data.combinedMatchWords = combinedMatchWords.value.split("\n").filter(keyword => keyword.trim().length > 0).map(keyword => keyword.trim());
+    
     if (uploadType.value === 1) {
+        // 手动录入模式验证
         if (data.allKeywords.length === 0) {
             showErrorNotification('请输入第一项关键词');
-            return
+            return;
         }
         if (data.singleMatchWords.length === 0 && data.combinedMatchWords.length === 0) {
             showErrorNotification('后两项需选填一个');
-            return
+            return;
         }
+        console.log('开始手动录入查询:', data);
         xCustomTable.value.queryTableData("/api/front/keyword/filter/group", data);
     }
+    
     if (uploadType.value === 2) {
-        if (fileList.value.length === 0) {
-            showErrorNotification('请选择文件');
-            return
+        // 文件上传模式验证
+        if (fileList.value.length === 0 || !fileList.value[0].file) {
+            showErrorNotification('请选择要上传的文件');
+            return;
         }
+        
+        // 验证后两项至少填一个
+        if (data.singleMatchWords.length === 0 && data.combinedMatchWords.length === 0) {
+            showErrorNotification('后两项需选填一个');
+            return;
+        }
+        
+        // 构建FormData
         const formData = new FormData();
         formData.append('csvFile', fileList.value[0].file);
-        formData.append('singleMatchWords', data.singleMatchWords);
-        formData.append('combinedMatchWords', data.combinedMatchWords);
+        formData.append('singleMatchWords', JSON.stringify(data.singleMatchWords));
+        formData.append('combinedMatchWords', JSON.stringify(data.combinedMatchWords));
+        
+        console.log('开始文件上传查询:', {
+            fileName: fileList.value[0].file.name,
+            fileSize: fileList.value[0].file.size,
+            singleMatchWords: data.singleMatchWords.length,
+            combinedMatchWords: data.combinedMatchWords.length
+        });
+        
         xCustomTable.value.queryTableData("/api/front/keyword/filter/group/file", formData);
     }
 }
@@ -184,11 +221,12 @@ function exportRecordKeepingDomains() {
 }
 .form_item {
     height: 44px;
-    .form_title {
-        width: 100px;
-        font-size: 14px;
-        font-weight: 500;
-    }
+}
+.form_title {
+    width: 100px;
+    line-height: 44px;
+    font-size: 14px;
+    font-weight: 500;
 }
 .upload_box {
   :deep(.arco-upload-progress) {

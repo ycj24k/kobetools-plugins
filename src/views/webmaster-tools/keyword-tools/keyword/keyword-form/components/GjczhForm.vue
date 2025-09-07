@@ -194,68 +194,52 @@ const orderHandleChange = (values) => {
 };
 // 组合关键词
 const getKeywords = (type, listA, listB, listC, listD) => {
-  let list = [];
-  switch (type) {
-    case 2:
-      list = [listA, listC].reduce(
-        (acc, curr) => {
-          return acc.flatMap((d) => curr.map((e) => (spaceCheck.value ? d + ' ' + e : d + e)));
-        },
-        ['']
-      );
-      break;
-    case 3:
-      list = [listB, listC].reduce(
-        (acc, curr) => {
-          return acc.flatMap((d) => curr.map((e) => (spaceCheck.value ? d + ' ' + e : d + e)));
-        },
-        ['']
-      );
-      break;
-    case 4:
-      list = [listC, listD].reduce(
-        (acc, curr) => {
-          return acc.flatMap((d) => curr.map((e) => (spaceCheck.value ? d + ' ' + e : d + e)));
-        },
-        ['']
-      );
-      break;
-    case 5:
-      list = [listB, listC, listD].reduce(
-        (acc, curr) => {
-          return acc.flatMap((d) => curr.map((e) => (spaceCheck.value ? d + ' ' + e : d + e)));
-        },
-        ['']
-      );
-      break;
-    case 6:
-      list = [listA, listB, listC].reduce(
-        (acc, curr) => {
-          return acc.flatMap((d) => curr.map((e) => (spaceCheck.value ? d + ' ' + e : d + e)));
-        },
-        ['']
-      );
-      break;
-    case 7:
-      list = [listA, listC, listD].reduce(
-        (acc, curr) => {
-          return acc.flatMap((d) => curr.map((e) => (spaceCheck.value ? d + ' ' + e : d + e)));
-        },
-        ['']
-      );
-      break;
-    case 8:
-      list = [listA, listB, listC, listD].reduce(
-        (acc, curr) => {
-          return acc.flatMap((d) => curr.map((e) => (spaceCheck.value ? d + ' ' + e : d + e)));
-        },
-        ['']
-      );
-      break;
-    default:
-      list = [...listC];
+  // 预计算分隔符，避免重复计算
+  const separator = spaceCheck.value ? ' ' : '';
+  
+  // 定义组合类型映射
+  const typeMapping = {
+    2: [listA, listC],
+    3: [listB, listC],
+    4: [listC, listD],
+    5: [listB, listC, listD],
+    6: [listA, listB, listC],
+    7: [listA, listC, listD],
+    8: [listA, listB, listC, listD]
+  };
+  
+  // 获取要组合的列表
+  const listsToCombine = typeMapping[type];
+  
+  // 如果没有匹配的类型，返回默认的 listC
+  if (!listsToCombine) {
+    return [...listC];
   }
-  return list;
+  
+  // 过滤掉空数组，避免无效组合
+  const validLists = listsToCombine.filter(list => list && list.length > 0);
+  
+  // 如果没有任何有效列表，返回空数组
+  if (validLists.length === 0) {
+    return [];
+  }
+  
+  // 使用统一的组合逻辑
+  return validLists.reduce(
+    (acc, curr) => {
+      return acc.flatMap((d) => 
+        curr.map((e) => {
+          // 如果d为空字符串（第一个元素），直接返回e
+          if (d === '') {
+            return e;
+          }
+          // 否则在d和e之间加分隔符
+          return d + separator + e;
+        })
+      );
+    },
+    ['']
+  );
 };
 // 快速在线组合
 const orderingFormJoin = () => {

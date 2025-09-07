@@ -304,7 +304,7 @@ export const  processTextArea = (inputText, isDeep = true) => {
   return newList;
 }
 // 处理字符长度过滤
-export const filterByLength = (inputList, minLength = 0, maxLength = 0) => {
+export const filterByLength = (inputList, min = 0, max = 0) => {
   if (!Array.isArray(inputList)) {
     return [];
   }

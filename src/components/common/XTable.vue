@@ -1,7 +1,7 @@
 <script setup>
 
 import { post } from "@/hooks/useHttp";
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, onMounted, onUnmounted, computed } from "vue";
 import { showErrorNotification } from "@/hooks/useNotification";
 
 const props = defineProps({
@@ -10,6 +10,16 @@ const props = defineProps({
     locales: {
         type: Object,
         default: {}
+    },
+    // 是否启用动态高度计算
+    enableDynamicHeight: {
+        type: Boolean,
+        default: true
+    },
+    // 固定高度偏移量（用于减去头部、分页等固定元素的高度）
+    heightOffset: {
+        type: Number,
+        default: 200
     }
 });
 const localeData = ref(props.locales);
@@ -46,6 +56,33 @@ const rowSelection = reactive({
 
 const selectedKeys = ref([]);
 
+// 动态高度计算
+const windowHeight = ref(window.innerHeight);
+const tableHeight = computed(() => {
+    if (!props.enableDynamicHeight) {
+        return '100%';
+    }
+    const calculatedHeight = windowHeight.value - props.heightOffset;
+    return Math.max(calculatedHeight, 300); // 最小高度300px
+});
+
+// 监听窗口大小变化
+const handleResize = () => {
+    windowHeight.value = window.innerHeight;
+};
+
+onMounted(() => {
+    if (props.enableDynamicHeight) {
+        window.addEventListener('resize', handleResize);
+    }
+});
+
+onUnmounted(() => {
+    if (props.enableDynamicHeight) {
+        window.removeEventListener('resize', handleResize);
+    }
+});
+
 /**
  * 表的网络查询
  * @param url
@@ -65,18 +102,18 @@ function queryTableData(url, data, callback = () => { }) {
                 return item;
             });
         }
-        let errorNum = 0
-        result.data.forEach(item => {
-            for (let key in item) {
-                 if (item[key]&&item[key].toString().indexOf('错误') > -1) {
-                    errorNum++;
-                 }
-            }
-        });
-        if (errorNum) {
-            showErrorNotification('余额不足或网络错误，请稍后再试')
-            return
-        }
+        // let errorNum = 0
+        // result.data.forEach(item => {
+        //     for (let key in item) {
+        //          if (item[key]&&(item[key]+'').indexOf('错误') > -1) {
+        //             errorNum++;
+        //          }
+        //     }
+        // });
+        // if (errorNum) {
+        //     showErrorNotification('余额不足或网络错误，请稍后再试')
+        //     return
+        // }
         setData(result, callback);
     }, () => {
         table.isLoadTable = false;
@@ -151,7 +188,7 @@ defineExpose({ queryTableData, table, setData, onPageIndexChange, selectedKeys }
 <template>
     <div style="height: 100%; display: flex; flex-direction: column">
         <div style="flex: 1; overflow-y: auto">
-            <a-table column-resizable :loading="table.isLoadTable" :scroll="{ y: '100%' }" :scrollbar="true"
+            <a-table column-resizable :loading="table.isLoadTable" :scroll="{ y: tableHeight }" :scrollbar="true"
                 :columns="dealColumns(columns)" :data="table.tableCurrData" :bordered="{ cell: true }" row-key="serialNumber"
                 :row-selection="rowSelection" :spanMethod="spanMethod" :pagination="false" v-model:selectedKeys="selectedKeys">
                 <template v-for="(slot, slotName) in $slots" :key="slotName" #[slotName]="slotProps">

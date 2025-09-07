@@ -104,7 +104,7 @@ function setData(result, url, callback = () => { }) {
     table.isLoadTable = false;
     let resData = result.data
     let list = []
-    if (url === '/api/front/keyword/filter/group') {
+    if (url === '/api/front/keyword/filter/group' || url === '/api/front/keyword/filter/group/file') {
         columns.value = resData.tableHeaders.map(item => {
             return {
                 title: item,
@@ -125,7 +125,7 @@ function setData(result, url, callback = () => { }) {
             list.push(json);
         });
     }
-    if (url === '/api/front/keyword-compare/compare') {
+    if (url === '/api/front/keyword-compare/compare' || url === '/api/front/keyword-compare/compare-files') {
         let max = resData.compareResults.length
         if (resData.group1Words&&resData.group1Words.length > max) max = resData.group1Words.length
         if (resData.group2Words&&resData.group2Words.length > max) max = resData.group2Words.length

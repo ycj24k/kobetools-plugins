@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <a-form class="form_box" layout="vertical" hide-label>
-            <div class="flex_box form_item">
+            <div class="flex_box">
                 <div class="form_title">选择方式</div>
                 <a-radio-group v-model="uploadType" :options="uploadTypeOptions"></a-radio-group>
             </div>
@@ -19,12 +19,13 @@
                 </div>
             </div>
             <div v-if="uploadType === 2" class="upload_box">
-                <div class="flex_box flex_row_between">
-                    <a target="_blank" href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-categorization-tools.csv">点击下载示例文件</a>
+                <div class="flex_box" style="gap: 20px;">
+                    <a target="_blank"
+                        href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-categorization-tools.csv">点击下载示例文件</a>
                     <div class="upload_tip">支持 .csv 格式文件，每行一个关键词</div>
                 </div>
                 <a-upload ref="uploadRef" :show-cancel-button="false" @change="uploadChange" draggable
-                    :auto-upload="false" :limit="1" action="/" accept=".txt,.xlsx,.xls,.csv" :file-list="fileList"
+                    :auto-upload="false" :limit="1" action="/" accept=".csv" :file-list="fileList"
                     :show-file-list="true" :show-upload-button="true" :custom-request="() => { }" />
             </div>
             <a-grid>
@@ -66,8 +67,7 @@
         </a-form>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
-                <XButton @xClick="queryTableData" color="purple_blue_pink"
-                    text="立即对比" />
+                <XButton @xClick="queryTableData" color="purple_blue_pink" text="立即对比" />
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                 <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" text="导出对比结果" />
@@ -81,6 +81,7 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { Message } from '@arco-design/web-vue';
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import XCustomTable from "@/components/common/XCustomTable.vue";
@@ -114,37 +115,47 @@ const uploadTypeOptions = [
 ];
 // 监听上传类型变化，清空文件列表
 watch(uploadType, (newType) => {
-  if (newType === 1) {
-    fileList.value = [];
-  }
+    if (newType === 1) {
+        fileList.value = [];
+    }
 });
 // 上传改变
 const uploadChange = (res) => {
-  fileList.value = res;
-  if (res[0]) {
-    // 检查文件大小（限制为10MB）
-    // const maxSize = 10 * 1024 * 1024; // 10MB
-    // if (res[0].file && res[0].file.size > maxSize) {
-    //   Message.error('文件大小不能超过10MB');
-    //   fileList.value = [];
-    //   GLForm.value.file = null;
-    //   return;
-    // }
-    
-    // 检查文件类型
-    const allowedTypes = ['.csv'];
-    const fileName = res[0].file.name.toLowerCase();
-    const isValidType = allowedTypes.some(type => fileName.endsWith(type));
-    
-    if (!isValidType) {
-      Message.error('只支持 .csv 格式的文件');
-      fileList.value = [];
-      return;
+    fileList.value = res;
+    if (res[0]) {
+        // 基础文件验证
+        const file = res[0].file;
+        if (!file) {
+            Message.error('文件读取失败，请重新选择');
+            fileList.value = [];
+            return;
+        }
+
+        // 检查文件大小（限制为10MB）
+        // const maxSize = 10 * 1024 * 1024; // 10MB
+        // if (file.size > maxSize) {
+        //   Message.error('文件大小不能超过10MB');
+        //   fileList.value = [];
+        //   return;
+        // }
+
+        // 检查文件类型
+        const allowedTypes = ['.csv'];
+        const fileName = file.name.toLowerCase();
+        const isValidType = allowedTypes.some(type => fileName.endsWith(type));
+
+        if (!isValidType) {
+            Message.error('只支持 .csv 格式的文件');
+            fileList.value = [];
+            return;
+        }
+
+        console.log('文件验证通过:', {
+            name: file.name,
+            size: file.size,
+            type: file.type
+        });
     }
-    
-  } else {
-    
-  }
 };
 
 const groupOptions = [
@@ -185,58 +196,84 @@ const typeOptions = [
 ]
 
 function queryTableData() {
+    // 验证需求关键词
     if (compareType.value === 'MUST_CONTAIN' || compareType.value === 'CANNOT_CONTAIN') {
         if (!matchKeywords.value.trim()) {
             showErrorNotification('请输入需求关键词');
-            return
+            return;
         }
     } else {
-        matchKeywords.value = ''
+        matchKeywords.value = '';
     }
-    let data = {
+
+    // 准备基础数据
+    const data = {
         group1Keywords: [],
         group2Keywords: [],
         group3Keywords: [],
         compareGroups: compareGroups.value,
         compareType: compareType.value,
         matchKeywords: [],
-    }
-    data.group1Keywords = group1Keywords.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
-    data.group2Keywords = group2Keywords.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
-    data.group3Keywords = group3Keywords.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
-    data.matchKeywords = matchKeywords.value.split("\n").filter(domain => domain.trim().length > 0).map(domain => domain.trim());
+    };
+
+    // 处理关键词数据
+    data.group1Keywords = group1Keywords.value.split("\n").filter(keyword => keyword.trim().length > 0).map(keyword => keyword.trim());
+    data.group2Keywords = group2Keywords.value.split("\n").filter(keyword => keyword.trim().length > 0).map(keyword => keyword.trim());
+    data.group3Keywords = group3Keywords.value.split("\n").filter(keyword => keyword.trim().length > 0).map(keyword => keyword.trim());
+    data.matchKeywords = matchKeywords.value.split("\n").filter(keyword => keyword.trim().length > 0).map(keyword => keyword.trim());
+
     if (uploadType.value === 1) {
+        // 手动录入模式验证
         if (compareGroups.value.length < 2) {
             showErrorNotification('请至少选择两组对比数据');
-            return
+            return;
         }
         if (!compareType.value) {
             showErrorNotification('请选择需求选项');
-            return
+            return;
         }
-        if (compareGroups.value.includes(1)&&data.group1Keywords.length === 0) {
+        if (compareGroups.value.includes(1) && data.group1Keywords.length === 0) {
             showErrorNotification('请输入第一组关键词，一行一个');
-            return
+            return;
         }
-        if (compareGroups.value.includes(2)&&data.group2Keywords.length === 0) {
+        if (compareGroups.value.includes(2) && data.group2Keywords.length === 0) {
             showErrorNotification('请输入第二组关键词，一行一个');
-            return
+            return;
         }
-        if (compareGroups.value.includes(3)&&data.group3Keywords.length === 0) {
+        if (compareGroups.value.includes(3) && data.group3Keywords.length === 0) {
             showErrorNotification('请输入第三组关键词，一行一个');
-            return
+            return;
         }
+
+        console.log('开始手动录入对比:', data);
         xCustomTable.value.queryTableData("/api/front/keyword-compare/compare", data);
     }
+
     if (uploadType.value === 2) {
-        if (fileList.value.length === 0) {
-            showErrorNotification('请选择文件');
-            return
+        // 文件上传模式验证
+        if (fileList.value.length === 0 || !fileList.value[0].file) {
+            showErrorNotification('请选择要上传的文件');
+            return;
         }
+
+        if (!compareType.value) {
+            showErrorNotification('请选择需求选项');
+            return;
+        }
+
+        // 构建FormData
         const formData = new FormData();
         formData.append('csvFile', fileList.value[0].file);
         formData.append('compareType', data.compareType);
-        formData.append('matchKeywords', data.matchKeywords);
+        formData.append('matchKeywords', JSON.stringify(data.matchKeywords));
+
+        console.log('开始文件上传对比:', {
+            fileName: fileList.value[0].file.name,
+            fileSize: fileList.value[0].file.size,
+            compareType: data.compareType,
+            matchKeywords: data.matchKeywords.length
+        });
+
         xCustomTable.value.queryTableData("/api/front/keyword-compare/compare-files", formData);
     }
 }
@@ -253,6 +290,7 @@ function exportRecordKeepingDomains() {
 
 <style lang="less" scoped>
 @import '@/assets/style/form.less';
+
 .search_box {
     height: 500px;
     align-items: stretch;
@@ -273,17 +311,18 @@ function exportRecordKeepingDomains() {
         margin: 0 20px;
     }
 }
+
 .upload_box {
-    width: 50%;
-  :deep(.arco-upload-progress) {
-    display: none;
-  }
-  
-  .upload_tip {
-    font-size: 13px;
-    color: #999;
-    text-align: center;
-    line-height: 40px;
-  }
+
+    :deep(.arco-upload-progress) {
+        display: none;
+    }
+
+    .upload_tip {
+        font-size: 13px;
+        color: #999;
+        text-align: center;
+        line-height: 40px;
+    }
 }
 </style>

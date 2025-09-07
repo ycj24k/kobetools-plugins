@@ -6,7 +6,7 @@ export function keywordfiltertext(data) {
 
 //关键词过滤--文件上传
 export function keywordfiltertextfile(data) {
-  return axios.post('/api/front/keyword/filter/file/stream', data, {
+  return axios.post('/api/front/keyword/filter/file', data, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
