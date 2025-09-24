@@ -162,8 +162,9 @@ function queryTableData() {
         // 构建FormData
         const formData = new FormData();
         formData.append('csvFile', fileList.value[0].file);
-        formData.append('singleMatchWords', JSON.stringify(data.singleMatchWords));
-        formData.append('combinedMatchWords', JSON.stringify(data.combinedMatchWords));
+        // 后端按数组字段约定接收：singleMatchWords[]=a&singleMatchWords[]=b
+        data.singleMatchWords.forEach((v) => formData.append('singleMatchWords[]', v));
+        data.combinedMatchWords.forEach((v) => formData.append('combinedMatchWords[]', v));
         
         console.log('开始文件上传查询:', {
             fileName: fileList.value[0].file.name,

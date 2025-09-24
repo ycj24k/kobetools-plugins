@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-tabs v-model="activeKey">
         <a-tab-pane :key="1" title="下拉关键词">
           <GjcwjForm :locales="localeData" />
@@ -17,14 +17,17 @@
         <a-tab-pane :key="5" title="竞对关键词">
           <JdgjcForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="6" title="SEM关键词">
+        <a-tab-pane :key="6" title="关键词规划师">
           <SEMGjcForm :locales="localeData" />
         </a-tab-pane>
         <a-tab-pane :key="7" title="AI挖掘词">
           <AIWjcForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="8" title="站长关键词库">
+        <a-tab-pane :key="8" title="站长平台词">
           <ZzgjckForm :locales="localeData" />
+        </a-tab-pane>
+        <a-tab-pane :key="9" title="关键词裂变">
+          <GjclbForm />
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -44,12 +47,14 @@ import XgsscForm from './components/XgsscForm.vue';
 import DjdzsForm from './components/DjdzsForm.vue';
 // 竟对关键词
 import JdgjcForm from './components/JdgjcForm.vue';
-// SEM关键词
+// 关键词规划师
 import SEMGjcForm from './components/SEMGjcForm.vue';
 // AI挖掘词
 import AIWjcForm from './components/AIWjcForm.vue';
-// 站长关键词库
+// 站长平台词
 import ZzgjckForm from './components/ZzgjckForm.vue';
+// 关键词裂变（参考下拉关键词）
+import GjclbForm from './components/GjclbForm.vue';
 // 多语言
 const localeData = ref({});
 localeData.value = localeConfig;

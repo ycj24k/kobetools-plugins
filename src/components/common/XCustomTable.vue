@@ -89,7 +89,7 @@ function queryTableData(url, data, callback = () => { }) {
         //     showErrorNotification('余额不足或网络错误，请稍后再试')
         //     return
         // }
-        setData(result, url, callback);
+        setData(result, url, callback, data);
     }, () => {
         table.isLoadTable = false;
     });
@@ -100,10 +100,32 @@ function queryTableData(url, data, callback = () => { }) {
  * @param result
  * @param callback
  */
-function setData(result, url, callback = () => { }) {
+function setData(result, url, callback = () => { }, data) {
     table.isLoadTable = false;
     let resData = result.data
     let list = []
+    if (url === '/api/front/keyword/filter/text' || url === '/api/front/keyword/filter/file') {
+        columns.value = [
+            {
+                title: '原始关键词',
+                dataIndex: 'oldKeyword',
+                width: 200,
+                align: 'center'
+            },
+            {
+                title: '过滤后关键词',
+                dataIndex: 'newKeyword',
+                width: 200,
+                align: 'center'
+            },
+        ]
+        list = data.keywords.map((item, index) => {
+            return {
+                oldKeyword: item,
+                newKeyword: resData.filteredKeywords[index]?resData.filteredKeywords[index].keyword:''
+            }
+        })
+    }
     if (url === '/api/front/keyword/filter/group' || url === '/api/front/keyword/filter/group/file') {
         columns.value = resData.tableHeaders.map(item => {
             return {

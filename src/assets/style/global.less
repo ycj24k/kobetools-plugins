@@ -5,8 +5,6 @@
 html, body, #plugins {
     width: 100%;
     height: 100%;
-    min-width: 1400px;
-    min-height: 1000px;
     margin: 0;
     padding: 0;
     font-size: 14px;
@@ -24,7 +22,8 @@ html, body, #plugins {
     padding: 20px;
     border-radius: .625vw;
     background-color: #fff;
-    height: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .form_explain {
@@ -104,10 +103,16 @@ html, body, #plugins {
 
 .container {
   padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   .container_box {
     background-color: #fff;
     border-radius: 12px;
     padding: 0;
+    flex: 1;
+    min-height: 0;
   }
 }
 
@@ -153,4 +158,33 @@ html, body, #plugins {
 
 .text_blue {
   color: #1249FE;
+}
+
+/* 全局：Tabs 填满父容器并仅在面板内滚动（公共工具类） */
+.x-tabs-fill {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.x-tabs-fill .arco-tabs {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.x-tabs-fill .arco-tabs-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.x-tabs-fill .arco-tabs-content .arco-tabs-content-list,
+.x-tabs-fill .arco-tabs-content .arco-tab-pane,
+.x-tabs-fill .arco-tabs-pane {
+  height: 100%;
+}
+.x-pane-scroll {
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }

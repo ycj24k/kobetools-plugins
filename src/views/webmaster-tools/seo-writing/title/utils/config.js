@@ -13,7 +13,7 @@ export const AITitleFormDefault = {
   // 生成关键词描述信息开关：0：关闭，1：开启
   isDesc: 0,
   // 标题风格
-  style: '',
+  style: 2,
   // 包含关键字开关：0：关闭，1：开启
   include: 0,
   // 包含关键字
@@ -125,6 +125,19 @@ export const orderingFormDefault = {
   sensitiveFilter: 0,
   // 违禁词过滤
   sensitiveFilterVal: 0,
+};
+// 标题裂变初始表单
+export const LBFormDefault = {
+  // 关键词
+  keyword: [],
+  // 任务类型：1：智能挖掘，2：在线组合，3：手动录入，4：智能清洗
+  type: 2,
+  // 生成关键词和描述
+  isDetail: '',
+  // 语言
+  language: '',
+  // 顺序
+  order: 1,
 };
 // 挖掘来源
 export const supportOptions = [
@@ -302,6 +315,13 @@ export const AIKeyNumOptions = [
     label: '随机',
     value: 0
   },
+];
+
+// 排列顺序
+export const LBOrderOptions = [
+  { label: '默认顺序', value: 1 },
+  { label: '长短排列', value: 2 },
+  { label: '随机排列', value: 3 },
 ];
 // AI标题风格
 export const AIStyleOptions = [
@@ -632,11 +652,11 @@ export const lengthMaxOptions = [
 export const includeOptions = [
   {
     label: '任一项',
-    value: 1,
+    value: 0,
   },
   {
     label: '所有项',
-    value: 0,
+    value: 1,
   },
 ];
 
@@ -644,20 +664,16 @@ export const includeOptions = [
 export const excludeOptions = [
   {
     label: '任一项',
-    value: 1,
+    value: 0,
   },
   {
     label: '所有项',
-    value: 0,
+    value: 1,
   },
 ];
 
 // 组合方式
 export const orderOptions = [
-  {
-    label: 'C',
-    value: 1,
-  },
   {
     label: 'A + C',
     value: 2,
@@ -718,7 +734,7 @@ export const typeOptions = [
     value: 5,
   },
   {
-    label: 'SEM关键词',
+    label: '关键词规划师',
     value: 6,
   },
   {
@@ -726,7 +742,7 @@ export const typeOptions = [
     value: 7,
   },
   {
-    label: '站长关键词库',
+    label: '站长平台词',
     value: 8,
   },
 ];
@@ -829,6 +845,14 @@ export const addFormDefault = {
   sensitiveFilterVal: 0,
   // 违禁词过滤自定义词库
   sensitiveCustom: '',
+  // 包含关键字开关：0：关闭，1：开启
+  include: 0,
+  // 包含关键字
+  includeKeyword: [],
+  // 不含关键字开关：0：关闭，1：开启
+  exclude: 0,
+  // 不含关键字
+  excludeKeyword: [],
 };
 
 export const AIMakeFormDefault = {

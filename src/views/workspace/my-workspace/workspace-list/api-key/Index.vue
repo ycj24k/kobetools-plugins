@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <h2>API KEY</h2>
       <p>这是API KEY管理页面</p>
     </div>

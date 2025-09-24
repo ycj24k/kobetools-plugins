@@ -265,7 +265,8 @@ function queryTableData() {
         const formData = new FormData();
         formData.append('csvFile', fileList.value[0].file);
         formData.append('compareType', data.compareType);
-        formData.append('matchKeywords', JSON.stringify(data.matchKeywords));
+        // matchKeywords 为数组，使用重复 key 传参
+        data.matchKeywords.forEach((v) => formData.append('matchKeywords[]', v));
 
         console.log('开始文件上传对比:', {
             fileName: fileList.value[0].file.name,

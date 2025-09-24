@@ -40,7 +40,7 @@
         </a-grid>
         <div class="form_item">
           <a-grid :col-gap="20">
-            <a-grid-item :span="8">
+            <a-grid-item :span="14">
               <div class="flex_box form_item_radio form_item_radio_flex">
                 <div class="form_title"><span style="color: #ff0000">*</span>AI模型</div>
                 <a-form-item no-style field="model" :rules="[{ required: true, message: localeGet('message2') }]" :validate-trigger="['change', 'blur']">
@@ -55,18 +55,18 @@
                 </a-form-item>
               </div>
             </a-grid-item>
-            <a-grid-item :span="11">
+            <a-grid-item :span="4">
               <div class="flex_box form_item_radio">
                 <div class="form_title"><span style="color: #ff0000">*</span>标题数量</div>
                 <a-form-item no-style field="keyNum" :rules="[{ required: true, message: localeGet('message2') }]" :validate-trigger="['change', 'blur']">
-                  <a-radio-group v-model="AITitleForm.keyNum" :options="AIKeyNumOptions">
+                  <a-select v-model="AITitleForm.keyNum" :options="AIKeyNumOptions">
                     <!-- <template #label="{ data }">
                       <span>{{ localeGet(data?.label) }}</span>
                     </template>
                     <template #option="{ data }">
                       <span>{{ localeGet(data?.label) }}</span>
                     </template> -->
-                  </a-radio-group>
+                  </a-select>
                 </a-form-item>
               </div>
             </a-grid-item>

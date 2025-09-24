@@ -190,7 +190,7 @@ export const jingduiFormDefault = {
   // 违禁词过滤自定义词库
   sensitiveCustom: '',
 };
-// SEM关键词初始表单
+// 关键词规划师初始表单
 export const SEMFormDefault = {
   // 关键词
   keyword: '',
@@ -255,7 +255,7 @@ export const AIFormDefault = {
   excludeKeyword: '',
 };
 
-// 站长关键词库初始表单
+// 站长平台词初始表单
 export const zhanzhangFormDefault = {
   // 关键词
   keyword: '',
@@ -445,11 +445,11 @@ export const AIModelOptions = [
 export const includeOptions = [
   {
     label: '任一项',
-    value: 1,
+    value: 0,
   },
   {
     label: '所有项',
-    value: 0,
+    value: 1,
   },
 ];
 
@@ -457,11 +457,11 @@ export const includeOptions = [
 export const excludeOptions = [
   {
     label: '任一项',
-    value: 1,
+    value: 0,
   },
   {
     label: '所有项',
-    value: 0,
+    value: 1,
   },
 ];
 // 挖掘来源
@@ -557,7 +557,7 @@ export const xgssSupportOptions = [
 // 挖掘来源
 export const sourceOptions = [
   {
-    label: '站长关键词库',
+    label: '站长平台词',
     value: 1,
   },
   {
@@ -880,7 +880,7 @@ export const typeOptions = [
     value: 5,
   },
   {
-    label: 'SEM关键词',
+    label: '关键词规划师',
     value: 6,
   },
   {
@@ -888,7 +888,7 @@ export const typeOptions = [
     value: 7,
   },
   {
-    label: '站长关键词库',
+    label: '站长平台词',
     value: 8,
   },
 ];

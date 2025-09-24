@@ -3,7 +3,7 @@
     <a-grid class="form_main">
       <a-grid-item :span="6" class="form_left">
         <a-form-item no-style field="keyword">
-          <a-textarea v-model="keyword" class="form_area" :placeholder="localeGet('placeholder1')" allow-clear />
+          <a-textarea v-model="keyword" class="form_area" placeholder="请输入关键词，一行一个" allow-clear />
         </a-form-item>
       </a-grid-item>
       <a-grid-item :span="18" class="form_right">

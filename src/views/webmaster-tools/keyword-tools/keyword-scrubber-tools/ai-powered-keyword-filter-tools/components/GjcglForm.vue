@@ -152,39 +152,28 @@
         </div>
       </a-grid-item>
     </a-grid>
-    <div class="form_explain">
-      <div class="form_explain_title">工具介绍</div>
-      <!-- <div>{{ localeGet('content1') }}</div>
-      <div>{{ localeGet('content2') }}</div> -->
+    <div style="height: 100px; display: flex; align-items: center;">
+        <div style="width: 500px;">
+            <!-- <XButton @xClick="queryTableData" color="purple_blue_pink" text="立即对比" /> -->
+        </div>
+        <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
+            <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" text="导出过滤结果" />
+        </div>
     </div>
-    <!-- 弹出提示 -->
-    <a-modal :mask-closable="false" l :esc-to-close="false" class="modal_box" v-model:visible="tipVisible"
-      width="600px">
-      <template #title>
-        <div class="flex_box modal_title">
-          <div class="modal_title_icon">
-            <icon-info-circle-fill />
-          </div>
-          <div class="modal_title_text">温馨提示</div>
-        </div>
-      </template>
-      <div class="modal_content">当前关键词清洗任务已在后台运行，请前往关键词任务列表查看进度。</div>
-      <template #footer>
-        <div class="flex_box flex_row_center modal_footer">
-          <a-button style="color: #333" @click="tipVisible = false">继续过滤</a-button>
-          <a-button class="form_btn3" @click="tipSubmit">查看进度</a-button>
-        </div>
-      </template>
-    </a-modal>
+    <div style="height: 400px;">
+        <x-custom-table ref="xCustomTable" />
+    </div>
   </a-form>
 </template>
 
 <script setup>
 import { ref, watch, h } from 'vue';
 import { Message, Modal } from '@arco-design/web-vue';
-import { keywordfiltertext, keywordfiltertextfile } from '@/api/apps/tools/keyword-scrubber-tools';
 import { GLFormDefault, includeOptions, excludeOptions, GLEngineOptions, lengthMinOptions, lengthMaxOptions, customOptions, uploadTypeOptions } from '../../utils/config';
-import { jumpPage, processTextArea } from '@/utils/index';
+import { processTextArea } from '@/utils/index';
+import XCustomTable from "@/components/common/XCustomTable.vue";
+import { showErrorNotification } from "@/hooks/useNotification";
+import { handleExport } from '@/utils';
 
 // 多语言
 const props = defineProps({
@@ -195,6 +184,7 @@ const props = defineProps({
 });
 const localeData = ref(props.locales);
 const columns = ref([]);
+let xCustomTable = ref(null);
 // 监听 props 的变化
 watch(
   () => props.locales,
@@ -257,11 +247,6 @@ const uploadChange = (res) => {
     GLForm.value.file = null;
   }
 };
-function tipSubmit() {
-  tipVisible.value = false;
-  jumpPage('/webmaster-tools/keyword-tools/keyword/keyword-task');
-}
-
 // 关键词过滤提交
 const GLFormSubmit = async ({ errors, values }) => {
   if (loading.value) return;
@@ -281,60 +266,60 @@ const GLFormSubmit = async ({ errors, values }) => {
         loading.value = false;
         return;
       }
-      // 保留原始词
-      if (GLForm.value.reserve) {
-        GLForm.value.reserveKeyword = keywords.value;
-      }
-      // 字符长度过滤
-      if (GLForm.value.lengthFilterEnabled) {
-        const { minLength, maxLength } = GLForm.value;
-        if (minLength > 0 || maxLength > 0) {
-          GLForm.value.keywords = GLForm.value.keywords.filter((item) => (minLength === 0 && maxLength > 0 && item.length <= maxLength) || (minLength > 0 && maxLength === 0 && item.length >= minLength) || (minLength > 0 && maxLength > 0 && item.length >= minLength && item.length <= maxLength));
-        }
-      }
-      // 包含关键词
-      if (includeKeywords.value.length) {
-        GLForm.value.includeKeywords = includeKeywords.value.split('\n');
-        if (GLForm.value.include) {
-          GLForm.value.keywords = GLForm.value.keywords.filter((item) => GLForm.value.includeKeywords.some((char) => item.includes(char)));
-        } else {
-          GLForm.value.keywords = GLForm.value.keywords.filter((item) => GLForm.value.includeKeywords.every((char) => item.includes(char)));
-        }
-      }
-      // 不包含关键词
-      if (excludeKeywords.value.length) {
-        GLForm.value.excludeKeywords = excludeKeywords.value.split('\n');
-        if (GLForm.value.exclude) {
-          GLForm.value.keywords = GLForm.value.keywords.filter((item) => !GLForm.value.excludeKeywords.some((char) => item.includes(char)));
-        } else {
-          GLForm.value.keywords = GLForm.value.keywords.filter((item) => !GLForm.value.excludeKeywords.every((char) => item.includes(char)));
-        }
-      }
-      if (uploadType.value === 1 && GLForm.value.keywords.length === 0) {
-        Message.warning('过滤后关键词为空');
-        loading.value = false;
-        return;
-      }
+      // // 保留原始词
+      // if (GLForm.value.reserve) {
+      //   GLForm.value.reserveKeyword = keywords.value;
+      // }
+      // // 字符长度过滤
+      // if (GLForm.value.lengthFilterEnabled) {
+      //   const { minLength, maxLength } = GLForm.value;
+      //   if (minLength > 0 || maxLength > 0) {
+      //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => (minLength === 0 && maxLength > 0 && item.length <= maxLength) || (minLength > 0 && maxLength === 0 && item.length >= minLength) || (minLength > 0 && maxLength > 0 && item.length >= minLength && item.length <= maxLength));
+      //   }
+      // }
+      // // 包含关键词
+      // if (includeKeywords.value.length) {
+      //   GLForm.value.includeKeywords = includeKeywords.value.split('\n');
+      //   if (GLForm.value.include) {
+      //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => GLForm.value.includeKeywords.some((char) => item.includes(char)));
+      //   } else {
+      //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => GLForm.value.includeKeywords.every((char) => item.includes(char)));
+      //   }
+      // }
+      // // 不包含关键词
+      // if (excludeKeywords.value.length) {
+      //   GLForm.value.excludeKeywords = excludeKeywords.value.split('\n');
+      //   if (GLForm.value.exclude) {
+      //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => !GLForm.value.excludeKeywords.some((char) => item.includes(char)));
+      //   } else {
+      //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => !GLForm.value.excludeKeywords.every((char) => item.includes(char)));
+      //   }
+      // }
+      // if (uploadType.value === 1 && GLForm.value.keywords.length === 0) {
+      //   Message.warning('过滤后关键词为空');
+      //   loading.value = false;
+      //   return;
+      // }
       console.log(GLForm.value)
       if (uploadType.value === 1) {
-        console.log('开始处理关键词:', GLForm.value.keywords.length, '个关键词');
-        keywordfiltertext(GLForm.value)
-          .then((res) => {
-            Message.success('提交成功');
-            GLForm.value = { ...GLFormDefault };
-            keywords.value = '';
-            includeKeywords.value = '';
-            excludeKeywords.value = '';
-            fileList.value = [];
-            tipVisible.value = true;
-          })
-          .catch((error) => { 
-            console.error('关键词过滤失败:', error);
-            // 错误信息已经在拦截器中处理，这里不需要重复显示
-          })
-          .finally(() => {
-            loading.value = false;
-          });
+        xCustomTable.value.queryTableData("/api/front/keyword/filter/text", GLForm.value);
+        // keywordfiltertext(GLForm.value)
+        //   .then((res) => {
+        //     Message.success('提交成功');
+        //     GLForm.value = { ...GLFormDefault };
+        //     keywords.value = '';
+        //     includeKeywords.value = '';
+        //     excludeKeywords.value = '';
+        //     fileList.value = [];
+        //     tipVisible.value = true;
+        //   })
+        //   .catch((error) => { 
+        //     console.error('关键词过滤失败:', error);
+        //     // 错误信息已经在拦截器中处理，这里不需要重复显示
+        //   })
+        //   .finally(() => {
+        //     loading.value = false;
+        //   });
       }
       if (uploadType.value === 2) {
         // 验证文件
@@ -369,47 +354,46 @@ const GLFormSubmit = async ({ errors, values }) => {
         // 添加文件
         formData.append('file', GLForm.value.file.file);
         
-        // 添加其他表单数据
-        const formFields = {
-          engineTypes: GLForm.value.engineTypes,
-          includeType: GLForm.value.includeType,
-          includeKeywords: GLForm.value.includeKeywords,
-          excludeType: GLForm.value.excludeType,
-          excludeKeywords: GLForm.value.excludeKeywords,
-          lengthFilterEnabled: GLForm.value.lengthFilterEnabled,
-          minLength: GLForm.value.minLength,
-          maxLength: GLForm.value.maxLength,
-          sensitiveFilterEnabled: GLForm.value.sensitiveFilterEnabled,
-          sensitiveFilterVal: GLForm.value.sensitiveFilterVal
-        };
-
-        // 批量添加表单字段
-        Object.entries(formFields).forEach(([key, value]) => {
-          if (value !== null && value !== undefined) {
-            formData.append(key, typeof value === 'object' ? JSON.stringify(value) : value);
-          }
-        });
+        // 添加其他表单数据（数组用重复 key 方式 append）
+        const { engineTypes, includeKeywords: incKw = [], excludeKeywords: excKw = [] } = GLForm.value;
+        if (Array.isArray(engineTypes)) {
+          engineTypes.forEach(v => formData.append('engineTypes[]', v));
+        }
+        if (Array.isArray(incKw)) {
+          incKw.forEach(v => formData.append('includeKeywords[]', v));
+        }
+        if (Array.isArray(excKw)) {
+          excKw.forEach(v => formData.append('excludeKeywords[]', v));
+        }
+        // 其余标量字段
+        formData.append('includeType', GLForm.value.includeType ?? '');
+        formData.append('excludeType', GLForm.value.excludeType ?? '');
+        formData.append('lengthFilterEnabled', String(!!GLForm.value.lengthFilterEnabled));
+        if (GLForm.value.minLength !== undefined && GLForm.value.minLength !== null) formData.append('minLength', GLForm.value.minLength);
+        if (GLForm.value.maxLength !== undefined && GLForm.value.maxLength !== null) formData.append('maxLength', GLForm.value.maxLength);
+        formData.append('sensitiveFilterEnabled', String(!!GLForm.value.sensitiveFilterEnabled));
+        if (GLForm.value.sensitiveFilterVal !== undefined && GLForm.value.sensitiveFilterVal !== null) formData.append('sensitiveFilterVal', GLForm.value.sensitiveFilterVal);
         
-        console.log('开始上传文件:', GLForm.value.file.file.name, '大小:', GLForm.value.file.file.size);
+        xCustomTable.value.queryTableData("/api/front/keyword/filter/file", formData);
         
-        keywordfiltertextfile(formData)
-          .then((res) => {
-            Message.success('文件上传成功');
-            // 重置表单
-            GLForm.value = { ...GLFormDefault };
-            keywords.value = '';
-            includeKeywords.value = '';
-            excludeKeywords.value = '';
-            fileList.value = [];
-            tipVisible.value = true;
-          })
-          .catch((error) => { 
-            console.error('文件上传失败:', error);
-            // 错误信息已经在拦截器中处理，这里不需要重复显示
-          })
-          .finally(() => {
-            loading.value = false;
-          });
+        // keywordfiltertextfile(formData)
+        //   .then((res) => {
+        //     Message.success('文件上传成功');
+        //     // 重置表单
+        //     GLForm.value = { ...GLFormDefault };
+        //     keywords.value = '';
+        //     includeKeywords.value = '';
+        //     excludeKeywords.value = '';
+        //     fileList.value = [];
+        //     tipVisible.value = true;
+        //   })
+        //   .catch((error) => { 
+        //     console.error('文件上传失败:', error);
+        //     // 错误信息已经在拦截器中处理，这里不需要重复显示
+        //   })
+        //   .finally(() => {
+        //     loading.value = false;
+        //   });
       }
       // 弹出提示
       // Modal.info({
@@ -439,6 +423,13 @@ const GLFormSubmit = async ({ errors, values }) => {
   } else {
     const list = Object.keys(errors);
     if (list.length > 0) Message.error(errors[list[0]].message);
+  }
+  function exportRecordKeepingDomains() {
+      if (xCustomTable.value.table.tableCurrData.length === 0) {
+          showErrorNotification('未获取到查询结果');
+          return;
+      }
+      handleExport(xCustomTable.value.table.tableCurrData, xCustomTable.value.selectedKeys, xCustomTable.value.columns, '', 'csv')
   }
 };
 </script>

@@ -1,9 +1,11 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-tabs v-model="activeKey">
         <a-tab-pane :key="1" title="关键词过滤">
-          <GjcglForm :locales="localeData" />
+          <div class="x-pane-scroll">
+            <GjcglForm :locales="localeData" />
+          </div>
         </a-tab-pane>
       </a-tabs>
     </div>

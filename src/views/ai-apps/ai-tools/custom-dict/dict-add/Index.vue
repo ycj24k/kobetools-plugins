@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-form class="form_box" ref="titleFormRef" layout="vertical" hide-label :model="wordForm" @submit="wordFormSubmit">
         <a-grid :col-gap="20" :row-gap="30" class="form_content">
           <a-grid-item :span="24">

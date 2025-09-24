@@ -190,7 +190,51 @@ export const jingduiFormDefault = {
   // 违禁词过滤自定义词库
   sensitiveCustom: '',
 };
-// SEM关键词初始表单
+// 关键词裂变初始表单（与下拉关键词结构一致，按裂变场景复用）
+export const LBFormDefault = {
+  // 关键词
+  keyword: '',
+  // 任务类型：1：智能挖掘，2：在线组合，3：手动录入，4：智能清洗
+  type: 1,
+  // 原始词
+  reserveKeyword: '',
+  // 挖掘来源（裂变无需特定来源，保留字段备用）
+  support: '',
+  // 输出语言
+  language: '',
+  // 裂变数量（使用 LBDepthOptions）
+  depth: 1,
+  // 包含关键字开关：0：关闭，1：开启
+  include: 0,
+  // 包含关键字
+  includeKeyword: '',
+  // 不含关键字开关：0：关闭，1：开启
+  exclude: 0,
+  // 不含关键字
+  excludeKeyword: '',
+  // 保留原始词开关：0：关闭，1：开启
+  reserve: 0,
+  // 关键词去重开关：0：关闭，1：开启
+  removal: 1,
+  // 关键词过滤开关：0：关闭，1：开启
+  keyFilter: 0,
+  // 关键词过滤
+  keyFilterVal: 1,
+  // 字符长度过滤开关：0：关闭，1：开启
+  lengthFilter: 1,
+  // 字符长度过滤
+  lengthFilterVal: {
+    min: 0,
+    max: 0,
+  },
+  // 违禁词过滤开关：0：关闭，1：开启
+  sensitiveFilter: 0,
+  // 违禁词过滤
+  sensitiveFilterVal: 0,
+  // 违禁词过滤自定义词库
+  sensitiveCustom: '',
+};
+// 关键词规划师初始表单
 export const SEMFormDefault = {
   // 关键词
   keyword: '',
@@ -271,7 +315,7 @@ export const AIFormDefault = {
   excludeKeywords: [],
 };
 
-// 站长关键词库初始表单
+// 站长平台词初始表单
 export const zhanzhangFormDefault = {
   // 关键词
   keyword: '',
@@ -550,7 +594,7 @@ export const xgssSupportOptions = [
 // 挖掘来源
 export const sourceOptions = [
   {
-    label: '站长关键词库',
+    label: '站长平台词',
     value: 1,
   },
   {
@@ -807,6 +851,19 @@ export const lengthMaxOptions = [
     value: 60,
   },
 ];
+// 裂变数量选项（页面直显中文）
+export const LBDepthOptions = [
+  { label: '2个', value: 2 },
+  { label: '3个', value: 3 },
+  { label: '4个', value: 4 },
+  { label: '5个', value: 5 },
+];
+// 排列顺序
+export const LBOrderOptions = [
+  { label: '默认顺序', value: 1 },
+  { label: '长短排列', value: 2 },
+  { label: '随机排列', value: 3 },
+];
 // 组合方式
 export const orderOptions = [
   {
@@ -873,7 +930,7 @@ export const typeOptions = [
     value: 5,
   },
   {
-    label: 'SEM关键词',
+    label: '关键词规划师',
     value: 6,
   },
   {
@@ -881,7 +938,7 @@ export const typeOptions = [
     value: 7,
   },
   {
-    label: '站长关键词库',
+    label: '站长平台词',
     value: 8,
   },
 ];

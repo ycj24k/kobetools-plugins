@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <h2>回收站</h2>
       <p>这是回收站页面</p>
     </div>

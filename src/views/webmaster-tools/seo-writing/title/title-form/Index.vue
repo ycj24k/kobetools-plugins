@@ -1,30 +1,46 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-tabs v-model="activeKey">
         <a-tab-pane :key="1" title="AI智能生成标题">
-          <AIZnscbtForm :locales="localeData" />
+          <div class="x-pane-scroll">
+            <AIZnscbtForm :locales="localeData" />
+          </div>
         </a-tab-pane>
-        <a-tab-pane :key="2" title="关键词生成标题">
-          <GjcscbtForm :locales="localeData" />
-        </a-tab-pane>
+        <!-- <a-tab-pane :key="2" title="关键词生成标题">
+          <div class="x-pane-scroll">
+            <GjcscbtForm :locales="localeData" />
+          </div>
+        </a-tab-pane> -->
         <a-tab-pane :key="3" title="下拉词生成标题">
-          <XlcscbtForm :locales="localeData" />
+          <div class="x-pane-scroll">
+            <XlcscbtForm :locales="localeData" />
+          </div>
         </a-tab-pane>
         <a-tab-pane :key="4" title="文本组合生成标题">
-          <WbzhscbtForm :locales="localeData" />
+          <div class="x-pane-scroll">
+            <WbzhscbtForm :locales="localeData" />
+          </div>
         </a-tab-pane>
         <a-tab-pane :key="5" title="热搜标题挖掘">
-          <RsbtwjForm :locales="localeData" />
+          <div class="x-pane-scroll">
+            <RsbtwjForm :locales="localeData" />
+          </div>
         </a-tab-pane>
         <a-tab-pane :key="6" title="标题裂变生成">
-          <BtlbscForm :locales="localeData" />
+          <div class="x-pane-scroll">
+            <BtlbscForm :locales="localeData" />
+          </div>
         </a-tab-pane>
         <a-tab-pane :key="7" title="竞品标题改写">
-          <JpbtgxForm :locales="localeData" />
+          <div class="x-pane-scroll">
+            <JpbtgxForm :locales="localeData" />
+          </div>
         </a-tab-pane>
         <a-tab-pane :key="8" title="SERP排名标题改写">
-          <SERPPmbtgxForm :locales="localeData" />
+          <div class="x-pane-scroll">
+            <SERPPmbtgxForm :locales="localeData" />
+          </div>
         </a-tab-pane>
       </a-tabs>
     </div>

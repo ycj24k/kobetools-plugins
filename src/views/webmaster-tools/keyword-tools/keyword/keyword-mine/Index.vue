@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-form class="form_box" ref="queryFormRef" layout="vertical" hide-label :model="queryForm">
         <a-grid :col-gap="24" :row-gap="24">
           <a-grid-item :span="4" class="flex_box">
@@ -29,7 +29,7 @@
       <div class="table_box">
         <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading || saveLoading"
           :columns="myTableColumns" :data="tableData" row-key="id" :row-selection="rowSelection"
-          v-model:selectedKeys="selectedKeys" :pagination="isAll ? false : pagination" @page-size-change="handlePageSizeChange"
+          v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange" @page-change="handlePageChange"
           :scroll="{ x: '100%', y: 'calc(100vh - 300px)' }">
           <template #header="{ column }">
             <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
@@ -265,25 +265,25 @@ const rowSelection = reactive({
   showCheckedAll: true,
   onlyCurrent: false,
 });
-const pagination = ref({ pageSize: 100, showPageSize: true, pageSizeOptions: [100, 200, 500, 1000, 2000] });
+const pagination = ref({ current: 1, total: 0, pageSize: 100, showPageSize: true, pageSizeOptions: [100, 200, 500, 1000, 2000] });
 const queryFormRef = ref(null);
 const queryForm = ref({
   taskId: '',
   title: '',
-  weight: '',
-  website: '',
   page: 1,
   loadAll: 0,
   limit: 100,
 });
 const allForm = ref({
   taskId: '',
+  title: '',
   loadAll: 1,
 });
 if (router.currentRoute.value.query.taskId) {
   queryForm.value.taskId = +router.currentRoute.value.query.taskId;
 }
 const taskList = ref([]);
+const taskMap = ref({});
 const tableLoading = ref(false);
 const isAll = ref(false);
 const tableDataAll = ref([]);
@@ -296,7 +296,10 @@ const getTaskList = async () => {
       page: 1,
       limit: 100,
     });
+    // 构建下拉选项与任务映射（用于统一显示所属任务与备注信息）
     taskList.value = res.data.list.map((item) => {
+      // 记录映射：id -> { name, website }
+      taskMap.value[item.id] = { name: item.name, website: item.website };
       return {
         label: item.name,
         value: item.id,
@@ -311,14 +314,21 @@ const getTaskList = async () => {
 getTaskList();
 // 获取列表
 const getList = async () => {
-  pagination.value.pageSize = 100;
+  pagination.value.pageSize = pagination.value.pageSize || 100;
   tableLoading.value = true;
   try {
-    const res = await keywordMyList(queryForm.value);
-    tableData.value = res.data.list;
-    tableDataAll.value = res.data.list;
+    const res = await keywordMyList({ ...queryForm.value, page: pagination.value.current, limit: pagination.value.pageSize });
+    const currentTask = taskMap.value[queryForm.value.taskId] || { name: '', website: '' };
+    // 覆盖每行的所属任务与备注信息
+    tableData.value = res.data.list.map(row => ({
+      ...row,
+      taskName: currentTask.name,
+      website: currentTask.website,
+    }));
+    tableDataAll.value = tableData.value;
     allForm.value.taskId = queryForm.value.taskId;
     allForm.value.pages = res.data.pages;
+    pagination.value.total = res.data.total || res.data.pages * pagination.value.pageSize || tableData.value.length;
   } catch (error) {
     tableData.value = [];
     tableDataAll.value = [];
@@ -327,35 +337,70 @@ const getList = async () => {
   tableLoading.value = false;
 };
 
-// 获取全部列表
-const getListAll = async () => {
-  // if (allForm.value.pages === 1) {
-  //   Message.success(localeGet('message1'));
-  //   return;
-  // }
-  tableLoading.value = true;
-  const res = await keywordMyList(allForm.value);
-  tableData.value = res.data.list;
-  tableDataAll.value = res.data.list;
-  tableLoading.value = false;
-  isAll.value = true;
-};
-// 分页发生改变
-const handlePageSizeChange = (pageSize) => {
-  queryForm.value.page = 1;
-  queryForm.value.limit = pageSize;
-  pagination.value.pageSize = pageSize;
-  getList();
-};
-// 搜索
-const handleSearch = () => {
-  const list = filteredData();
-  tableData.value = list;
-};
+// 过滤逻辑
 const filteredData = () => {
   return tableDataAll.value.filter((item) => {
     return (!queryForm.value.title || (queryForm.value.title && item.title.toLowerCase().includes(queryForm.value.title.toLowerCase()))) && (!queryForm.value.weight || (queryForm.value.weight && item.weight.toString().includes(queryForm.value.weight))) && (!queryForm.value.website || (queryForm.value.website && item.website.toLowerCase().includes(queryForm.value.website.toLowerCase())));
   });
+};
+// 客户端分页（仅在 isAll 为 true 时使用）
+const paginateAll = (sourceList) => {
+  const start = (pagination.value.current - 1) * pagination.value.pageSize;
+  const end = start + pagination.value.pageSize;
+  tableData.value = sourceList.slice(start, end);
+};
+
+// 获取全部列表
+const getListAll = async () => {
+  tableLoading.value = true;
+  allForm.value.title = queryForm.value.title;
+  const res = await keywordMyList({ ...allForm.value });
+  const currentTask = taskMap.value[allForm.value.taskId] || { name: '', website: '' };
+  // 保存全量并覆盖列
+  tableDataAll.value = res.data.list.map(row => ({
+    ...row,
+    taskName: currentTask.name,
+    website: currentTask.website,
+  }));
+  // 初始化前端分页
+  isAll.value = true;
+  pagination.value.current = 1;
+  pagination.value.total = tableDataAll.value.length;
+  paginateAll(tableDataAll.value);
+  tableLoading.value = false;
+};
+// 分页发生改变
+const handlePageSizeChange = (pageSize) => {
+  pagination.value.current = 1;
+  pagination.value.pageSize = pageSize;
+  if (isAll.value) {
+    const list = filteredData();
+    pagination.value.total = list.length;
+    paginateAll(list);
+  } else {
+    getList();
+  }
+};
+// 页码变化
+const handlePageChange = (page) => {
+  pagination.value.current = page;
+  if (isAll.value) {
+    const list = filteredData();
+    paginateAll(list);
+  } else {
+    getList();
+  }
+};
+// 搜索
+const handleSearch = () => {
+  const list = filteredData();
+  if (isAll.value) {
+    pagination.value.current = 1;
+    pagination.value.total = list.length;
+    paginateAll(list);
+  } else {
+    tableData.value = list;
+  }
 };
 // 重置
 const handleReset = () => {

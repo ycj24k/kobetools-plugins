@@ -7,7 +7,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <a-textarea :auto-size="{minRows: 8}" class="textarea" style="padding-top: 4px; height: 100%;" :placeholder="placeholder" allow-clear />
+    <a-textarea class="textarea" style="padding-top: 4px; height: 100%;" :placeholder="placeholder" allow-clear />
 </template>
 
 <style scoped>

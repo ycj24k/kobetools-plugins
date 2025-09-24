@@ -572,11 +572,11 @@ export const formatOptions = [
 export const includeOptions = [
   {
     label: 'includeOptions.label1',
-    value: 1,
+    value: 0,
   },
   {
     label: 'includeOptions.label2',
-    value: 0,
+    value: 1,
   },
 ];
 
@@ -584,11 +584,11 @@ export const includeOptions = [
 export const excludeOptions = [
   {
     label: 'includeOptions.label1',
-    value: 1,
+    value: 0,
   },
   {
     label: 'includeOptions.label2',
-    value: 0,
+    value: 1,
   },
 ];
 
@@ -623,7 +623,7 @@ export const typeOptions = [
     value: 5,
   },
   {
-    label: 'SEM关键词',
+    label: '关键词规划师',
     value: 6,
   },
   {
@@ -631,7 +631,7 @@ export const typeOptions = [
     value: 7,
   },
   {
-    label: '站长关键词库',
+    label: '站长平台词',
     value: 8,
   },
 ];

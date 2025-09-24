@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <h2>工作空间列表</h2>
       <p>这是工作空间列表页面</p>
     </div>

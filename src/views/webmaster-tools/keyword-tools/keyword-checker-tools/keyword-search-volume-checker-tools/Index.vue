@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-tabs v-model="activeKey">
         <a-tab-pane :key="1" title="关键词搜索量查询">
           <GjcsslForm :locales="localeData" />

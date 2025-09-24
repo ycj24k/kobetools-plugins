@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-form class="form_box" ref="queryFormRef" layout="vertical" hide-label :model="queryForm">
         <a-grid :col-gap="24" :row-gap="12">
           <a-grid-item :span="4" class="flex_box">

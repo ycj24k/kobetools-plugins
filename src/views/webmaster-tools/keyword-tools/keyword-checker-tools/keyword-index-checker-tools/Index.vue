@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-tabs v-model="activeKey">
         <a-tab-pane :key="1" title="单域名查询">
           <DymForm :locales="localeData" />

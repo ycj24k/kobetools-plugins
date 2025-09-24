@@ -29,22 +29,25 @@
           </a-grid-item>
         </a-grid>
         <div class="form_item">
-          <div class="flex_box flex_row_between">
-            <div class="form_title" style="width: 400px;"><span style="color: #ff0000">*</span>{{ localeGet('title5') }}<span style="color: #ff0000;">（C列为核心关键词不可为空）</span></div>
+          <div class="flex_box">
             <div class="form_title_right">
-              <a-checkbox :model-value="spaceCheck" @change="spaceChange">{{ localeGet('title6') }}</a-checkbox>
-              <a-checkbox :model-value="orderCheckedAll" :indeterminate="orderIndeterminate" @change="orderHandleChangeAll">{{ localeGet('title7') }}</a-checkbox>
+              <a-checkbox :model-value="spaceCheck" @change="spaceChange">智能加空格</a-checkbox>
+              <a-checkbox :model-value="orderCheckedAll" :indeterminate="orderIndeterminate" @change="orderHandleChangeAll">全选/全不选</a-checkbox>
             </div>
           </div>
-          <a-form-item no-style field="order">
-            <a-checkbox-group @change="orderHandleChange" v-model="orderSelect" :options="orderOptions"></a-checkbox-group>
-          </a-form-item>
+          
         </div>
         <div class="form_item">
-          <div class="form_title">{{ localeGet('title4') }}</div>
           <a-grid :col-gap="20" :row-gap="10">
-            <a-grid-item :span="12" class="flex_box">
-              <div class="form_label">字符长度</div>
+            <a-grid-item :span="14" class="flex_box">
+              <div class="form_title"><span style="color: #ff0000">*</span>组合方式</div>
+              <a-form-item no-style field="order">
+                <a-checkbox-group @change="orderHandleChange" v-model="orderSelect" :options="orderOptions"></a-checkbox-group>
+              </a-form-item>
+            </a-grid-item>
+            <a-grid-item :span="10" class="flex_box">
+              <div class="form_title">条件筛选</div>
+              <div class="form_label">标题字符长度</div>
               <a-form-item no-style field="lengthFilter">
                 <a-space :size="20">
                   <a-switch v-model="orderingForm.lengthFilter" :checked-value="1" :unchecked-value="0" />
@@ -74,34 +77,13 @@
                 </a-space>
               </a-form-item>
             </a-grid-item>
-            <a-grid-item :span="12" class="flex_box">
-              <div class="form_label">{{ localeGet('label4') }}</div>
-              <a-form-item no-style field="sensitiveFilter">
-                <a-space :size="20">
-                  <a-switch v-model="orderingForm.sensitiveFilter" :checked-value="1" :unchecked-value="0" />
-                  <template v-if="orderingForm.sensitiveFilter === 1">
-                    <a-select v-model="orderingForm.sensitiveFilterVal" :options="customOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')">
-                      <template #label="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                      <template #option="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                    </a-select>
-                  </template>
-                </a-space>
-              </a-form-item>
-            </a-grid-item>
           </a-grid>
         </div>
-        <div class="flex_box flex_row_between form_btn">
+        <a-space :size="30" class="form_btn">
           <a-button class="form_btn1" type="primary" :loading="loading" @click="orderingFormJoin">组合关键词</a-button>
           <a-button class="form_btn2" type="primary" :loading="loading">组合项插入</a-button>
           <a-button class="form_btn5" type="primary" :loading="loading" @click="clearAll">清空组合项</a-button>
-          <a-button class="form_btn3" type="primary" :loading="loading" html-type="submit">保存到空间</a-button>
-          <a-button class="form_btn4" type="primary" :loading="loading" @click="downloadLocale">下载到本地</a-button>
-          <a-button class="form_btn6" type="primary" :loading="loading" @click="copyKeywords">复制组合词</a-button>
-        </div>
+        </a-space>
       </a-grid-item>
       <a-grid-item :span="6" class="form_right">
         <a-form-item no-style>

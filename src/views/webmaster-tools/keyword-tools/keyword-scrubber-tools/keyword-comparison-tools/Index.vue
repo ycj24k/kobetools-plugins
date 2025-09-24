@@ -1,9 +1,11 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-tabs v-model="activeKey">
         <a-tab-pane :key="1" title="关键词对比工具">
-          <GjcdbForm :locales="localeData" />
+          <div class="x-pane-scroll">
+            <GjcdbForm :locales="localeData" />
+          </div>
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -45,5 +47,16 @@ export default {
   .form_box .form_title {
     width: 100px;
   }
+}
+/* 父容器高度已为 100%，本组件跟随父容器填满并禁止外层滚动 */
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.container_box {
+  flex: 1;
+  min-height: 0;
 }
 </style>

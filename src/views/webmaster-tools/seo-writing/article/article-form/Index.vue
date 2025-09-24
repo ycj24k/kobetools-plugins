@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <a-tabs>
         <a-tab-pane :key="1" :title="localeGet('type1')">
           <a-form class="form_box" ref="articleFormRef" layout="vertical" hide-label :model="articleForm" @submit="articleFormSubmit">

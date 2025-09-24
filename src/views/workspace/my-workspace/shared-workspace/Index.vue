@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container_box">
+    <div class="container_box x-tabs-fill">
       <h2>共享空间</h2>
       <p>这是共享空间页面</p>
     </div>
