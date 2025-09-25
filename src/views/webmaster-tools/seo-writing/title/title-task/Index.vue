@@ -35,7 +35,7 @@
         </a-grid>
       </a-form>
       <div class="table_box">
-        <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading" :columns="taskTableColumns" :data="tableData" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange" :scroll="{ x: '100%', y: 500 }">
+        <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading" :columns="taskTableColumns" :data="tableData" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="false" :scroll="{ x: '100%', y: 500 }">
           <template #header="{ column }">
             <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
           </template>
@@ -66,8 +66,21 @@
             </div>
           </template>
         </a-table>
-        <div class="table_save">
-          <a-button class="form_btn5" type="primary" @click="handleSave">{{ localeGet('btn8') }}</a-button>
+        <div class="table_footer">
+          <div class="table_save">
+            <a-button class="form_btn5" type="primary" @click="handleSave">{{ localeGet('btn8') }}</a-button>
+          </div>
+          <div class="table_pagination">
+            <a-pagination
+              v-model:current="queryForm.page"
+              v-model:page-size="queryForm.limit"
+              :total="Math.max(1, tableDataAll.length)"
+              :page-size-options="[100, 200, 500, 1000, 2000]"
+              show-page-size
+              @page-size-change="handlePageSizeChange"
+              @change="handlePageChange"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -255,7 +268,11 @@ getList();
 const handlePageSizeChange = (pageSize) => {
   queryForm.value.page = 1;
   queryForm.value.limit = pageSize;
-  pagination.value.pageSize = pageSize;
+  getList();
+};
+// 页码改变
+const handlePageChange = (page) => {
+  queryForm.value.page = page;
   getList();
 };
 // 搜索
@@ -366,4 +383,10 @@ export default {
 
 <style lang="less" scoped>
 @import '@/assets/style/table.less';
+.table_footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
 </style>

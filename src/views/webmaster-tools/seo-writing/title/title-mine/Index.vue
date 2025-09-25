@@ -29,7 +29,7 @@
       <div class="table_box">
         <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading || saveLoading"
           :columns="myTableColumns" :data="tableData" row-key="id" :row-selection="rowSelection"
-          v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange"
+          v-model:selectedKeys="selectedKeys" :pagination="false"
           :scroll="{ x: '100%', y: 500 }">
           <template #header="{ column }">
             <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
@@ -49,15 +49,26 @@
             </div>
           </template>
         </a-table>
-        <a-space :size="20" class="table_save">
-          <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('btn9')
-          }}</a-button>
-          <a-button :loading="saveLoading" class="form_btn8" type="primary">批量删除</a-button>
-          <a-button :loading="saveLoading" class="form_btn1" type="primary" @click="handleAIMake">AI生成 Meta标签</a-button>
-          <a-button type="outline" @click="getListAll">{{ localeGet('btn10') }}</a-button>
-          <div class="table_save_total">{{ localeGet('message2') }}{{ tableDataAll.length }}{{ localeGet('message3') }}
+        <div class="table_footer">
+          <a-space :size="20" class="table_save">
+            <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('btn9') }}</a-button>
+            <a-button :loading="saveLoading" class="form_btn8" type="primary">批量删除</a-button>
+            <a-button :loading="saveLoading" class="form_btn1" type="primary" @click="handleAIMake">AI生成 Meta标签</a-button>
+            <a-button type="outline" @click="getListAll">{{ localeGet('btn10') }}</a-button>
+            <div class="table_save_total">{{ localeGet('message2') }}{{ tableDataAll.length }}{{ localeGet('message3') }}</div>
+          </a-space>
+          <div class="table_pagination">
+            <a-pagination
+              v-model:current="pagination.current"
+              v-model:page-size="pagination.pageSize"
+              :total="Math.max(1, pagination.total || tableDataAll.length)"
+              :page-size-options="[100, 200, 500, 1000, 2000]"
+              show-page-size
+              @page-size-change="handlePageSizeChange"
+              @change="handlePageChange"
+            />
           </div>
-        </a-space>
+        </div>
       </div>
       <!-- 手动加标题 -->
       <a-modal :mask-closable="false" l :esc-to-close="false" class="modal_box" v-model:visible="addVisible" width="85%">
@@ -530,6 +541,12 @@ const handlePageSizeChange = (pageSize) => {
   pagination.value.pageSize = pageSize;
   getList();
 };
+// 页码改变
+const handlePageChange = (page) => {
+  pagination.value.current = page;
+  queryForm.value.page = page;
+  getList();
+};
 // 搜索
 const handleSearch = () => {
   const list = filteredData();
@@ -796,6 +813,13 @@ export default {
 
 <style lang="less" scoped>
 @import '@/assets/style/table.less';
+
+.table_footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
 
 .form_content {
   :deep(.arco-upload-progress) {

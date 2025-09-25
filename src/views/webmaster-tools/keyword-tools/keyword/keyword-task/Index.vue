@@ -35,7 +35,7 @@
         </a-grid>
       </a-form>
       <div class="table_box">
-        <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading" :columns="taskTableColumns" :data="tableData" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange" :scroll="{ x: '100%', y: 500 }">
+        <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading" :columns="taskTableColumns" :data="tableData" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="false" :scroll="{ x: '100%', y: 500 }">
           <template #header="{ column }">
             <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
           </template>
@@ -69,8 +69,21 @@
             </div>
           </template>
         </a-table>
-        <div class="table_save">
-          <a-button class="form_btn5" type="primary" @click="handleSave">{{ localeGet('button8') }}</a-button>
+        <div class="table_footer">
+          <div class="table_save">
+            <a-button class="form_btn5" type="primary" @click="handleSave">{{ localeGet('button8') }}</a-button>
+          </div>
+          <div class="table_pagination">
+            <a-pagination
+              v-model:current="queryForm.page"
+              v-model:page-size="queryForm.pageSize"
+              :total="Math.max(1, totalCount)"
+              :page-size-options="[100, 200, 500, 1000, 2000]"
+              show-page-size
+              @page-size-change="handlePageSizeChange"
+              @change="handlePageChange"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -239,7 +252,12 @@ const rowSelection = reactive({
   showCheckedAll: true,
   onlyCurrent: false,
 });
-const pagination = ref({ pageSize: 100, showPageSize: true, pageSizeOptions: [100, 200, 500, 1000, 2000] });
+const pagination = ref({ 
+  pageSize: 100, 
+  showPageSize: true, 
+  pageSizeOptions: [100, 200, 500, 1000, 2000]
+});
+const totalCount = ref(0);
 const queryFormRef = ref(null);
 const queryForm = ref({
   type: '',
@@ -263,9 +281,11 @@ const getList = async () => {
     const res = await keywordTaskList(queryForm.value);
     tableData.value = res.data.list;
     tableDataAll.value = res.data.list;
+    totalCount.value = (res.data && (res.data.total || res.data.count)) ? (res.data.total || res.data.count) : tableDataAll.value.length;
   } catch (error) {
     tableData.value = [];
     tableDataAll.value = [];
+    totalCount.value = 0;
   }
   tableLoading.value = false;
   saveForm.value.data = [];
@@ -275,7 +295,11 @@ getList();
 const handlePageSizeChange = (pageSize) => {
   queryForm.value.page = 1;
   queryForm.value.pageSize = pageSize;
-  pagination.value.pageSize = pageSize;
+  getList();
+};
+// 页码改变
+const handlePageChange = (page) => {
+  queryForm.value.page = page;
   getList();
 };
 // 搜索
@@ -392,4 +416,10 @@ export default {
 
 <style lang="less" scoped>
 @import '@/assets/style/table.less';
+.table_footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
 </style>

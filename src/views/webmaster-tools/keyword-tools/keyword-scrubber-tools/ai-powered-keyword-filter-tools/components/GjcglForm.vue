@@ -277,24 +277,24 @@ const GLFormSubmit = async ({ errors, values }) => {
       //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => (minLength === 0 && maxLength > 0 && item.length <= maxLength) || (minLength > 0 && maxLength === 0 && item.length >= minLength) || (minLength > 0 && maxLength > 0 && item.length >= minLength && item.length <= maxLength));
       //   }
       // }
-      // // 包含关键词
-      // if (includeKeywords.value.length) {
-      //   GLForm.value.includeKeywords = includeKeywords.value.split('\n');
-      //   if (GLForm.value.include) {
-      //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => GLForm.value.includeKeywords.some((char) => item.includes(char)));
-      //   } else {
-      //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => GLForm.value.includeKeywords.every((char) => item.includes(char)));
-      //   }
-      // }
-      // // 不包含关键词
-      // if (excludeKeywords.value.length) {
-      //   GLForm.value.excludeKeywords = excludeKeywords.value.split('\n');
-      //   if (GLForm.value.exclude) {
-      //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => !GLForm.value.excludeKeywords.some((char) => item.includes(char)));
-      //   } else {
-      //     GLForm.value.keywords = GLForm.value.keywords.filter((item) => !GLForm.value.excludeKeywords.every((char) => item.includes(char)));
-      //   }
-      // }
+      // 包含关键词
+      if (includeKeywords.value.length) {
+        GLForm.value.includeKeywords = includeKeywords.value.split('\n');
+        // if (GLForm.value.include) {
+        //   GLForm.value.keywords = GLForm.value.keywords.filter((item) => GLForm.value.includeKeywords.some((char) => item.includes(char)));
+        // } else {
+        //   GLForm.value.keywords = GLForm.value.keywords.filter((item) => GLForm.value.includeKeywords.every((char) => item.includes(char)));
+        // }
+      }
+      // 不包含关键词
+      if (excludeKeywords.value.length) {
+        GLForm.value.excludeKeywords = excludeKeywords.value.split('\n');
+        // if (GLForm.value.exclude) {
+        //   GLForm.value.keywords = GLForm.value.keywords.filter((item) => !GLForm.value.excludeKeywords.some((char) => item.includes(char)));
+        // } else {
+        //   GLForm.value.keywords = GLForm.value.keywords.filter((item) => !GLForm.value.excludeKeywords.every((char) => item.includes(char)));
+        // }
+      }
       // if (uploadType.value === 1 && GLForm.value.keywords.length === 0) {
       //   Message.warning('过滤后关键词为空');
       //   loading.value = false;

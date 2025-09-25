@@ -1,7 +1,7 @@
 <template>
   <a-form class="form_box" ref="orderingFormRef" layout="vertical" hide-label :model="orderingForm" @submit="orderingFormSubmit">
     <a-grid class="form_main">
-      <a-grid-item :span="18" class="form_left">
+      <a-grid-item :span="24" class="form_left">
         <a-grid :col-gap="20" class="form_left_areas">
           <a-grid-item :span="6" class="form_left_area">
             <a-form-item no-style field="keywordA">
@@ -85,11 +85,11 @@
           <a-button class="form_btn5" type="primary" :loading="loading" @click="clearAll">清空组合项</a-button>
         </a-space>
       </a-grid-item>
-      <a-grid-item :span="6" class="form_right">
+      <!-- <a-grid-item :span="6" class="form_right">
         <a-form-item no-style>
           <a-textarea v-model="orderingResult" class="form_area" disabled />
         </a-form-item>
-      </a-grid-item>
+      </a-grid-item> -->
     </a-grid>
     <div class="form_explain">
       <div class="form_explain_title">{{ localeGet('introduce1') }}</div>

@@ -29,7 +29,7 @@
       <div class="table_box">
         <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading || saveLoading"
           :columns="myTableColumns" :data="tableData" row-key="id" :row-selection="rowSelection"
-          v-model:selectedKeys="selectedKeys" :pagination="pagination" @page-size-change="handlePageSizeChange" @page-change="handlePageChange"
+          v-model:selectedKeys="selectedKeys" :pagination="false"
           :scroll="{ x: '100%', y: 'calc(100vh - 300px)' }">
           <template #header="{ column }">
             <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
@@ -53,13 +53,25 @@
             </div>
           </template>
         </a-table>
-        <a-space :size="20" class="table_save" :style="{ bottom: isAll ? '32px' : '80px' }">
-          <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('button8')
-          }}</a-button>
-          <a-button :loading="delLoading" class="form_btn8" type="primary" @click="handleDels">批量删除</a-button>
-          <a-button type="outline" @click="getListAll">{{ localeGet('button9') }}</a-button>
-          <div class="table_save_total">{{ localeGet('total1') }}{{ tableDataAll.length }}{{ localeGet('total2') }}</div>
-        </a-space>
+        <div class="table_footer">
+          <a-space :size="20" class="table_save">
+            <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('button8') }}</a-button>
+            <a-button :loading="delLoading" class="form_btn8" type="primary" @click="handleDels">批量删除</a-button>
+            <a-button type="outline" @click="getListAll">{{ localeGet('button9') }}</a-button>
+            <div class="table_save_total">{{ localeGet('total1') }}{{ tableDataAll.length }}{{ localeGet('total2') }}</div>
+          </a-space>
+          <div class="table_pagination">
+            <a-pagination
+              v-model:current="pagination.current"
+              v-model:page-size="pagination.pageSize"
+              :total="Math.max(1, pagination.total)"
+              :page-size-options="[100, 200, 500, 1000, 2000]"
+              show-page-size
+              @page-size-change="handlePageSizeChange"
+              @change="handlePageChange"
+            />
+          </div>
+        </div>
       </div>
       <!-- 手动加词 -->
       <a-modal :mask-closable="false" l :esc-to-close="false" class="modal_box" v-model:visible="addVisible" width="85%">
@@ -553,4 +565,12 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>@import '@/assets/style/table.less';</style>
+<style lang="less" scoped>
+@import '@/assets/style/table.less';
+.table_footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+</style>
