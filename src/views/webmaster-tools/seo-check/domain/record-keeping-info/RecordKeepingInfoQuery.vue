@@ -9,8 +9,8 @@
                     :text="localeGet('button1')" />
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" text="导出查询结果" />
-                <XButton color="pink" :text="localeGet('button4')" />
+                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" :text="localeGet('button2')" />
+                <XButton color="pink" :text="localeGet('button5')" />
             </div>
         </div>
         <div style="height: 400px;">
@@ -24,14 +24,14 @@
                     <div class="modal_title_icon">
                         <icon-info-circle-fill />
                     </div>
-                    <div class="modal_title_text">温馨提示</div>
+                    <div class="modal_title_text">{{ localeGet('title2') }}</div>
                 </div>
             </template>
-            <div class="modal_content">您当前日查询额度上限为100个，当前已使用88，更多查询额度可通过升级VIP权限获取。</div>
+            <div class="modal_content">{{ localeGet('content4') }}</div>
             <template #footer>
                 <div class="flex_box flex_row_center modal_footer">
-                    <a-button style="color: #333" @click="tipVisible = false">返回查询页面</a-button>
-                    <a-button class="form_btn3" @click="tipSubmit">升级VIP权限</a-button>
+                    <a-button style="color: #333" @click="tipVisible = false">{{ localeGet('button6') }}</a-button>
+                    <a-button class="form_btn3" @click="tipSubmit">{{ localeGet('button7') }}</a-button>
                 </div>
             </template>
         </a-modal>
@@ -47,6 +47,9 @@ import XTable from "@/components/common/XTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
 import { handleExport, validateDomains } from '@/utils';
 
+import { useI18n } from '../../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
+
 // 多语言
 const props = defineProps({
     locales: {
@@ -54,14 +57,13 @@ const props = defineProps({
         default: {}
     }
 });
-const localeData = ref(props.locales);
-const localeGet = (key) => {
-    return localeData.value[key]
-}
+
+const { localeGet, updateLocales } = useI18n(localZhCN);
 const columns = ref([]);
+
 // 监听 props 的变化
 watch(() => props.locales, (newVal) => {
-    localeData.value = newVal;
+    if (newVal) updateLocales(newVal);
     columns.value = [
         {
             title: localeGet('domainColumns.label1'),
@@ -145,13 +147,13 @@ function queryTableData() {
 }
 
 function tipSubmit() {
-    Message.info('已点击升级VIP权限');
+    Message.info(localeGet('message4'));
     tipVisible.value = false;
 }
 
 function exportRecordKeepingDomains() {
     if (xTable.value.table.tableCurrData.length === 0) {
-        showErrorNotification('未获取到查询结果');
+        showErrorNotification(localeGet('message3'));
         return;
     }
     handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns.value, '', 'csv')

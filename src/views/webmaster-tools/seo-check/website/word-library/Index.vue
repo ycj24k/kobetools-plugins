@@ -1,23 +1,30 @@
 <script setup>
-
+import { ref, onMounted } from "vue";
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 import WordLibraryWebsiteQuery from "./WordLibraryWebsiteQuery.vue";
 
+const { localeGet, initMicroApp, localeData } = useI18n(localZhCN);
+
+onMounted(() => {
+  initMicroApp();
+});
 </script>
 
 <template>
     <div class="index">
         <div style="flex: 1;">
             <a-tabs default-active-key="1" justify>
-                <a-tab-pane key="1" title="网站词库查询">
-                    <WordLibraryWebsiteQuery />
+                <a-tab-pane key="1" :title="localeGet('type1')">
+                    <WordLibraryWebsiteQuery :locales="localeData" />
                 </a-tab-pane>
             </a-tabs>
         </div>
         <div style="height: 12px"></div>
         <div class="form_explain">
-            <div class="form_explain_title">工具介绍：</div>
-            <div>1、Kobetools网站词库查询工具支持高效率、大批量查询网站在爱站或站长工具平台的词库数据。</div>
-            <div>2、Kobetools网站词库查询工具还可以查询词库中关键词排名前五页的分布情况。</div>
+            <div class="form_explain_title">{{ localeGet('introduce1') }}</div>
+            {{ localeGet('content1') }}
+            {{ localeGet('content2') }}
         </div>
     </div>
 </template>

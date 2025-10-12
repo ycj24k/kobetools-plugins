@@ -1,16 +1,16 @@
 <template>
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div style="flex: 1;">
-            <XTextarea v-model="domains" placeholder="请输入需要查询的域名信息，一行一个，单次最多提交20个，格式如：google.com"/>
+            <XTextarea v-model="domains" :placeholder="localeGet('placeholder1')"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" text="立即查询"/>
+                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" :text="localeGet('button1')"/>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                 <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
-                    text="导出查询结果" />
-                <XButton color="pink" text="VIP查询通道"/>
+                    :text="localeGet('button2')" />
+                <XButton color="pink" :text="localeGet('button5')"/>
             </div>
         </div>
         <div style="height: 400px;">
@@ -24,70 +24,34 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import XTable from "@/components/common/XTable.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
 import { handleExport } from '@/utils';
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
+
+// 多语言
+const props = defineProps({
+    locales: {
+        type: Object,
+        default: {},
+    },
+});
+const { localeGet, updateLocales } = useI18n(localZhCN);
+watch(() => props.locales, (v) => { if (v) updateLocales(v); }, { immediate: true });
 
 let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        width: 100
-    },
-    {
-        title: '域名信息',
-        dataIndex: 'domain',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        width: 150
-    },
-    {
-        title: '域名所有人',
-        dataIndex: 'contactPerson',
-        width: 300
-    },
-    {
-        title: '注册机构',
-        dataIndex: 'registrar',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        width: 150
-    },
-    {
-        title: '注册邮箱',
-        dataIndex: 'email',
-        width: 150
-    },
-    {
-        title: '注册时间',
-        dataIndex: 'creationDate',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        width: 150
-    },
-    {
-        title: '到期时间',
-        dataIndex: 'expirationDate',
-        width: 150
-    },
-    {
-        title: '域名年龄',
-        dataIndex: 'age',
-        slotName: 'age',
-        sortable: {
-            sortDirections: ['ascend', 'descend']
-        },
-        width: 100
-    },
+    { title: 'registerColumns.label1', dataIndex: 'serialNumber', sortable: { sortDirections: ['ascend', 'descend'] }, width: 100 },
+    { title: 'registerColumns.label2', dataIndex: 'domain', sortable: { sortDirections: ['ascend', 'descend'] }, width: 150 },
+    { title: 'registerColumns.label3', dataIndex: 'contactPerson', width: 300 },
+    { title: 'registerColumns.label4', dataIndex: 'registrar', sortable: { sortDirections: ['ascend', 'descend'] }, width: 150 },
+    { title: 'registerColumns.label5', dataIndex: 'email', width: 150 },
+    { title: 'registerColumns.label6', dataIndex: 'creationDate', sortable: { sortDirections: ['ascend', 'descend'] }, width: 150 },
+    { title: 'registerColumns.label7', dataIndex: 'expirationDate', width: 150 },
+    { title: 'registerColumns.label8', dataIndex: 'age', slotName: 'age', sortable: { sortDirections: ['ascend', 'descend'] }, width: 100 },
 ];
 
 let domains = ref("");
@@ -96,7 +60,7 @@ let isDownloadFile = ref(false);
 
 function queryTableData() {
     if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的域名信息！');
+        showErrorNotification(localeGet('message2'));
         return;
     }
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
@@ -105,7 +69,7 @@ function queryTableData() {
 
 function exportRecordKeepingDomains() {
     if (xTable.value.table.tableCurrData.length === 0) {
-        showErrorNotification('未获取到查询结果');
+        showErrorNotification(localeGet('message1'));
         return;
     }
     handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns, '', 'csv')

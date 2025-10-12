@@ -17,9 +17,9 @@
           <a-grid-item :span="16">
             <div class="flex_box form_btns">
               <a-button class="form_btn1" type="primary" @click="handleSearch">{{ localeGet('button1') }}</a-button>
-              <a-button class="form_btn2" type="primary" @click="handleAdd">添加关键词</a-button>
-              <a-button class="form_btn3" type="primary" @click="handleExport('txt')">导出TXT</a-button>
-              <a-button class="form_btn4" type="primary" @click="handleExport('csv')">导出表格</a-button>
+              <a-button class="form_btn2" type="primary" @click="handleAdd">{{ localeGet('button2') }}</a-button>
+              <a-button class="form_btn3" type="primary" @click="handleExport('txt')">{{ localeGet('button3') }}</a-button>
+              <a-button class="form_btn4" type="primary" @click="handleExport('csv')">{{ localeGet('button4') }}</a-button>
               <a-button class="form_btn7" type="outline" @click="handleReset">{{ localeGet('button5') }}</a-button>
               <a-button type="outline" @click="handleRefresh">{{ localeGet('button6') }}</a-button>
             </div>
@@ -32,14 +32,14 @@
           v-model:selectedKeys="selectedKeys" :pagination="false"
           :scroll="{ x: '100%', y: 'calc(100vh - 300px)' }">
           <template #header="{ column }">
-            <div>{{ column.title === '备注信息' ? '备注信息' : localeGet(column.title) }}</div>
+            <div>{{ column.title === 'myTableColumns.title7' ? localeGet('myTableColumns.title7') : localeGet(column.title) }}</div>
           </template>
           <template #title="{ rowIndex }">
             <a-input @change="handleSaveChange(rowIndex, 'title')" v-model="tableData[rowIndex].title" />
           </template>
           <template #weight="{ rowIndex }">
-            <template v-for="item in weightOptions" :key="item.value">
-              <div v-if="item.value === tableData[rowIndex].weight">{{ localeGet(item.label) }}</div>
+            <template v-for="item in translatedWeightOptions" :key="item.value">
+              <div v-if="item.value === tableData[rowIndex].weight">{{ item.label }}</div>
             </template>
           </template>
           <template #updateTime="{ rowIndex }">
@@ -56,7 +56,7 @@
         <div class="table_footer">
           <a-space :size="20" class="table_save">
             <a-button :loading="saveLoading" class="form_btn5" type="primary" @click="handleSave">{{ localeGet('button8') }}</a-button>
-            <a-button :loading="delLoading" class="form_btn8" type="primary" @click="handleDels">批量删除</a-button>
+            <a-button :loading="delLoading" class="form_btn8" type="primary" @click="handleDels">{{ localeGet('button10') }}</a-button>
             <a-button type="outline" @click="getListAll">{{ localeGet('button9') }}</a-button>
             <div class="table_save_total">{{ localeGet('total1') }}{{ tableDataAll.length }}{{ localeGet('total2') }}</div>
           </a-space>
@@ -88,19 +88,19 @@
             <a-grid class="form_main">
               <a-grid-item :span="6" class="form_left">
                 <a-form-item no-style field="keyword">
-                  <a-textarea v-model="keyword" class="form_area" placeholder="请添加关键词，一行一个" allow-clear />
+                  <a-textarea v-model="keyword" class="form_area" :placeholder="localeGet('placeholder4')" allow-clear />
                 </a-form-item>
               </a-grid-item>
               <a-grid-item :span="18" class="form_right">
                 <div class="flex_box form_item">
-                  <div class="form_title"><span style="color: #FF0000;">* </span>添加类型</div>
+                  <div class="form_title"><span style="color: #FF0000;">* </span>{{ localeGet('label1') }}</div>
                   <a-grid :col-gap="20" :row-gap="10" class="form_content">
                     <a-grid-item :span="12" class="flex_box form_option">
                       <a-form-item no-style field="type">
                         <a-space :size="20">
-                          <a-radio @click="addForm.type = 1" :model-value="addForm.type === 1">新任务</a-radio>
+                          <a-radio @click="addForm.type = 1" :model-value="addForm.type === 1">{{ localeGet('label2') }}</a-radio>
                           <template v-if="addForm.type === 1">
-                            <a-input style="width: 320px;" v-model="addForm.taskName" placeholder="请设置任务名称" />
+                            <a-input style="width: 320px;" v-model="addForm.taskName" :placeholder="localeGet('placeholder5')" />
                           </template>
                         </a-space>
                       </a-form-item>
@@ -108,17 +108,9 @@
                     <a-grid-item :span="12" class="flex_box form_option">
                       <a-form-item no-style field="type">
                         <a-space :size="20">
-                          <a-radio @click="addForm.type = 2" :model-value="addForm.type === 2">当前任务</a-radio>
+                          <a-radio @click="addForm.type = 2" :model-value="addForm.type === 2">{{ localeGet('label3') }}</a-radio>
                           <template v-if="addForm.type === 2">
-                            <a-select style="width: 320px;" v-model="addForm.taskId" :options="taskList" placeholder="请选择任务"
-                              allow-search>
-                              <!-- <template #label="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template>
-                                <template #option="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template> -->
-                            </a-select>
+                            <a-select style="width: 320px;" v-model="addForm.taskId" :options="taskList" :placeholder="localeGet('placeholder6')" allow-search></a-select>
                           </template>
                         </a-space>
                       </a-form-item>
@@ -129,53 +121,29 @@
                   <a-grid :col-gap="20" :row-gap="10" class="form_content">
                     <a-grid-item :span="15" class="flex_box form_option">
                       <div class="form_title">{{ localeGet('title3') }}</div>
-                      <div class="form_label">字符长度</div>
+                      <div class="form_label">{{ localeGet('label4') }}</div>
                       <a-form-item no-style field="lengthFilter">
                         <a-space :size="20">
                           <a-switch v-model="addForm.lengthFilter" :checked-value="1" :unchecked-value="0" />
                           <template v-if="addForm.lengthFilter === 1">
                             <a-space :size="20">
-                              <span>最少</span>
-                              <a-select v-model="addForm.lengthFilterVal.min" :options="lengthMinOptions"
-                                :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
-                                <!-- <template #label="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template>
-                                <template #option="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template> -->
-                              </a-select>
+                              <span>{{ localeGet('label6') }}</span>
+                              <a-select v-model="addForm.lengthFilterVal.min" :options="translatedLengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder8')"></a-select>
                               <span>-</span>
-                              <span>最多</span>
-                              <a-select v-model="addForm.lengthFilterVal.max" :options="lengthMaxOptions"
-                                :style="{ width: '140px' }" :placeholder="localeGet('placeholder4')">
-                                <!-- <template #label="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template>
-                                <template #option="{ data }">
-                                  <span>{{ localeGet(data?.label) }}</span>
-                                </template> -->
-                              </a-select>
+                              <span>{{ localeGet('label7') }}</span>
+                              <a-select v-model="addForm.lengthFilterVal.max" :options="translatedLengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder9')"></a-select>
                             </a-space>
                           </template>
                         </a-space>
                       </a-form-item>
                     </a-grid-item>
                     <a-grid-item :span="9" class="flex_box form_option">
-                      <div class="form_label">违禁词过滤</div>
+                      <div class="form_label">{{ localeGet('label5') }}</div>
                       <a-form-item no-style field="sensitiveFilter">
                         <a-space :size="20">
                           <a-switch v-model="addForm.sensitiveFilter" :checked-value="1" :unchecked-value="0" />
                           <template v-if="addForm.sensitiveFilter === 1">
-                            <a-select v-model="addForm.sensitiveFilterVal" :options="customOptions"
-                              :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')">
-                              <template #label="{ data }">
-                                <span>{{ localeGet(data?.label) }}</span>
-                              </template>
-                              <template #option="{ data }">
-                                <span>{{ localeGet(data?.label) }}</span>
-                              </template>
-                            </a-select>
+                            <a-select v-model="addForm.sensitiveFilterVal" :options="translatedCustomOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder7')"></a-select>
                           </template>
                         </a-space>
                       </a-form-item>
@@ -187,31 +155,17 @@
                     <a-grid-item :span="12" class="flex_box form_content_item">
                       <div class="form_title">{{ localeGet('title4') }}</div>
                       <div class="flex_box form_content_top">
-                        <div class="form_label">结果包含</div>
+                        <div class="form_label">{{ localeGet('label8') }}</div>
                         <a-form-item no-style field="include">
-                          <a-radio-group v-model="addForm.include" :options="includeOptions">
-                            <template #label="{ data }">
-                              <span>{{ data?.label }}</span>
-                            </template>
-                            <template #option="{ data }">
-                              <span>{{ data?.label }}</span>
-                            </template>
-                          </a-radio-group>
+                          <a-radio-group v-model="addForm.include" :options="translatedIncludeOptions"></a-radio-group>
                         </a-form-item>
                       </div>
                     </a-grid-item>
                     <a-grid-item :span="12" class="form_content_item">
                       <div class="flex_box form_content_top">
-                        <div class="form_label">结果不包含</div>
+                        <div class="form_label">{{ localeGet('label9') }}</div>
                         <a-form-item no-style field="exclude">
-                          <a-radio-group v-model="addForm.exclude" :options="excludeOptions">
-                            <template #label="{ data }">
-                              <span>{{ data?.label }}</span>
-                            </template>
-                            <template #option="{ data }">
-                              <span>{{ data?.label }}</span>
-                            </template>
-                          </a-radio-group>
+                          <a-radio-group v-model="addForm.exclude" :options="translatedExcludeOptions"></a-radio-group>
                         </a-form-item>
                       </div>
                     </a-grid-item>
@@ -219,14 +173,12 @@
                   <a-grid :col-gap="20" :row-gap="10" class="form_content">
                     <a-grid-item :span="12" class="flex_box form_content_item">
                       <div class="form_content_input">
-                        <a-textarea v-model="addForm.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词"
-                          allow-clear />
+                        <a-textarea v-model="addForm.includeKeyword" class="form_area" :placeholder="localeGet('placeholder10')" allow-clear />
                       </div>
                     </a-grid-item>
                     <a-grid-item :span="12" class="form_content_item">
                       <div class="form_content_input">
-                        <a-textarea v-model="addForm.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词"
-                          allow-clear />
+                        <a-textarea v-model="addForm.excludeKeyword" class="form_area" :placeholder="localeGet('placeholder10')" allow-clear />
                       </div>
                     </a-grid-item>
                   </a-grid>
@@ -237,8 +189,8 @@
         </a-spin>
         <template #footer>
           <div class="flex_box flex_row_center modal_footer">
-            <a-button :loading="addLoading" style="color: #333" @click="addVisible = false">取消</a-button>
-            <a-button :loading="addLoading" class="form_btn3" @click="addSubmit">确定</a-button>
+            <a-button :loading="addLoading" style="color: #333" @click="addVisible = false">{{ localeGet('button11') }}</a-button>
+            <a-button :loading="addLoading" class="form_btn3" @click="addSubmit">{{ localeGet('button12') }}</a-button>
           </div>
         </template>
       </a-modal>
@@ -247,29 +199,31 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import dayjs from 'dayjs';
 import { keywordMyAdd, keywordMyList, keywordMySave, keywordMyDel, keywordMyDels, keywordTaskList, keywordMyListAll } from '@/api/apps/tools/keyword';
 import { includeOptions, excludeOptions, lengthMinOptions, lengthMaxOptions, customOptions, weightOptions, myTableColumns, addFormDefault } from '../utils/config';
 import { exportModal, processTextArea } from '@/utils';
-import localeConfig from './zh-CN.js';
 import { useRouter } from 'vue-router';
-// 多语言
-const localeData = ref({});
-localeData.value = localeConfig;
-const localeGet = (key) => {
-  return localeData.value[key];
-};
+import { useI18n } from '../utils/i18n';
+import localZhCN from './zh-CN.js';
 
-// 监听函数
-function dataListener(data) {
-  console.log('来自主应用的数据', data);
-  if (data && data.locales) localeData.value = data.locales;
-}
-// 监听数据变化，初始化时如果有数据则主动触发一次
-//@ts-ignore
-if (window.microApp) window.microApp.addDataListener(dataListener, true);
+// 多语言（使用本地配置）
+const { localeGet, translateOptions, initMicroApp } = useI18n(localZhCN);
+
+// 初始化微前端监听
+onMounted(() => {
+  initMicroApp();
+});
+
+// 翻译选项
+const translatedWeightOptions = translateOptions(weightOptions);
+const translatedIncludeOptions = translateOptions(includeOptions);
+const translatedExcludeOptions = translateOptions(excludeOptions);
+const translatedCustomOptions = translateOptions(customOptions);
+const translatedLengthMinOptions = translateOptions(lengthMinOptions);
+const translatedLengthMaxOptions = translateOptions(lengthMaxOptions);
 
 const router = useRouter();
 const selectedKeys = ref([]);
@@ -447,7 +401,7 @@ const delLoading = ref(false);
 // 批量删除
 const handleDels = () => {
   if (selectedKeys.value.length === 0) {
-    return Message.warning('请选择需要删除的数据');
+    return Message.warning(localeGet('message9'));
   }
   delLoading.value = true;
   keywordMyDels(queryForm.value.taskId, selectedKeys.value)
@@ -507,15 +461,15 @@ const addSubmit = () => {
   addForm.value.keyword = processTextArea(keyword.value);
   keyword.value = addForm.value.keyword.join('\n')
   if (addForm.value.keyword.length === 0) {
-    Message.warning('请添加关键词，一行一个');
+    Message.warning(localeGet('placeholder4'));
     return;
   }
   if (addForm.value.type === 1 && !addForm.value.taskName.trim()) {
-    Message.warning('请设置任务名称');
+    Message.warning(localeGet('message6'));
     return;
   }
   if (addForm.value.type === 2 && !addForm.value.taskId) {
-    Message.warning('请选择任务');
+    Message.warning(localeGet('placeholder6'));
     return;
   }
   // 字符长度过滤
@@ -542,13 +496,13 @@ const addSubmit = () => {
     }
   }
   if (addForm.value.keyword.length === 0) {
-    Message.warning('请添加关键词，一行一个');
+    Message.warning(localeGet('message7'));
     return;
   }
   addLoading.value = true;
   keywordMyAdd(addForm.value)
     .then((res) => {
-      Message.success('添加成功');
+      Message.success(localeGet('message8'));
       addVisible.value = false;
       getList();
       addLoading.value = false;

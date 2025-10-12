@@ -2,7 +2,7 @@
   <div class="container">
     <div class="container_box x-tabs-fill">
       <a-tabs v-model="activeKey">
-        <a-tab-pane :key="1" title="关键词分组工具">
+        <a-tab-pane :key="1" :title="localeGet('tabName')">
           <GjcfzForm :locales="localeData" />
         </a-tab-pane>
       </a-tabs>
@@ -11,25 +11,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import localeConfig from './zh-CN.js';
+import { ref, onMounted } from 'vue';
+import { useI18n } from '../../keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 // 关键词分组工具
 import GjcfzForm from './components/GjcfzForm.vue';
-// 多语言
-const localeData = ref({});
-localeData.value = localeConfig;
-const localeGet = (key) => {
-  return localeData.value[key];
-};
 
-// 监听函数
-function dataListener(data) {
-  console.log('来自主应用的数据', data);
-  if (data&&data.locales) localeData.value = data.locales;
-}
-// 监听数据变化，初始化时如果有数据则主动触发一次
-//@ts-ignore
-if (window.microApp) window.microApp.addDataListener(dataListener, true);
+// 多语言（使用本地配置）
+const { localeGet, initMicroApp, localeData } = useI18n(localZhCN);
+
+// 初始化微前端监听
+onMounted(() => {
+  initMicroApp();
+});
+
 const activeKey = ref(1);
 </script>
 

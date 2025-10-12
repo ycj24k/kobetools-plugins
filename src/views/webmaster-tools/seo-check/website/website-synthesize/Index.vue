@@ -1,23 +1,30 @@
 <script setup>
-
+import { ref, onMounted } from "vue";
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 import WeightWebsiteQuery from "./WeightWebsiteQuery.vue";
 
+const { localeGet, initMicroApp, localeData } = useI18n(localZhCN);
+
+onMounted(() => {
+  initMicroApp();
+});
 </script>
 
 <template>
     <div class="index">
         <div style="flex: 1;">
             <a-tabs default-active-key="1" justify>
-                <a-tab-pane key="1" title="网站综合查询">
+                <a-tab-pane key="1" :title="localeGet('type1')">
                     <WeightWebsiteQuery />
                 </a-tab-pane>
             </a-tabs>
         </div>
         <div style="height: 12px"></div>
         <div class="form_explain">
-            <div class="form_explain_title">工具介绍：</div>
-            <div>1、Kobetools网站综合查询工具可批量査询网站在爱站和站长工具的综合信息，支持主流搜索引擎的域名综合查询。</div>
-            <div>2、Kobetools网站综合查询工具同时可查询站点在各个搜索引擎在PC和WAP端的网站预估流量。</div>
+            <div class="form_explain_title">{{ localeGet('introduce1') }}</div>
+            <div>{{ localeGet('content1') }}</div>
+            <div>{{ localeGet('content2') }}</div>
         </div>
     </div>
 </template>

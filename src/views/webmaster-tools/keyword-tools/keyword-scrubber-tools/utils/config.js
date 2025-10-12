@@ -30,11 +30,11 @@ export const GLFormDefault = {
 // 包含关键词
 export const includeOptions = [
   {
-    label: '任一项',
+    label: 'includeOptions.label1',
     value: 0,
   },
   {
-    label: '所有项',
+    label: 'includeOptions.label2',
     value: 1,
   },
 ];
@@ -42,83 +42,83 @@ export const includeOptions = [
 // 不包含关键词
 export const excludeOptions = [
   {
-    label: '任一项',
+    label: 'excludeOptions.label1',
     value: 0,
   },
   {
-    label: '所有项',
+    label: 'excludeOptions.label2',
     value: 1,
   },
 ];
 // 选择方式
 export const uploadTypeOptions = [
   {
-    label: '手动录入',
+    label: 'uploadTypeOptions.label1',
     value: 1,
   },
   {
-    label: '文件上传',
+    label: 'uploadTypeOptions.label2',
     value: 2,
   },
 ];
 // 搜索引擎
 export const GLEngineOptions = [
   {
-    label: '无效关键词',
+    label: 'GLEngineOptions.label1',
     value: 1,
   },
   {
-    label: '疑似品牌词',
+    label: 'GLEngineOptions.label2',
     value: 2,
   },
   {
-    label: '联系方式词',
+    label: 'GLEngineOptions.label3',
     value: 3,
   },
   {
-    label: '违禁敏感词',
+    label: 'GLEngineOptions.label4',
     value: 4,
   },
   {
-    label: '知识科普词',
+    label: 'GLEngineOptions.label5',
     value: 5,
   },
   {
-    label: '疑问解答词',
+    label: 'GLEngineOptions.label6',
     value: 6,
   },
   {
-    label: '图片视频词',
+    label: 'GLEngineOptions.label7',
     value: 7,
   },
   {
-    label: '低价值词',
+    label: 'GLEngineOptions.label8',
     value: 8,
   },
 ];
 // 违禁词过滤
 export const customOptions = [
   {
-    label: '公有词库',
+    label: 'customOptions.label4',
     value: 0,
   },
   {
-    label: '政治类',
+    label: 'customOptions.label1',
     value: 1,
   },
   {
-    label: '公共词库别删',
+    label: 'customOptions.label2',
     value: 2,
   },
   {
-    label: '公共正文过滤别删',
+    label: 'customOptions.label3',
     value: 3,
   },
 ];
 // 字符过滤最小
 export const lengthMinOptions = [
   {
-    label: '不限制',
+    label: 'lengthOptions.unlimited',
     value: 0,
   },
   {
@@ -201,7 +201,7 @@ export const lengthMinOptions = [
 // 字符过滤最大
 export const lengthMaxOptions = [
   {
-    label: '不限制',
+    label: 'lengthOptions.unlimited',
     value: 0,
   },
   {

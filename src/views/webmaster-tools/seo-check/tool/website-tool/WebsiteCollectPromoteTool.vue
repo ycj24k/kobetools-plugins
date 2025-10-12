@@ -2,46 +2,46 @@
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div style="height: 12px;"></div>
         <div style="display: flex; gap: 20px;">
-            <div style="font-weight: bold">搜索引擎</div>
+            <div style="font-weight: bold">{{ localeGet('label1') }}</div>
             <a-radio-group>
-                <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :key="sEngines.code" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.name }}</a-radio>
+                <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :key="sEngines.code" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.label }}</a-radio>
             </a-radio-group>
         </div>
         <div style="height: 25px;"></div>
         <div style="display: flex; gap: 20px;">
-            <div style="font-weight: bold">操作方式</div>
+            <div style="font-weight: bold">{{ localeGet('label2') }}</div>
             <a-radio-group>
-                <a-radio style="margin-left: 30px">无验证推送</a-radio>
-                <a-radio style="margin-left: 30px">Sitemap推送</a-radio>
-                <a-radio style="margin-left: 30px">蜘蛛池收录</a-radio>
-                <a-radio style="margin-left: 30px">诊断推送</a-radio>
-                <a-radio style="margin-left: 30px">外链推送</a-radio>
-                <a-radio style="margin-left: 30px">AI推送</a-radio>
-                <a-radio style="margin-left: 30px">代做包收录</a-radio>
+                <a-radio style="margin-left: 30px">{{ localeGet('collectOperationOptions.noPush') }}</a-radio>
+                <a-radio style="margin-left: 30px">{{ localeGet('collectOperationOptions.sitemap') }}</a-radio>
+                <a-radio style="margin-left: 30px">{{ localeGet('collectOperationOptions.spider') }}</a-radio>
+                <a-radio style="margin-left: 30px">{{ localeGet('collectOperationOptions.diagnose') }}</a-radio>
+                <a-radio style="margin-left: 30px">{{ localeGet('collectOperationOptions.external') }}</a-radio>
+                <a-radio style="margin-left: 30px">{{ localeGet('collectOperationOptions.ai') }}</a-radio>
+                <a-radio style="margin-left: 30px">{{ localeGet('collectOperationOptions.service') }}</a-radio>
             </a-radio-group>
         </div>
         <div style="height: 25px;"></div>
         <div>
-                <span style="font-weight: bold; margin-right: 20px">百度站长资源平台TOKEN</span>
-                <a-input style="width: 450px; margin-right: 100px" placeholder="输入百度站长资源平台的Token信息，如：p3U78zgbyGdVitR3" allow-clear />
-                <span style="font-weight: bold; margin-right: 20px">已收录自动停止</span>
+                <span style="font-weight: bold; margin-right: 20px">{{ localeGet('label3') }}</span>
+                <a-input style="width: 450px; margin-right: 100px" :placeholder="localeGet('placeholder2')" allow-clear />
+                <span style="font-weight: bold; margin-right: 20px">{{ localeGet('label4') }}</span>
                 <a-switch style="position: relative; top: -3px" />
         </div>
         <div style="height: 25px;"></div>
         <div style="color: rgb(148, 3, 184)">
-            提示:1、请确保以下提交的站点均已通过站长平台验证，且以下所有站点均在同一百度资源平台账号下;  2、输入网址时注意https和http的区别。
+            {{ localeGet('tip1') }}
         </div>
         <div style="height: 25px;"></div>
         <div style="flex: 1;">
-            <XTextarea v-model="domains" placeholder="请输入需要查询的域名信息，一行一个，单次最多提交10个，格式如：google.com"/>
+            <XTextarea v-model="domains" :placeholder="localeGet('placeholder1')"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" text="提交任务"/>
+                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" :text="localeGet('button1')"/>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" text="查看任务列表"/>
-                <XButton color="pink" text="VIP查询通道"/>
+                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" :text="localeGet('button2')"/>
+                <XButton color="pink" :text="localeGet('button3')"/>
             </div>
         </div>
 
@@ -49,30 +49,44 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import {download} from "@/hooks/useHttp";
 import {showErrorNotification} from "@/hooks/useNotification";
 
-let searchEngines = [
-    {code: "baidu", name: "百度", disabled: false},
-    {code: "google", name: "谷歌", disabled: false},
-    {code: "bing", name: "必应", disabled: false},
-    {code: "so", name: "360", disabled: false},
-    {code: "sogou", name: "搜狗", disabled: false},
-    {code: "sm", name: "神马", disabled: false},
-    {code: "toutiao", name: "头条", disabled: false},
-    {code: "yahu", name: "雅虎", disabled: false},
-    {code: "yandex", name: "Yandex", disabled: false}
-];
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
 
+const props = defineProps({
+    locales: { type: Object, default: {} }
+});
+
+const { localeGet, updateLocales, translateOptions } = useI18n(localZhCN);
+
+watch(() => props.locales, (newVal) => {
+    if (newVal) updateLocales(newVal);
+    searchEngines.value = translateOptions([
+        {code: "baidu", label: "searchEngines.baidu", disabled: false},
+        {code: "google", label: "searchEngines.google", disabled: false},
+        {code: "bing", label: "searchEngines.bing", disabled: false},
+        {code: "so", label: "searchEngines.so", disabled: false},
+        {code: "sogou", label: "searchEngines.sogou", disabled: false},
+        {code: "sm", label: "searchEngines.sm", disabled: false},
+        {code: "toutiao", label: "searchEngines.toutiao", disabled: false},
+        {code: "yahu", label: "searchEngines.yahu", disabled: false},
+        {code: "yandex", label: "searchEngines.yandex", disabled: false}
+    ]);
+}, { immediate: true });
+
+let searchEngines = ref([]);
 let domains = ref("");
 let isDownloadFile = ref(false);
+let xTable = ref(null);
 
 function queryTableData() {
     if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的域名信息！');
+        showErrorNotification(localeGet('message1'));
         return;
     }
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
@@ -81,7 +95,7 @@ function queryTableData() {
 
 function exportToLocation(){
     if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的域名信息！');
+        showErrorNotification(localeGet('message1'));
         return;
     }
     isDownloadFile.value = true;

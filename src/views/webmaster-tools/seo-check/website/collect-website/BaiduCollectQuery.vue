@@ -1,18 +1,18 @@
 <template>
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div style="flex: 1;">
-            <XTextarea v-model="domains" placeholder="请输入需要查询的网站域名，一行一个，单词最多提交10个，格式如：www.google.com"/>
+            <XTextarea v-model="domains" :placeholder="localeGet('placeholder1')"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" text="立即查询"/>
-                <span v-if="isAutoQuery" style="margin-left: 12px;">{{ countdownQuerySecond }}秒后自动查询</span>
-                <span v-if="isAutoQuery" style="margin-left: 12px; cursor: pointer; color: #4c6ef0" @click="isAutoQuery=false">取消</span>
+                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" :text="localeGet('button1')"/>
+                <span v-if="isAutoQuery" style="margin-left: 12px;">{{ countdownQuerySecond }}{{ localeGet('countdown.text') }}</span>
+                <span v-if="isAutoQuery" style="margin-left: 12px; cursor: pointer; color: #4c6ef0" @click="isAutoQuery=false">{{ localeGet('countdown.cancel') }}</span>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                 <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
-                    text="导出查询结果" />
-                <XButton color="pink" text="VIP查询通道"/>
+                    :text="localeGet('button2')" />
+                <XButton color="pink" :text="localeGet('button3')"/>
             </div>
         </div>
         <div style="height: 400px;">
@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import {post, download} from "@/hooks/useHttp";
@@ -30,48 +30,30 @@ import XTable from "@/components/common/XTable.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
 import { handleExport } from '@/utils';
 
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        width: 100
-    },
-    {
-        title: '网站域名',
-        dataIndex: 'domain',
-        minWidth: 200
-    },
-    {
-        title: '首页位置',
-        dataIndex: 'baidupos',
-        width: 100
-    },
-    {
-        title: '总收录',
-        dataIndex: 'baidusl',
-        minWidth: 100
-    },
-    {
-        title: '总索引',
-        dataIndex: 'baidusy',
-        minWidth: 100
-    },
-    {
-        title: '日收录',
-        dataIndex: 'baidu1d',
-        minWidth: 100
-    },
-    {
-        title: '周收录',
-        dataIndex: 'baidu7d',
-        minWidth: 100
-    },
-    {
-        title: '月收录',
-        dataIndex: 'baidu30d',
-        minWidth: 100
-    },
-];
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
+
+const props = defineProps({
+    locales: { type: Object, default: {} }
+});
+
+const { localeGet, updateLocales } = useI18n(localZhCN);
+
+let columns = ref([]);
+
+watch(() => props.locales, (newVal) => {
+    if (newVal) updateLocales(newVal);
+    columns.value = [
+        { title: localeGet('baiduColumns.label1'), dataIndex: 'serialNumber', width: 100 },
+        { title: localeGet('baiduColumns.label2'), dataIndex: 'domain', minWidth: 200 },
+        { title: localeGet('baiduColumns.label3'), dataIndex: 'baidupos', width: 100 },
+        { title: localeGet('baiduColumns.label4'), dataIndex: 'baidusl', minWidth: 100 },
+        { title: localeGet('baiduColumns.label5'), dataIndex: 'baidusy', minWidth: 100 },
+        { title: localeGet('baiduColumns.label6'), dataIndex: 'baidu1d', minWidth: 100 },
+        { title: localeGet('baiduColumns.label7'), dataIndex: 'baidu7d', minWidth: 100 },
+        { title: localeGet('baiduColumns.label8'), dataIndex: 'baidu30d', minWidth: 100 },
+    ];
+}, { immediate: true });
 
 let domains = ref("");
 let xTable = ref({});
@@ -81,13 +63,13 @@ let countdownQuerySecond = ref(0); // 倒计时查询
 
 function queryTableData() {
     if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的网站域名！');
+        showErrorNotification(localeGet('message2'));
         return;
     }
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
     post("/api/sites/query/baidutask/create", data, (result)=>{
         if (result.data.success.length === 0){
-            showErrorNotification('未取到任务ID！');
+            showErrorNotification(localeGet('message4'));
             return;
         }
         let taskIds = result.data.success.map(task => task.taskid);
@@ -116,10 +98,10 @@ function countdownAutoQuery(taskIds){
 
 function exportRecordKeepingDomains() {
     if (xTable.value.table.tableCurrData.length === 0) {
-        showErrorNotification('未获取到查询结果');
+        showErrorNotification(localeGet('message3'));
         return;
     }
-    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns, '', 'csv')
+    handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns.value, '', 'csv')
 }
 
 

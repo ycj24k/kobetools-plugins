@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "keyword-task": "npm run build --abc=/webmaster-tools/keyword-tools/keyword/keyword-task",
     "keyword-mine": "npm run build --abc=/webmaster-tools/keyword-tools/keyword/keyword-mine",
-    "keyword-categorization-tools": "npm run build --abc=/webmaster-tools/keyword-tools/keyword-scrubber-tools/keyword-categorization-tools",
+    "ai-powered-keyword-filter-tools": "npm run build --abc=/webmaster-tools/keyword-tools/keyword-scrubber-tools/ai-powered-keyword-filter-tools",
     "run-build": "node run-build.js"
   },
   "dependencies": {

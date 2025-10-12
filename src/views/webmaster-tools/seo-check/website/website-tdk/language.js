@@ -1,0 +1,16 @@
+export default {
+  field: [
+    'pageName', 'type1', 'type2', 'placeholder1', 'button1', 'button2', 'button3', 'message1', 'message2', 'introduce1', 'content1', 'content2', 'columns.label1', 'columns.label2', 'columns.label3', 'columns.label4', 'columns.label5', 'columns.label6'
+  ],
+  value: {
+    'en-US': [
+      'Website TDK Query', 'Website TDK Query', 'Link TDK Query', 'Enter website domains to query，one per line，max 10 per submission，format: www.google.com', 'Query Now', 'Export Query Results', 'VIP Query Channel', 'Enter website domains to query！', 'No query results obtained', 'Tool Introduction:', '1、KobetoolsWebsite TDK Query工具支持批量查询网站的Title(Title)、Description(Description)、Keywords(Keywords)信息。', '2、KobetoolsWebsite TDK Query工具可以快速分析竞争对手站点的TDK设置和SEO策略。', 'No.', 'Website Domain', 'Title', 'Description', 'Keywords', 'Action'
+    ],
+    'zh-CN': [
+      '网站TDK查询', '网站TDK查询', '链接TDK查询', '请输入需要查询的网站域名，一行一个，单词最多提交10个，格式如：www.google.com', '立即查询', '导出查询结果', 'VIP查询通道', '请输入需要查询的网站域名！', '未获取到查询结果', '工具介绍：', '1、Kobetools网站TDK查询工具支持批量查询网站的标题(Title)、描述(Description)、关键词(Keywords)信息。', '2、Kobetools网站TDK查询工具可以快速分析竞争对手站点的TDK设置和SEO策略。', '序号', '网站域名', '标题', '描述', '关键词', '操作'
+    ],
+    'zh-TW': [
+      '網站TDK查詢', '網站TDK查詢', '鏈接TDK查詢', '請輸入需要查詢的網站域名，一行一個，單詞最多提交10個，格式如：www.google.com', '立即查詢', '導出查詢结果', 'VIP查詢通道', '請輸入需要查詢的網站域名！', '未获取到查詢结果', '工具介紹：', '1、Kobetools網站TDK查詢工具支持批量查詢網站的標題(Title)、描述(Description)、關鍵詞(Keywords)信息。', '2、Kobetools網站TDK查詢工具可以快速分析競爭對手站點的TDK設置和SEO策略。', '序號', '網站域名', '標題', '描述', '關鍵詞', '操作'
+    ],
+  },
+};

@@ -10,7 +10,7 @@
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
                 <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
-                    text="导出查询结果" />
+                    :text="localeGet('button2')" />
                 <XButton color="pink" :text="localeGet('button4')" />
             </div>
         </div>
@@ -27,6 +27,8 @@ import XTextarea from "@/components/common/XTextarea.vue";
 import XTable from "@/components/common/XTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
 import { handleExport } from '@/utils';
+import { useI18n } from '../../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
 
 // 多语言
 const props = defineProps({
@@ -35,12 +37,13 @@ const props = defineProps({
         default: {}
     }
 });
-const localeData = ref(props.locales);
+
+const { localeGet, updateLocales } = useI18n(localZhCN);
 const columns = ref([]);
+
 // 监听 props 的变化
 watch(() => props.locales, (newVal) => {
-    console.log(newVal)
-    localeData.value = newVal;
+    if (newVal) updateLocales(newVal);
     columns.value = [
         {
             title: localeGet('domainColumns.label1'),
@@ -99,11 +102,7 @@ watch(() => props.locales, (newVal) => {
         },
     ]
 });
-const localeGet = (key) => {
-    return localeData.value[key]
-}
 
-// let domains = ref("0001mg.com \n zikaow.com \n qyhyn168.com \n duxufeng.com \n yiyebaofu.com.cn \n allshebei.com \n linkedin.com \n youtube.com \n jimdo.com \n vistaprint.com \n goodreads.com \n blogarama.com \n steinberg.net");
 let domains = ref("");
 let xTable = ref(null);
 let isDownloadFile = ref(false);
@@ -119,7 +118,7 @@ function queryTableData() {
 
 function exportRecordKeepingDomains() {
     if (xTable.value.table.tableCurrData.length === 0) {
-        showErrorNotification('未获取到查询结果');
+        showErrorNotification(localeGet('message3'));
         return;
     }
     handleExport(xTable.value.table.tableCurrData, xTable.value.selectedKeys, columns.value, '', 'csv')

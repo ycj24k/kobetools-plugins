@@ -3,11 +3,11 @@
         <div :style="{width: '1800px', height: (innerHeight * 0.8)+'px'}">
             <div style="height: 65px; display: flex;">
                 <div style="width: 500px;">
-                    <XButton color="purple_blue_pink" text="返回列表页" @xClick="visible=false"/>
+                    <XButton color="purple_blue_pink" :text="localeGet('button6')" @xClick="visible=false"/>
                 </div>
                 <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                    <XButton :loading="isDownloadFile" @xClick="exportExcel" color="yellow" text="导出站点信息"/>
-                    <XButton :loading="isQuery" @xClick="handleQuery" color="pink" text="查询站点权重"/>
+                    <XButton :loading="isDownloadFile" @xClick="exportExcel" color="yellow" :text="localeGet('button7')"/>
+                    <XButton :loading="isQuery" @xClick="handleQuery" color="pink" :text="localeGet('button8')"/>
                 </div>
             </div>
             <div style="height: calc(100% - 65px)">
@@ -51,74 +51,35 @@ import {download} from "@/hooks/useHttp";
 import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
 
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
+
+const props = defineProps({
+    locales: { type: Object, default: {} }
+});
+
+const { localeGet, updateLocales, translateOptions } = useI18n(localZhCN);
+
 let visible = ref(false);
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        width: 80
-    },
-    {
-        title: '域名',
-        dataIndex: 'url',
-        width: 200,
-        ellipsis: true,
-        tooltip: true
-    },
-    {
-        title: 'PC权重',
-        slotName: 'aizhanPcBr',
-        width: 100
-    },
-    {
-        title: '移动权重',
-        slotName: 'aizhanMobileBr',
-        width: 100
-    },
-    {
-        title: 'PC权重',
-        slotName: 'chinazPcBr',
-        width: 100
-    },
-    {
-        title: '移动权重',
-        slotName: 'chinazMobileBr',
-        width: 100
-    },
-    {
-        title: '反链数',
-        slotName: 'link_count',
-        width: 100
-    },
-    {
-        title: '链接名称',
-        slotName: 'link_text',
-        width: 200,
-        ellipsis: true,
-        tooltip: true
-    },
-    {
-        title: '链接地址',
-        dataIndex: 'link_url',
-        ellipsis: true,
-        tooltip: true
-    },
-    {
-        title: 'Nofflow',
-        slotName: 'nofollow',
-        width: 100
-    },
-    {
-        title: '是否回链',
-        slotName: 'is_back_link',
-        width: 100
-    },
-    {
-        title: '发现时间',
-        dataIndex: 'date',
-        width: 150
-    },
-];
+let columns = ref([]);
+
+watch(() => props.locales, (newVal) => {
+    if (newVal) updateLocales(newVal);
+    columns.value = [
+        { title: localeGet('detailColumns.label1'), dataIndex: 'serialNumber', width: 80 },
+        { title: localeGet('detailColumns.label2'), dataIndex: 'url', width: 200, ellipsis: true, tooltip: true },
+        { title: 'PC权重', slotName: 'aizhanPcBr', width: 100 },
+        { title: localeGet('detailColumns.label3'), slotName: 'aizhanMobileBr', width: 100 },
+        { title: 'PC权重', slotName: 'chinazPcBr', width: 100 },
+        { title: localeGet('detailColumns.label3'), slotName: 'chinazMobileBr', width: 100 },
+        { title: localeGet('detailColumns.label4'), slotName: 'link_count', width: 100 },
+        { title: localeGet('detailColumns.label5'), slotName: 'link_text', width: 200, ellipsis: true, tooltip: true },
+        { title: localeGet('detailColumns.label6'), dataIndex: 'link_url', ellipsis: true, tooltip: true },
+        { title: 'Nofflow', slotName: 'nofollow', width: 100 },
+        { title: localeGet('detailColumns.label7'), slotName: 'is_back_link', width: 100 },
+        { title: localeGet('detailColumns.label8'), dataIndex: 'date', width: 150 },
+    ];
+}, { immediate: true });
 let xTable = ref(null);
 let isDownloadFile = ref(false);
 let isQuery = ref(false);
@@ -157,7 +118,7 @@ function exportExcel(){
 // 查询权重
 function handleQuery(){
     if (!xTable.value.table.tableAllData.length) {
-        showErrorNotification('请选择需要查询的域名！');
+        showErrorNotification(localeGet('message2'));
         return
     }
     isQuery.value = true;

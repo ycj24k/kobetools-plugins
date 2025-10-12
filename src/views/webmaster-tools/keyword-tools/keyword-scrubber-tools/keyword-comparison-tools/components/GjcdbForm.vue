@@ -2,27 +2,27 @@
     <div class="">
         <a-form class="form_box" layout="vertical" hide-label>
             <div class="flex_box">
-                <div class="form_title">选择方式</div>
-                <a-radio-group v-model="uploadType" :options="uploadTypeOptions"></a-radio-group>
+                <div class="form_title">{{ localeGet('title1') }}</div>
+                <a-radio-group v-model="uploadType" :options="translatedUploadTypeOptions"></a-radio-group>
             </div>
             <div v-if="uploadType === 1" class="flex_box search_box">
                 <div class="search_area">
-                    <XTextarea v-model="group1Keywords" placeholder="请输入第一组关键词，一行一个" />
+                    <XTextarea v-model="group1Keywords" :placeholder="localeGet('placeholder1')" />
                 </div>
                 <div class="search_line1"></div>
                 <div class="search_area">
-                    <XTextarea v-model="group2Keywords" placeholder="请输入第二组关键词，一行一个" />
+                    <XTextarea v-model="group2Keywords" :placeholder="localeGet('placeholder2')" />
                 </div>
                 <div class="search_line1"></div>
                 <div class="search_area">
-                    <XTextarea v-model="group3Keywords" placeholder="请输入第三组关键词，一行一组" />
+                    <XTextarea v-model="group3Keywords" :placeholder="localeGet('placeholder3')" />
                 </div>
             </div>
             <div v-if="uploadType === 2" class="upload_box">
                 <div class="flex_box" style="gap: 20px;">
                     <a target="_blank"
-                        href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-categorization-tools.csv">点击下载示例文件</a>
-                    <div class="upload_tip">支持 .csv 格式文件，每行一个关键词</div>
+                        href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-categorization-tools.csv">{{ localeGet('tip1') }}</a>
+                    <div class="upload_tip">{{ localeGet('tip2') }}</div>
                 </div>
                 <a-upload ref="uploadRef" :show-cancel-button="false" @change="uploadChange" draggable
                     :auto-upload="false" :limit="1" action="/" accept=".csv" :file-list="fileList"
@@ -34,18 +34,18 @@
                         <a-grid :col-gap="20">
                             <a-grid-item :span="8">
                                 <div class="flex_box form_item_radio form_item_radio_flex">
-                                    <div class="form_title"><span style="color: #ff0000">*</span>对比数据</div>
+                                    <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('title2') }}</div>
                                     <a-form-item no-style>
-                                        <a-checkbox-group v-model="compareGroups" :options="groupOptions">
+                                        <a-checkbox-group v-model="compareGroups" :options="translatedGroupOptions">
                                         </a-checkbox-group>
                                     </a-form-item>
                                 </div>
                             </a-grid-item>
                             <a-grid-item :span="16">
                                 <div class="flex_box form_item_radio form_item_radio_flex">
-                                    <div class="form_title"><span style="color: #ff0000">*</span>需求选项</div>
+                                    <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('title3') }}</div>
                                     <a-form-item no-style>
-                                        <a-radio-group v-model="compareType" :options="typeOptions">
+                                        <a-radio-group v-model="compareType" :options="translatedTypeOptions">
                                         </a-radio-group>
                                     </a-form-item>
                                 </div>
@@ -56,7 +56,7 @@
                         <a-grid :col-gap="20" :row-gap="10" class="form_content">
                             <a-grid-item :span="24" class="flex_box form_content_item">
                                 <div class="form_content_input">
-                                    <a-textarea v-model="matchKeywords" class="form_area" placeholder="请输入关键词，每行一个关键词"
+                                    <a-textarea v-model="matchKeywords" class="form_area" :placeholder="localeGet('placeholder1')"
                                         allow-clear />
                                 </div>
                             </a-grid-item>
@@ -67,10 +67,10 @@
         </a-form>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
-                <XButton @xClick="queryTableData" color="purple_blue_pink" text="立即对比" />
+                <XButton @xClick="queryTableData" color="purple_blue_pink" :text="localeGet('button1')" />
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" text="导出对比结果" />
+                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" :text="localeGet('button2')" />
             </div>
         </div>
         <div style="height: 400px;">
@@ -87,6 +87,12 @@ import XTextarea from "@/components/common/XTextarea.vue";
 import XCustomTable from "@/components/common/XCustomTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
 import { handleExport } from '@/utils';
+import { useI18n } from '../../../keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
+
+const props = defineProps({ locales: { type: Object, default: {} } });
+const { localeGet, translateOptions, updateLocales } = useI18n(localZhCN);
+watch(() => props.locales, (v) => { if (v) updateLocales(v); }, { immediate: true });
 
 // let group1Keywords = ref("SEO优化\nAbout\n关键词");
 // let group2Keywords = ref("seo优化\nABOUT\n推广");
@@ -102,17 +108,8 @@ let isDownloadFile = ref(false);
 const uploadType = ref(1);
 const fileList = ref([]);
 const uploadRef = ref(null);
-// 选择方式
-const uploadTypeOptions = [
-    {
-        label: '手动录入',
-        value: 1,
-    },
-    {
-        label: '文件上传',
-        value: 2,
-    },
-];
+const uploadTypeOptions = [{ label: 'uploadTypeOptions.label1', value: 1 }, { label: 'uploadTypeOptions.label2', value: 2 }];
+const translatedUploadTypeOptions = translateOptions(uploadTypeOptions);
 // 监听上传类型变化，清空文件列表
 watch(uploadType, (newType) => {
     if (newType === 1) {
@@ -126,7 +123,7 @@ const uploadChange = (res) => {
         // 基础文件验证
         const file = res[0].file;
         if (!file) {
-            Message.error('文件读取失败，请重新选择');
+            Message.error(localeGet('message1'));
             fileList.value = [];
             return;
         }
@@ -145,7 +142,7 @@ const uploadChange = (res) => {
         const isValidType = allowedTypes.some(type => fileName.endsWith(type));
 
         if (!isValidType) {
-            Message.error('只支持 .csv 格式的文件');
+            Message.error(localeGet('message2'));
             fileList.value = [];
             return;
         }
@@ -159,47 +156,26 @@ const uploadChange = (res) => {
 };
 
 const groupOptions = [
-    {
-        label: '第一组',
-        value: 1
-    },
-    {
-        label: '第二组',
-        value: 2
-    },
-    {
-        label: '第三组',
-        value: 3
-    },
-]
+    { label: 'compareGroupOptions.label1', value: 1 },
+    { label: 'compareGroupOptions.label2', value: 2 },
+    { label: 'compareGroupOptions.label3', value: 3 },
+];
+const translatedGroupOptions = translateOptions(groupOptions);
+
 const typeOptions = [
-    {
-        label: '完全相同',
-        value: 'EXACT_SAME'
-    },
-    {
-        label: '完全不同',
-        value: 'COMPLETELY_DIFFERENT'
-    },
-    {
-        label: '必须包含',
-        value: 'MUST_CONTAIN'
-    },
-    {
-        label: '不能包含',
-        value: 'CANNOT_CONTAIN'
-    },
-    {
-        label: '合并去重',
-        value: 'MERGE_DEDUPLICATE'
-    },
-]
+    { label: 'compareTypeOptions.label1', value: 'EXACT_SAME' },
+    { label: 'compareTypeOptions.label2', value: 'COMPLETELY_DIFFERENT' },
+    { label: 'compareTypeOptions.label3', value: 'MUST_CONTAIN' },
+    { label: 'compareTypeOptions.label4', value: 'CANNOT_CONTAIN' },
+    { label: 'compareTypeOptions.label5', value: 'MERGE_DEDUPLICATE' },
+];
+const translatedTypeOptions = translateOptions(typeOptions);
 
 function queryTableData() {
     // 验证需求关键词
     if (compareType.value === 'MUST_CONTAIN' || compareType.value === 'CANNOT_CONTAIN') {
         if (!matchKeywords.value.trim()) {
-            showErrorNotification('请输入需求关键词');
+            showErrorNotification(localeGet('message4'));
             return;
         }
     } else {
@@ -225,11 +201,11 @@ function queryTableData() {
     if (uploadType.value === 1) {
         // 手动录入模式验证
         if (compareGroups.value.length < 2) {
-            showErrorNotification('请至少选择两组对比数据');
+            showErrorNotification(localeGet('message5'));
             return;
         }
         if (!compareType.value) {
-            showErrorNotification('请选择需求选项');
+            showErrorNotification(localeGet('message6'));
             return;
         }
         if (compareGroups.value.includes(1) && data.group1Keywords.length === 0) {
@@ -252,12 +228,12 @@ function queryTableData() {
     if (uploadType.value === 2) {
         // 文件上传模式验证
         if (fileList.value.length === 0 || !fileList.value[0].file) {
-            showErrorNotification('请选择要上传的文件');
+            showErrorNotification(localeGet('message7'));
             return;
         }
 
         if (!compareType.value) {
-            showErrorNotification('请选择需求选项');
+            showErrorNotification(localeGet('message6'));
             return;
         }
 
@@ -266,7 +242,7 @@ function queryTableData() {
         formData.append('csvFile', fileList.value[0].file);
         formData.append('compareType', data.compareType);
         // matchKeywords 为数组，使用重复 key 传参
-        data.matchKeywords.forEach((v) => formData.append('matchKeywords[]', v));
+        data.matchKeywords.forEach((v) => formData.append('matchKeywords', v));
 
         console.log('开始文件上传对比:', {
             fileName: fileList.value[0].file.name,
@@ -281,7 +257,7 @@ function queryTableData() {
 
 function exportRecordKeepingDomains() {
     if (xCustomTable.value.table.tableCurrData.length === 0) {
-        showErrorNotification('未获取到查询结果');
+        showErrorNotification(localeGet('message8'));
         return;
     }
     handleExport(xCustomTable.value.table.tableCurrData, xCustomTable.value.selectedKeys, xCustomTable.value.columns, '', 'csv')

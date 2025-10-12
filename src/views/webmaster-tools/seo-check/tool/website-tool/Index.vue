@@ -1,35 +1,44 @@
 <script setup>
-
+import { ref, onMounted } from "vue";
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 import WebsiteWeightPromoteTool from "./WebsiteWeightPromoteTool.vue";
 import WebsiteCollectPromoteTool from "./WebsiteCollectPromoteTool.vue";
 import WebsiteCollectPromoteToolTaskList from "./WebsiteCollectPromoteToolTaskList.vue";
 import WebsiteCollectPromoteToolTaskDetails from "./WebsiteCollectPromoteToolTaskDetails.vue";
 
+// 多语言（使用本地配置）
+const { localeGet, initMicroApp, localeData } = useI18n(localZhCN);
+
+// 初始化微前端监听
+onMounted(() => {
+  initMicroApp();
+});
 </script>
 
 <template>
     <div class="index">
         <div style="flex: 1;">
             <a-tabs default-active-key="1" justify>
-                <a-tab-pane key="1" title="网站权重提升工具">
-                    <WebsiteWeightPromoteTool />
+                <a-tab-pane key="1" :title="localeGet('type1')">
+                    <WebsiteWeightPromoteTool :locales="localeData" />
                 </a-tab-pane>
-                <a-tab-pane key="2" title="网站收录提升工具">
-                    <WebsiteCollectPromoteTool />
+                <a-tab-pane key="2" :title="localeGet('type2')">
+                    <WebsiteCollectPromoteTool :locales="localeData" />
                 </a-tab-pane>
-                <a-tab-pane key="3" title="网站收录任务列表">
-                    <WebsiteCollectPromoteToolTaskList />
+                <a-tab-pane key="3" :title="localeGet('type3')">
+                    <WebsiteCollectPromoteToolTaskList :locales="localeData" />
                 </a-tab-pane>
-                <a-tab-pane key="4" title="网站收录任务详情">
-                    <WebsiteCollectPromoteToolTaskDetails />
+                <a-tab-pane key="4" :title="localeGet('type4')">
+                    <WebsiteCollectPromoteToolTaskDetails :locales="localeData" />
                 </a-tab-pane>
             </a-tabs>
         </div>
         <div style="height: 12px"></div>
         <div class="form_explain">
-            <div class="form_explain_title">工具介绍：</div>
-            <div>1、Kobetools网站收录提升工具支持大批量、高效率提交网站收录提升任务，支持多个搜索引擎的多种促收录方式。</div>
-            <div>2、Kobetools网站收录提升工具可持续监测站点收录状态，自动识别已收录站点或URL链接，避免已收录网页重复提交的情况。</div>
+            <div class="form_explain_title">{{ localeGet('introduce1') }}</div>
+            <div>{{ localeGet('content1') }}</div>
+            <div>{{ localeGet('content2') }}</div>
         </div>
     </div>
 </template>

@@ -3,16 +3,16 @@
         <div class="flex_box search_box">
             <div class="search_area1">
                 <div class="flex_box">
-                    <div class="form_title">选择方式</div>
-                    <a-radio-group v-model="uploadType" :options="uploadTypeOptions"></a-radio-group>
+                    <div class="form_title">{{ localeGet('title1') }}</div>
+                    <a-radio-group v-model="uploadType" :options="translatedUploadTypeOptions"></a-radio-group>
                 </div>
                 <div v-if="uploadType === 1" style="height: calc(100% - 40px);">
-                    <XTextarea v-model="allKeywords" placeholder="请输入关键词，一行一个" />
+                    <XTextarea v-model="allKeywords" :placeholder="localeGet('placeholder1')" />
                 </div>
                 <div v-if="uploadType === 2" class="upload_box">
                     <div class="flex_box flex_row_between">
-                        <a target="_blank" href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-comparison-tools.csv">点击下载示例文件</a>
-                        <div class="upload_tip">支持 .csv 格式文件，每行一个关键词</div>
+                        <a target="_blank" href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-comparison-tools.csv">{{ localeGet('tip1') }}</a>
+                        <div class="upload_tip">{{ localeGet('tip2') }}</div>
                     </div>
                     <a-upload ref="uploadRef" :show-cancel-button="false" @change="uploadChange" draggable
                         :auto-upload="false" :limit="1" action="/" accept=".csv" :file-list="fileList"
@@ -21,20 +21,20 @@
             </div>
             <div class="search_line1"></div>
             <div class="search_area2">
-                <XTextarea v-model="singleMatchWords" placeholder="请输入单个关键词，一行一个" />
+                <XTextarea v-model="singleMatchWords" :placeholder="localeGet('placeholder2')" />
             </div>
             <div class="search_line2"></div>
             <div class="search_area2">
-                <XTextarea v-model="combinedMatchWords" placeholder="请输入需要同时包含的文字或单词，一行一组，关键词之间用英文逗号隔开" />
+                <XTextarea v-model="combinedMatchWords" :placeholder="localeGet('placeholder3')" />
             </div>
         </div>
         <div class="flex_box flex_row_between table_btns">
             <div>
                 <XButton :loading="xCustomTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
-                    text="立即分组" />
+                    :text="localeGet('button1')" />
             </div>
             <div>
-                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" text="导出分组结果" />
+                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" :text="localeGet('button2')" />
             </div>
         </div>
         <div class="tableBox">
@@ -51,10 +51,27 @@ import XTextarea from "@/components/common/XTextarea.vue";
 import XCustomTable from "@/components/common/XCustomTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
 import { handleExport } from '@/utils';
+import { useI18n } from '../../../keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
 
-// let allKeywords = ref("谷歌SEO公司\n谷歌SEO公司哪家好\n谷歌推广公司\n谷歌优化\n谷歌优化公司");
-// let singleMatchWords = ref("seo\n优化");
-// let combinedMatchWords = ref("谷歌,seo\n谷歌,哪家好");
+// 多语言
+const props = defineProps({
+  locales: {
+    type: Object,
+    default: {},
+  },
+});
+
+const { localeGet, translateOptions, updateLocales } = useI18n(localZhCN);
+watch(() => props.locales, (v) => { if (v) updateLocales(v); }, { immediate: true });
+
+// 选择方式选项
+const uploadTypeOptions = [
+    { label: 'uploadTypeOptions.label1', value: 1 },
+    { label: 'uploadTypeOptions.label2', value: 2 },
+];
+const translatedUploadTypeOptions = translateOptions(uploadTypeOptions);
+
 let allKeywords = ref("");
 let singleMatchWords = ref("");
 let combinedMatchWords = ref("");
@@ -63,17 +80,6 @@ let isDownloadFile = ref(false);
 const uploadType = ref(1);
 const fileList = ref([]);
 const uploadRef = ref(null);
-// 选择方式
-const uploadTypeOptions = [
-    {
-        label: '手动录入',
-        value: 1,
-    },
-    {
-        label: '文件上传',
-        value: 2,
-    },
-];
 // 监听上传类型变化，清空文件列表
 watch(uploadType, (newType) => {
   if (newType === 1) {
@@ -87,7 +93,7 @@ const uploadChange = (res) => {
     // 基础文件验证
     const file = res[0].file;
     if (!file) {
-      Message.error('文件读取失败，请重新选择');
+      Message.error(localeGet('message1'));
       fileList.value = [];
       return;
     }
@@ -95,18 +101,18 @@ const uploadChange = (res) => {
     // 检查文件大小（限制为10MB）
     // const maxSize = 10 * 1024 * 1024; // 10MB
     // if (file.size > maxSize) {
-    //   Message.error('文件大小不能超过10MB');
+    //   Message.error(localeGet('message3'));
     //   fileList.value = [];
     //   return;
     // }
-    
+
     // 检查文件类型
     const allowedTypes = ['.csv'];
     const fileName = file.name.toLowerCase();
     const isValidType = allowedTypes.some(type => fileName.endsWith(type));
-    
+
     if (!isValidType) {
-      Message.error('只支持 .csv 格式的文件');
+      Message.error(localeGet('message2'));
       fileList.value = [];
       return;
     }
@@ -135,11 +141,11 @@ function queryTableData() {
     if (uploadType.value === 1) {
         // 手动录入模式验证
         if (data.allKeywords.length === 0) {
-            showErrorNotification('请输入第一项关键词');
+            showErrorNotification(localeGet('message4'));
             return;
         }
         if (data.singleMatchWords.length === 0 && data.combinedMatchWords.length === 0) {
-            showErrorNotification('后两项需选填一个');
+            showErrorNotification(localeGet('message5'));
             return;
         }
         console.log('开始手动录入查询:', data);
@@ -149,13 +155,13 @@ function queryTableData() {
     if (uploadType.value === 2) {
         // 文件上传模式验证
         if (fileList.value.length === 0 || !fileList.value[0].file) {
-            showErrorNotification('请选择要上传的文件');
+            showErrorNotification(localeGet('message6'));
             return;
         }
         
         // 验证后两项至少填一个
         if (data.singleMatchWords.length === 0 && data.combinedMatchWords.length === 0) {
-            showErrorNotification('后两项需选填一个');
+            showErrorNotification(localeGet('message5'));
             return;
         }
         
@@ -163,14 +169,14 @@ function queryTableData() {
         const formData = new FormData();
         formData.append('csvFile', fileList.value[0].file);
         // 后端按数组字段约定接收：singleMatchWords[]=a&singleMatchWords[]=b
-        data.singleMatchWords.forEach((v) => formData.append('singleMatchWords[]', v));
-        data.combinedMatchWords.forEach((v) => formData.append('combinedMatchWords[]', v));
+        data.singleMatchWords.forEach((v) => formData.append('singleMatchWords', v));
+        data.combinedMatchWords.forEach((v) => formData.append('combinedMatchWords', v));
         
         console.log('开始文件上传查询:', {
             fileName: fileList.value[0].file.name,
             fileSize: fileList.value[0].file.size,
-            singleMatchWords: data.singleMatchWords.length,
-            combinedMatchWords: data.combinedMatchWords.length
+            singleMatchWords: data.singleMatchWords,
+            combinedMatchWords: data.combinedMatchWords
         });
         
         xCustomTable.value.queryTableData("/api/front/keyword/filter/group/file", formData);
@@ -179,7 +185,7 @@ function queryTableData() {
 
 function exportRecordKeepingDomains() {
     if (xCustomTable.value.table.tableCurrData.length === 0) {
-        showErrorNotification('未获取到查询结果');
+        showErrorNotification(localeGet('message7'));
         return;
     }
     handleExport(xCustomTable.value.table.tableCurrData, xCustomTable.value.selectedKeys, xCustomTable.value.columns, '', 'csv')

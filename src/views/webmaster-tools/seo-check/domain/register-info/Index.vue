@@ -1,26 +1,35 @@
 <script setup>
-
+import { ref, onMounted } from "vue";
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 import DomainRegisterQuery from "./DomainRegisterQuery.vue";
 
+// 多语言（使用本地配置）
+const { localeGet, initMicroApp, localeData } = useI18n(localZhCN);
+
+// 初始化微前端监听
+onMounted(() => {
+  initMicroApp();
+});
 </script>
 
 <template>
     <div class="index">
         <div style="flex: 1;">
             <a-tabs default-active-key="1" justify>
-                <a-tab-pane key="1" title="域名注册信息查询">
-                    <DomainRegisterQuery />
+                <a-tab-pane key="1" :title="localeGet('type1')">
+                    <DomainRegisterQuery :locales="localeData" />
                 </a-tab-pane>
-                <a-tab-pane key="2" title="未注册老域名查询">
-                    没有UI图，未开发
+                <a-tab-pane key="2" :title="localeGet('type2')">
+                    {{ localeGet('tip1') }}
                 </a-tab-pane>
             </a-tabs>
         </div>
         <div style="height: 12px"></div>
         <div class="form_explain">
-            <div class="form_explain_title">工具介绍：</div>
-            <div>1、Kobetools域名注册信息查询工具支持高效率、大批量查询域名注册所有人信息。</div>
-            <div>2、Kobetools未注册老域名查询工具支持高效率，大批量、多条件检索查询未注册的老域名信息。</div>
+            <div class="form_explain_title">{{ localeGet('introduce1') }}</div>
+            <div>{{ localeGet('content1') }}</div>
+            <div>{{ localeGet('content2') }}</div>
         </div>
     </div>
 </template>

@@ -2,32 +2,32 @@
   <div class="container">
     <div class="container_box x-tabs-fill">
       <a-tabs v-model="activeKey">
-        <a-tab-pane :key="1" title="下拉关键词">
+        <a-tab-pane :key="1" :title="localeGet('tab1')">
           <GjcwjForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="2" title="组合关键词">
+        <a-tab-pane :key="2" :title="localeGet('tab2')">
           <GjczhForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="3" title="相关搜索词">
+        <a-tab-pane :key="3" :title="localeGet('tab3')">
           <XgsscForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="4" title="大家都在搜">
+        <a-tab-pane :key="4" :title="localeGet('tab4')">
           <DjdzsForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="5" title="竞对关键词">
+        <a-tab-pane :key="5" :title="localeGet('tab5')">
           <JdgjcForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="6" title="关键词规划师">
+        <a-tab-pane :key="6" :title="localeGet('tab6')">
           <SEMGjcForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="7" title="AI挖掘词">
+        <a-tab-pane :key="7" :title="localeGet('tab7')">
           <AIWjcForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="8" title="站长平台词">
+        <a-tab-pane :key="8" :title="localeGet('tab8')">
           <ZzgjckForm :locales="localeData" />
         </a-tab-pane>
-        <a-tab-pane :key="9" title="关键词裂变">
-          <GjclbForm />
+        <a-tab-pane :key="9" :title="localeGet('tab9')">
+          <GjclbForm :locales="localeData" />
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -35,8 +35,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import localeConfig from './zh-CN.js';
+import { ref, onMounted } from 'vue';
+import { useI18n } from '../utils/i18n';
 // 下拉关键词
 import GjcwjForm from './components/GjcwjForm.vue';
 // 关键词组合
@@ -53,23 +53,17 @@ import SEMGjcForm from './components/SEMGjcForm.vue';
 import AIWjcForm from './components/AIWjcForm.vue';
 // 站长平台词
 import ZzgjckForm from './components/ZzgjckForm.vue';
-// 关键词裂变（参考下拉关键词）
+// 关键词裂变
 import GjclbForm from './components/GjclbForm.vue';
-// 多语言
-const localeData = ref({});
-localeData.value = localeConfig;
-const localeGet = (key) => {
-  return localeData.value[key];
-};
 
-// 监听函数
-function dataListener(data) {
-  console.log('来自主应用的数据', data);
-  if (data&&data.locales) localeData.value = data.locales;
-}
-// 监听数据变化，初始化时如果有数据则主动触发一次
-//@ts-ignore
-if (window.microApp) window.microApp.addDataListener(dataListener, true);
+// 多语言
+const { localeData, localeGet, initMicroApp } = useI18n();
+
+// 初始化微前端监听
+onMounted(() => {
+  initMicroApp();
+});
+
 const activeKey = ref(1);
 </script>
 

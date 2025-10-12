@@ -3,20 +3,20 @@
     <a-grid class="form_main">
       <a-grid-item :span="6" class="form_left">
         <div class="flex_box">
-          <div class="form_title">选择方式</div>
+          <div class="form_title">{{ localeGet('title1') }}</div>
           <a-form-item no-style field="engineTypes">
-            <a-radio-group v-model="uploadType" :options="uploadTypeOptions"></a-radio-group>
+            <a-radio-group v-model="uploadType" :options="translatedUploadTypeOptions"></a-radio-group>
           </a-form-item>
         </div>
         <div v-if="uploadType === 1" style="height: calc(100% - 40px);">
           <a-form-item no-style field="keywords">
-            <a-textarea v-model="keywords" class="form_area" placeholder="请输入需要过滤的关键词，一行一个" allow-clear />
+            <a-textarea v-model="keywords" class="form_area" :placeholder="localeGet('placeholder1')" allow-clear />
           </a-form-item>
         </div>
         <div v-if="uploadType === 2" class="upload_box">
           <div class="flex_box flex_row_between">
-              <a target="_blank" href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-filter.csv">点击下载示例文件</a>
-              <div class="upload_tip">支持 .csv 格式文件，每行一个关键词</div>
+              <a target="_blank" href="https://kobetools-shenzhen.oss-cn-shenzhen.aliyuncs.com/res/template/keyword-filter.csv">{{ localeGet('tip1') }}</a>
+              <div class="upload_tip">{{ localeGet('tip2') }}</div>
           </div>
           <a-upload 
             ref="uploadRef" 
@@ -36,62 +36,38 @@
       </a-grid-item>
       <a-grid-item :span="18" class="form_right">
         <div class="flex_box form_item form_item_radio">
-          <div class="form_title">AI过滤</div>
+          <div class="form_title">{{ localeGet('title2') }}</div>
           <a-form-item no-style field="engineTypes">
-            <a-checkbox-group v-model="GLForm.engineTypes" :options="GLEngineOptions"></a-checkbox-group>
+            <a-checkbox-group v-model="GLForm.engineTypes" :options="translatedGLEngineOptions"></a-checkbox-group>
           </a-form-item>
         </div>
         <div class="flex_box form_item">
-          <div class="form_title">过滤设置</div>
+          <div class="form_title">{{ localeGet('title3') }}</div>
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="14" class="flex_box form_option">
-              <div class="form_label">字符长度</div>
+              <div class="form_label">{{ localeGet('label1') }}</div>
               <a-form-item no-style field="lengthFilterEnabled">
                 <a-space :size="20">
                   <a-switch v-model="GLForm.lengthFilterEnabled" :checked-value="true" :unchecked-value="false" />
                   <template v-if="GLForm.lengthFilterEnabled">
                     <a-space :size="20">
-                      <span>最少</span>
-                      <a-select v-model="GLForm.minLength" :options="lengthMinOptions" :style="{ width: '140px' }"
-                        placeholder="请选择">
-                        <!-- <template #label="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template>
-<template #option="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template> -->
-                      </a-select>
+                      <span>{{ localeGet('label3') }}</span>
+                      <a-select v-model="GLForm.minLength" :options="translatedLengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder2')"></a-select>
                       <span>-</span>
-                      <span>最多</span>
-                      <a-select v-model="GLForm.maxLength" :options="lengthMaxOptions" :style="{ width: '140px' }"
-                        placeholder="请选择">
-                        <!-- <template #label="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template>
-                        <template #option="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template> -->
-                      </a-select>
+                      <span>{{ localeGet('label4') }}</span>
+                      <a-select v-model="GLForm.maxLength" :options="translatedLengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder2')"></a-select>
                     </a-space>
                   </template>
                 </a-space>
               </a-form-item>
             </a-grid-item>
             <a-grid-item :span="10" class="flex_box form_option">
-              <div class="form_label">违禁词词库</div>
+              <div class="form_label">{{ localeGet('label2') }}</div>
               <a-form-item no-style field="sensitiveFilterEnabled">
                 <a-space :size="20">
                   <a-switch v-model="GLForm.sensitiveFilterEnabled" :checked-value="true" :unchecked-value="false" />
                   <template v-if="GLForm.sensitiveFilterEnabled">
-                    <a-select v-model="GLForm.sensitiveFilterVal" :options="customOptions" :style="{ width: '220px' }"
-                      allow-search placeholder="请选择">
-                      <!-- <template #label="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-      <template #option="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template> -->
-                    </a-select>
+                    <a-select v-model="GLForm.sensitiveFilterVal" :options="translatedCustomOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')"></a-select>
                   </template>
                 </a-space>
               </a-form-item>
@@ -101,33 +77,19 @@
         <div class="form_item">
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
-              <div class="form_title">条件筛选</div>
+              <div class="form_title">{{ localeGet('title4') }}</div>
               <div class="flex_box form_content_top">
-                <div class="form_label">结果包含</div>
+                <div class="form_label">{{ localeGet('label5') }}</div>
                 <a-form-item no-style field="includeType">
-                  <a-radio-group v-model="GLForm.includeType" :options="includeOptions">
-                    <!-- <template #label="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                    <template #option="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template> -->
-                  </a-radio-group>
+                  <a-radio-group v-model="GLForm.includeType" :options="translatedIncludeOptions"></a-radio-group>
                 </a-form-item>
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="flex_box form_content_top">
-                <div class="form_label">结果不包含</div>
+                <div class="form_label">{{ localeGet('label6') }}</div>
                 <a-form-item no-style field="excludeType">
-                  <a-radio-group v-model="GLForm.excludeType" :options="excludeOptions">
-                    <!-- <template #label="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                    <template #option="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template> -->
-                  </a-radio-group>
+                  <a-radio-group v-model="GLForm.excludeType" :options="translatedExcludeOptions"></a-radio-group>
                 </a-form-item>
               </div>
             </a-grid-item>
@@ -135,19 +97,19 @@
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="includeKeywords" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="includeKeywords" class="form_area" :placeholder="localeGet('placeholder3')" allow-clear />
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="excludeKeywords" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="excludeKeywords" class="form_area" :placeholder="localeGet('placeholder3')" allow-clear />
               </div>
             </a-grid-item>
           </a-grid>
         </div>
         <div class="form_btn form_btnp">
           <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">
-            {{ loading ? '正在提交...' : '提交关键词过滤' }}
+            {{ loading ? localeGet('button3') : localeGet('button1') }}
           </a-button>
         </div>
       </a-grid-item>
@@ -157,7 +119,7 @@
             <!-- <XButton @xClick="queryTableData" color="purple_blue_pink" text="立即对比" /> -->
         </div>
         <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-            <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" text="导出过滤结果" />
+            <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" :text="localeGet('button2')" />
         </div>
     </div>
     <div style="height: 400px;">
@@ -174,6 +136,8 @@ import { processTextArea } from '@/utils/index';
 import XCustomTable from "@/components/common/XCustomTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
 import { handleExport } from '@/utils';
+import { useI18n } from '../../../keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
 
 // 多语言
 const props = defineProps({
@@ -182,20 +146,22 @@ const props = defineProps({
     default: {},
   },
 });
-const localeData = ref(props.locales);
+
+const { localeGet, translateOptions, updateLocales } = useI18n(localZhCN);
+
+watch(() => props.locales, (v) => { if (v) updateLocales(v); }, { immediate: true });
+
+// 翻译选项
+const translatedUploadTypeOptions = translateOptions(uploadTypeOptions);
+const translatedIncludeOptions = translateOptions(includeOptions);
+const translatedExcludeOptions = translateOptions(excludeOptions);
+const translatedGLEngineOptions = translateOptions(GLEngineOptions);
+const translatedLengthMinOptions = translateOptions(lengthMinOptions);
+const translatedLengthMaxOptions = translateOptions(lengthMaxOptions);
+const translatedCustomOptions = translateOptions(customOptions);
+
 const columns = ref([]);
 let xCustomTable = ref(null);
-// 监听 props 的变化
-watch(
-  () => props.locales,
-  (newVal) => {
-    console.log(newVal);
-    localeData.value = newVal;
-  }
-);
-const localeGet = (key) => {
-  return localeData.value[key];
-};
 // 关键词过滤
 const GLFormRef = ref(null);
 const keywords = ref('');
@@ -224,7 +190,7 @@ const uploadChange = (res) => {
     // 基础文件验证
     const file = res[0].file;
     if (!file) {
-      Message.error('文件读取失败，请重新选择');
+      Message.error(localeGet('message1'));
       fileList.value = [];
       GLForm.value.file = null;
       return;
@@ -236,7 +202,7 @@ const uploadChange = (res) => {
     const isValidType = allowedTypes.some(type => fileName.endsWith(type));
     
     if (!isValidType) {
-      Message.error('只支持 .csv 格式的文件');
+      Message.error(localeGet('message2'));
       fileList.value = [];
       GLForm.value.file = null;
       return;
@@ -256,13 +222,13 @@ const GLFormSubmit = async ({ errors, values }) => {
       GLForm.value.keywords = processTextArea(keywords.value);
       keywords.value = GLForm.value.keywords.join('\n')
       if (uploadType.value === 1 && GLForm.value.keywords.length === 0) {
-        Message.warning('请输入需要过滤的关键词，一行一个');
+        Message.warning(localeGet('message3'));
         loading.value = false;
         return;
       }
       
       if (uploadType.value === 2 && !GLForm.value.file) {
-        Message.warning('请上传关键词文件');
+        Message.warning(localeGet('message4'));
         loading.value = false;
         return;
       }
@@ -324,7 +290,7 @@ const GLFormSubmit = async ({ errors, values }) => {
       if (uploadType.value === 2) {
         // 验证文件
         if (!GLForm.value.file || !GLForm.value.file.file) {
-          Message.error('请选择要上传的文件');
+          Message.error(localeGet('message5'));
           loading.value = false;
           return;
         }
@@ -332,7 +298,7 @@ const GLFormSubmit = async ({ errors, values }) => {
         // 检查文件大小（限制为10MB）
         // const maxSize = 10 * 1024 * 1024; // 10MB
         // if (GLForm.value.file.file.size > maxSize) {
-        //   Message.error('文件大小不能超过10MB');
+        //   Message.error(localeGet('message6'));
         //   loading.value = false;
         //   return;
         // }
@@ -343,7 +309,7 @@ const GLFormSubmit = async ({ errors, values }) => {
         const isValidType = allowedTypes.some(type => fileName.endsWith(type));
         
         if (!isValidType) {
-          Message.error('只支持 .csv 格式的文件');
+          Message.error(localeGet('message2'));
           loading.value = false;
           return;
         }
@@ -426,7 +392,7 @@ const GLFormSubmit = async ({ errors, values }) => {
   }
   function exportRecordKeepingDomains() {
       if (xCustomTable.value.table.tableCurrData.length === 0) {
-          showErrorNotification('未获取到查询结果');
+          showErrorNotification(localeGet('message7'));
           return;
       }
       handleExport(xCustomTable.value.table.tableCurrData, xCustomTable.value.selectedKeys, xCustomTable.value.columns, '', 'csv')

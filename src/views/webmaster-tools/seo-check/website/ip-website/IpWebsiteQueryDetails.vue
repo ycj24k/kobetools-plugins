@@ -3,11 +3,11 @@
         <div :style="{width: '1800px', height: (innerHeight * 0.8)+'px'}">
             <div style="height: 65px; display: flex;">
                 <div style="width: 500px;">
-                    <XButton color="purple_blue_pink" text="返回列表页" @xClick="visible=false"/>
+                    <XButton color="purple_blue_pink" :text="localeGet('button6')" @xClick="visible=false"/>
                 </div>
                 <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                    <XButton :loading="isDownloadFile" @xClick="exportExcel" color="yellow" text="导出站点信息"/>
-                    <XButton :loading="isQuery" @xClick="handleQuery" color="pink" text="查询站点权重"/>
+                    <XButton :loading="isDownloadFile" @xClick="exportExcel" color="yellow" :text="localeGet('button7')"/>
+                    <XButton :loading="isQuery" @xClick="handleQuery" color="pink" :text="localeGet('button8')"/>
                 </div>
             </div>
             <div style="height: calc(100% - 65px)" v-if="visible">
@@ -53,56 +53,33 @@ import {download} from "@/hooks/useHttp";
 import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
 
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
+
+const props = defineProps({
+    locales: { type: Object, default: {} }
+});
+
+const { localeGet, updateLocales, translateOptions } = useI18n(localZhCN);
+
 let visible = ref(false);
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        width: 50
-    },
-    {
-        title: '域名信息',
-        dataIndex: 'domain',
-        width: 150
-    },
-    {
-        title: '百度PC权重',
-        slotName: 'baiduPCWeight',
-        width: 123
-    },
-    {
-        title: '百度移动权重',
-        slotName: 'baiduMobileWeight',
-        width: 123
-    },
-    {
-        title: '搜狗PC权重',
-        slotName: 'sogouPCWeight',
-        width: 80
-    },
-    {
-        title: '搜狗移动权重',
-        slotName: 'sogouMobileWeight',
-        width: 80
-    },
-    {
-        title: '神马权重',
-        slotName: 'smWeight',
-        width: 80
-    },
-    {
-        title: '必应权重',
-        slotName: 'bingWeight',
-        width: 80
-    },
-    {
-        title: '首页标题',
-        dataIndex: 'title',
-        width: 300,
-        ellipsis: true,
-        tooltip: true
-    },
-];
+let columns = ref([]);
+
+watch(() => props.locales, (newVal) => {
+    if (newVal) updateLocales(newVal);
+    columns.value = [
+        { title: localeGet('detailColumns.label1'), dataIndex: 'serialNumber', width: 50 },
+        { title: localeGet('detailColumns.label2'), dataIndex: 'domain', width: 150 },
+        { title: localeGet('detailColumns.label3'), slotName: 'baiduPCWeight', width: 123 },
+        { title: localeGet('detailColumns.label4'), slotName: 'baiduMobileWeight', width: 123 },
+        { title: localeGet('detailColumns.label5'), slotName: 'sogouPCWeight', width: 80 },
+        { title: localeGet('detailColumns.label6'), slotName: 'sogouMobileWeight', width: 80 },
+        { title: localeGet('detailColumns.label7'), slotName: 'smWeight', width: 80 },
+        { title: localeGet('detailColumns.label8'), slotName: 'bingWeight', width: 80 },
+        { title: localeGet('detailColumns.label9'), dataIndex: 'title', width: 300, ellipsis: true, tooltip: true },
+    ];
+}, { immediate: true });
+
 let detailTable = ref(null);
 let isDownloadFile = ref(false);
 let isQuery = ref(false);
@@ -147,7 +124,7 @@ function exportExcel(){
 // 查询权重
 function handleQuery(){
     if (!detailTable.value.table.tableAllData.length) {
-        showErrorNotification('请选择需要查询的域名！');
+        showErrorNotification(localeGet('message2'));
         return
     }
     isQuery.value = true;

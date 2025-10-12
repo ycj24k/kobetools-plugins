@@ -1,22 +1,22 @@
 <template>
-    <a-form class="form_box" ref="titleFormRef" layout="vertical" hide-label :model="titleForm" @submit="titleFormSubmit">
+    <a-form class="form_box" ref="formRefExpose" layout="vertical" hide-label :model="model" @submit="onSubmit">
       <a-grid class="form_main">
         <a-grid-item :span="4">
           <a-form-item no-style field="keyword">
-            <a-textarea v-model="keyword" class="form_area" placeholder="请输入简体中文关键词，一行一个" allow-clear />
+            <a-textarea v-model="keywordLocal" class="form_area" :placeholder="localeGet('placeholder13')" allow-clear />
           </a-form-item>
         </a-grid-item>
         <a-grid-item :span="20" class="form_middle">
           <div class="form_item">
             <a-space :size="20" class="flex_box form_option">
                 <div class="form_btn">
-                  <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">1、一键拆分关键词</a-button>
+                  <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('button9') }}</a-button>
                 </div>
                 <div class="form_btn">
-                  <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">2、提取所有词根</a-button>
+                  <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('button10') }}</a-button>
                 </div>
                 <div class="form_btn">
-                  <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">3、同义词生成</a-button>
+                  <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('button11') }}</a-button>
                 </div>
               </a-space>
           </div>
@@ -25,55 +25,52 @@
               <div class="flex_box flex_row_between set_item" v-for="(item, index) in 10" :key="index">
                 <div class="flex_box flex_wrap set_content">
                   <div class="set_text">10</div>
-                  <div class="set_text">个</div>
-                  <div class="set_text">谷歌</div>
-                  <div class="set_text">SEO</div>
-                  <div class="set_text">优化</div>
-                  <div class="set_text">的</div>
-                  <div class="set_text">技巧</div>
+                  <div class="set_text">{{ localeGet('example.num') }}</div>
+                  <div class="set_text">{{ localeGet('example.word1') }}</div>
+                  <div class="set_text">{{ localeGet('example.word2') }}</div>
+                  <div class="set_text">{{ localeGet('example.word3') }}</div>
+                  <div class="set_text">{{ localeGet('example.word4') }}</div>
+                  <div class="set_text">{{ localeGet('example.word5') }}</div>
                 </div>
-                <a-button shape="round" size="mini" class="set_btn" type="primary">裂变配置</a-button>
+                <a-button shape="round" size="mini" class="set_btn" type="primary">{{ localeGet('example.btnConfig') }}</a-button>
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="set_box">
               <div class="flex_box flex_row_between set_item" v-for="(item, index) in 10" :key="index">
                 <div class="flex_box flex_wrap set_content">
                   <div class="set_text">10</div>
-                  <div class="set_text">个</div>
-                  <div class="set_text">谷歌</div>
-                  <div class="set_text">SEO</div>
-                  <div class="set_text">优化</div>
-                  <div class="set_text">的</div>
-                  <div class="set_text">技巧</div>
+                  <div class="set_text">{{ localeGet('example.num') }}</div>
+                  <div class="set_text">{{ localeGet('example.word1') }}</div>
+                  <div class="set_text">{{ localeGet('example.word2') }}</div>
+                  <div class="set_text">{{ localeGet('example.word3') }}</div>
+                  <div class="set_text">{{ localeGet('example.word4') }}</div>
+                  <div class="set_text">{{ localeGet('example.word5') }}</div>
                 </div>
-                <a-button shape="round" size="mini" class="set_btn" type="primary">裂变配置</a-button>
+                <a-button shape="round" size="mini" class="set_btn" type="primary">{{ localeGet('example.btnConfig') }}</a-button>
               </div>
             </a-grid-item>
           </a-grid>
           <div class="form_item">
               <a-grid :col-gap="20" :row-gap="10" class="form_content">
                   <a-grid-item :span="12" class="flex_box form_option">
-                      <div class="form_title"><span style="color: #ff0000">*</span>输出语言</div>
-                      <a-form-item no-style field="language" :rules="[{ required: true, message: '请选择输出语言' }]"
+                      <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('outputLanguage') }}</div>
+                      <a-form-item no-style field="language" :rules="[{ required: true, message: localeGet('message16') }]"
                           :validate-trigger="['change', 'blur']">
-                          <a-select v-model="model.language" :options="AILangOptions" :style="{ width: '220px' }"
-                              placeholder="请选择关键词生成语言" />
+                          <a-select v-model="model.language" :options="translatedAILangOptions" :style="{ width: '220px' }"
+                              :placeholder="localeGet('placeholder7')" allow-search></a-select>
                       </a-form-item>
                   </a-grid-item>
                   <a-grid-item :span="12" class="flex_box form_item_radio1">
-                      <div class="form_title"><span style="color: #ff0000">*</span>排列顺序</div>
-                      <a-form-item no-style field="order" :rules="[{ required: true, message: '请选择排列顺序' }]"
+                      <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('sortOrder') }}</div>
+                      <a-form-item no-style field="order" :rules="[{ required: true, message: localeGet('message17') }]"
                           :validate-trigger="['change', 'blur']">
-                          <a-radio-group v-model="model.order" :options="LBOrderOptions">
-                              <template #label="{ data }"><span>{{ data?.label }}</span></template>
-                              <template #option="{ data }"><span>{{ data?.label }}</span></template>
-                          </a-radio-group>
+                          <a-radio-group v-model="model.order" :options="translatedLBOrderOptions"></a-radio-group>
                       </a-form-item>
                   </a-grid-item>
               </a-grid>
           </div>
           <div class="form_btn form_btnp">
-            <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">立即挖掘关键词</a-button>
+            <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('button8') }}</a-button>
           </div>
         </a-grid-item>
       </a-grid>
@@ -88,8 +85,9 @@
 import { ref, watch } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd } from '@/api/apps/tools/keyword';
-import { LBFormDefault, LBOrderOptions, AILangOptions } from '../../utils/config';
+import { LBFormDefault, LBOrderOptions, AILangOptions, lengthMinOptions, lengthMaxOptions } from '../../utils/config';
 import { processTextArea, filterByLength, filterByInclude, filterByExclude } from '@/utils/index';
+import { useI18n } from '../../utils/i18n';
 
 const props = defineProps({
     modelValue: { type: Object, default: () => ({ ...LBFormDefault }) },
@@ -100,9 +98,14 @@ const emit = defineEmits(['update:modelValue','submitted']);
 const model = ref({ ...LBFormDefault, ...props.modelValue });
 watch(() => props.modelValue, (v) => { model.value = { ...LBFormDefault, ...v }; });
 
-const localeData = ref(props.locales || {});
-watch(() => props.locales, (v) => { if (v) localeData.value = v; });
-const localeGet = (key) => localeData.value && localeData.value[key];
+const { localeGet, translateOptions, updateLocales } = useI18n();
+watch(() => props.locales, (v) => { if (v) updateLocales(v); }, { immediate: true });
+
+// 翻译选项
+const translatedAILangOptions = translateOptions(AILangOptions);
+const translatedLBOrderOptions = translateOptions(LBOrderOptions);
+const translatedLengthMinOptions = translateOptions(lengthMinOptions);
+const translatedLengthMaxOptions = translateOptions(lengthMaxOptions);
 
 const loading = ref(false);
 const formRefExpose = ref(null);
@@ -119,7 +122,7 @@ const onSubmit = async ({ errors }) => {
             model.value.keyword = processTextArea(keywordLocal.value);
             keywordLocal.value = model.value.keyword.join('\n');
             if (model.value.keyword.length === 0) {
-                Message.warning(localeGet('message3') || '请输入关键词');
+                Message.warning(localeGet('message3'));
                 return;
             }
             if (model.value.lengthFilter) {
@@ -139,11 +142,11 @@ const onSubmit = async ({ errors }) => {
                 model.value.keyword = filterByExclude(model.value.keyword, model.value.excludeKeywords, model.value.exclude);
             }
             if (model.value.keyword.length === 0) {
-                Message.warning(localeGet('message4') || '过滤后无关键词');
+                Message.warning(localeGet('message4'));
                 return;
             }
             await keywordTaskAdd(model.value);
-            Message.success(localeGet('message5') || '提交成功');
+            Message.success(localeGet('message5'));
             emit('update:modelValue', { ...LBFormDefault });
             emit('submitted');
             keywordLocal.value = '';

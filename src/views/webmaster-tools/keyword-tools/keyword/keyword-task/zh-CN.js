@@ -1,11 +1,17 @@
 export default {
+  // ========== 页面标题 ==========
+  'pageName': '关键词任务',
+  
+  // ========== 占位符 ==========
   'placeholder1': '任务类型',
-  'placeholder2': '输入关键词任务',
-  'placeholder3': '输入应用站点',
-  'placeholder4': '请选择',
-  'placeholder5': '最少字数',
-  'placeholder6': '最多字数',
-  'placeholder7': '请输入关键词按回车键确认，支持多个关键词',
+  'placeholder2': '请选择自定义词库',
+  'placeholder3': '请选择最少字符数',
+  'placeholder4': '请选择最多字符数',
+  'placeholder5': '请输入关键词，每行一个关键词',
+  'placeholder6': '输入任务名称关键字',
+  'placeholder7': '输入备注信息关键字',
+  
+  // ========== 按钮文字 ==========
   'button1': '搜索',
   'button2': '重置',
   'button3': '刷新',
@@ -16,50 +22,53 @@ export default {
   'button8': '保存',
   'button9': '取消',
   'button10': '确定',
+  
+  // ========== 标题文字 ==========
   'title1': '清洗任务：',
   'title2': '过滤设置',
-  'title3': '条件筛选',
-  'label1': '关键词去重',
-  'label2': '特殊字符过滤',
-  'label3': '保留原始词',
-  'label4': '字符长度过滤',
-  'label5': '最少字数',
-  'label6': '最多字数',
-  'label7': '必须包含关键词',
-  'label8': '必须不包含关键词',
+  'title3': '包含不包含',
+  'title4': 'AI过滤',
+  
+  // ========== 标签文字 ==========
+  'label1': '字符长度',
+  'label2': '违禁词过滤',
+  'label3': '最少',
+  'label4': '最多',
+  'label5': '结果包含',
+  'label6': '结果不包含',
+  
+  // ========== 消息提示 ==========
   'message1': '您暂未修改数据',
   'message2': '保存成功',
   'message3': '清洗成功',
   'message4': '暂停成功',
   'message5': '删除成功',
+  
+  // ========== 确认内容 ==========
   'content1': '是否暂停当前任务？',
   'content2': '是否删除当前任务？',
-  'typeOptions.label1': '智能挖掘',
-  'typeOptions.label2': '在线组合',
-  'typeOptions.label3': '手动录入',
-  'typeOptions.label4': '智能清洗',
-  'sensitiveOptions.label1': '公有词库',
-  'sensitiveOptions.label2': '自定义词库',
-  'customOptions.label1': '政治类',
-  'customOptions.label2': '公共词库别删',
-  'customOptions.label3': '公共正文过滤别删',
-  'lengthMinOptions.label1': '不限制',
-  'lengthMinOptions.label2': '4',
-  'lengthMinOptions.label3': '5',
-  'lengthMinOptions.label4': '6',
-  'lengthMinOptions.label5': '7',
-  'lengthMinOptions.label6': '8',
-  'lengthMaxOptions.label1': '不限制',
-  'lengthMaxOptions.label2': '10',
-  'lengthMaxOptions.label3': '15',
-  'lengthMaxOptions.label4': '20',
-  'lengthMaxOptions.label5': '25',
-  'lengthMaxOptions.label6': '30',
-  'taskTableColumns.title1': 'ID',
-  'taskTableColumns.title2': '任务名称',
-  'taskTableColumns.title3': '关键词数',
-  'taskTableColumns.title4': '任务类型',
-  'taskTableColumns.title5': '应用站点',
-  'taskTableColumns.title6': '更新时间',
-  'taskTableColumns.title7': '操作',
+  
+  // ========== 状态文本 ==========
+  'status.paused': '暂停中',
+  'status.generating': '生成中',
+  
+  // ========== 表格标题（使用config.js中的） ==========
+  'taskTableColumns.title5': '备注信息',
+  
+  // config.js 选项翻译（已在keyword-form中定义，这里复用）
+  'includeOptions.label1': '任一项',
+  'includeOptions.label2': '所有项',
+  'excludeOptions.label1': '任一项',
+  'excludeOptions.label2': '所有项',
+  'lengthOptions.unlimited': '不限制',
+  
+  // AI过滤选项
+  'GLEngineOptions.label1': '无效关键词',
+  'GLEngineOptions.label2': '疑似品牌词',
+  'GLEngineOptions.label3': '联系方式词',
+  'GLEngineOptions.label4': '违禁敏感词',
+  'GLEngineOptions.label5': '知识科普词',
+  'GLEngineOptions.label6': '疑问解答词',
+  'GLEngineOptions.label7': '图片视频词',
+  'GLEngineOptions.label8': '低价值词',
 };

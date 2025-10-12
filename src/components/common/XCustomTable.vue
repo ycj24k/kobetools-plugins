@@ -119,7 +119,8 @@ function setData(result, url, callback = () => { }, data) {
                 align: 'center'
             },
         ]
-        list = data.keywords.map((item, index) => {
+        let keywords = data.keywords || []
+        list = keywords.map((item, index) => {
             return {
                 oldKeyword: item,
                 newKeyword: resData.filteredKeywords[index]?resData.filteredKeywords[index].keyword:''

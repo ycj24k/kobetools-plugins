@@ -10,26 +10,26 @@
                 </a-radio-group>
             </div>
             <div style="display: flex; gap: 12px; flex: 1">
-                <div style="font-weight: bold">搜索引擎</div>
+                <div style="font-weight: bold">{{ localeGet('label1') }}</div>
                 <a-radio-group v-model="queryParam.searchEngines">
-                    <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :key="sEngines.code" :value="sEngines.code">{{ sEngines.name }}</a-radio>
+                    <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :key="sEngines.code" :value="sEngines.code">{{ sEngines.label }}</a-radio>
                 </a-radio-group>
             </div>
         </div>
         <div style="height: 25px;"></div>
         <div style="flex: 1;">
             <XTextarea v-model="queryParam.domains"
-                       placeholder="请输入需要查询的网站域名，一行一个，单词最多提交20个，格式如：www.google.com"/>
+                       :placeholder="localeGet('placeholder1')"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
                 <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
-                         text="立即查询"/>
+                         :text="localeGet('button1')"/>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" text="导出到本地"/>
-                <XButton color="yellow" text="导出网站列表"/>
-                <XButton color="pink" text="VIP查询通道"/>
+                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" :text="localeGet('button2')"/>
+                <XButton color="yellow" :text="localeGet('button3')"/>
+                <XButton color="pink" :text="localeGet('button4')"/>
             </div>
         </div>
         <div style="height: 400px;">
@@ -43,8 +43,8 @@
                 <template #sum="{ record }">
                     <span style="font-weight: bold; color: #6f1ef6">{{record.sum}}</span>
                 </template>
-                <template>
-                    详情|未开发
+                <template #option>
+                    {{ localeGet('detail.text') }}
                 </template>
             </XTable>
         </div>
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import {download} from "@/hooks/useHttp";
@@ -60,83 +60,51 @@ import XTable from "@/components/common/XTable.vue";
 import XCapsuleTag from "@/components/common/XCapsuleTag.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
 
-let searchEngines = [
-    {code: "baidu", name: "百度", disabled: false},
-    {code: "google", name: "谷歌", disabled: false},
-    {code: "bing", name: "必应", disabled: false},
-    {code: "so", name: "360", disabled: false},
-    {code: "sogou", name: "搜狗", disabled: false},
-    {code: "sm", name: "神马", disabled: false},
-    {code: "toutiao", name: "头条", disabled: false},
-    {code: "yahu", name: "雅虎", disabled: false},
-    {code: "yandex", name: "Yandex", disabled: false}
-];
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
 
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        width: 100,
-    },
-    {
-        title: '域名域名',
-        dataIndex: 'domain',
-        minWidth: 200
-    },
-    {
-        title: '站长平台',
-        dataIndex: 'platform',
-        width: 100
-    },
-    {
-        title: '权重',
-        dataIndex: 'weight',
-        slotName: 'weight',
-        minWidth: 100
-    },
-    {
-        title: '预估流量',
-        dataIndex: 'ip',
-        slotName: 'ip',
-        width: 200
-    },
-    {
-        title: '总词数',
-        dataIndex: 'sum',
-        slotName: 'sum',
-        minWidth: 100
-    },
-    {
-        title: '第一页',
-        dataIndex: 't0',
-        minWidth: 100
-    },
-    {
-        title: '第二页',
-        dataIndex: 't1',
-        minWidth: 100
-    },
-    {
-        title: '第三页',
-        dataIndex: 't2',
-        minWidth: 100
-    },
-    {
-        title: '第四页',
-        dataIndex: 't3',
-        minWidth: 100
-    },
-    {
-        title: '第五页',
-        dataIndex: 't4',
-        minWidth: 100
-    },
-    {
-        title: '操作',
-        slotName: 'option',
-        minWidth: 100
-    },
-];
+const props = defineProps({
+    locales: { type: Object, default: {} }
+});
+
+const { localeGet, updateLocales, translateOptions } = useI18n(localZhCN);
+
+let searchEngines = ref([]);
+
+watch(() => props.locales, (newVal) => {
+    if (newVal) updateLocales(newVal);
+    searchEngines.value = translateOptions([
+        {code: "baidu", label: "searchEngines.baidu", disabled: false},
+        {code: "google", label: "searchEngines.google", disabled: false},
+        {code: "bing", label: "searchEngines.bing", disabled: false},
+        {code: "so", label: "searchEngines.so", disabled: false},
+        {code: "sogou", label: "searchEngines.sogou", disabled: false},
+        {code: "sm", label: "searchEngines.sm", disabled: false},
+        {code: "toutiao", label: "searchEngines.toutiao", disabled: false},
+        {code: "yahu", label: "searchEngines.yahu", disabled: false},
+        {code: "yandex", label: "searchEngines.yandex", disabled: false}
+    ]);
+}, { immediate: true });
+
+let columns = ref([]);
+
+watch(() => props.locales, (newVal) => {
+    if (newVal) updateLocales(newVal);
+    columns.value = [
+        { title: localeGet('columns.label1'), dataIndex: 'serialNumber', width: 100 },
+        { title: localeGet('columns.label2'), dataIndex: 'domain', minWidth: 200 },
+        { title: localeGet('columns.label3'), dataIndex: 'platform', width: 100 },
+        { title: localeGet('columns.label4'), dataIndex: 'weight', slotName: 'weight', minWidth: 100 },
+        { title: localeGet('columns.label5'), dataIndex: 'ip', slotName: 'ip', width: 200 },
+        { title: localeGet('columns.label6'), dataIndex: 'sum', slotName: 'sum', minWidth: 100 },
+        { title: localeGet('columns.label7'), dataIndex: 't0', minWidth: 100 },
+        { title: localeGet('columns.label8'), dataIndex: 't1', minWidth: 100 },
+        { title: localeGet('columns.label9'), dataIndex: 't2', minWidth: 100 },
+        { title: localeGet('columns.label10'), dataIndex: 't3', minWidth: 100 },
+        { title: localeGet('columns.label11'), dataIndex: 't4', minWidth: 100 },
+        { title: localeGet('columns.label12'), slotName: 'option', minWidth: 100 },
+    ];
+}, { immediate: true });
 
 let xTable = ref({});
 
@@ -151,7 +119,7 @@ let queryParam = reactive({
 function queryTableData() {
 
     if (queryParam.domains.trim().length === 0) {
-        showErrorNotification('请输入需要查询的网站域名！');
+        showErrorNotification(localeGet('message2'));
         return;
     }
     let data = {
@@ -188,7 +156,7 @@ function queryTableData() {
 
 function exportToLocation() {
     if (queryParam.domains.trim().length === 0) {
-        showErrorNotification('请输入需要查询的网站域名！');
+        showErrorNotification(localeGet('message2'));
         return;
     }
     let data = {

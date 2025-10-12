@@ -1,10 +1,10 @@
 <template>
     <div class="x-tabs-fill">
         <a-tabs v-model="innerActiveKey" destroy-on-hide>
-            <a-tab-pane :key="1" title="同语义裂变">
+            <a-tab-pane :key="1" :title="localeGet('tab9_1')">
                 <TongyuyiForm v-model="lbForm" :locales="localeData" @submitted="handleSubmitted" />
             </a-tab-pane>
-            <a-tab-pane :key="2" title="同义词裂变">
+            <a-tab-pane :key="2" :title="localeGet('tab9_2')">
                 <TongyiciForm v-model="lbForm" :locales="localeData" @submitted="handleSubmitted" />
             </a-tab-pane>
         </a-tabs>
@@ -16,22 +16,23 @@ import { ref, watch } from 'vue';
 import { LBFormDefault } from '../../utils/config';
 import TongyuyiForm from './TongyuyiForm.vue';
 import TongyiciForm from './TongyiciForm.vue';
+import { useI18n } from '../../utils/i18n';
 
-// 多语言可选接入（当前页面中文为主，保留兼容）
+// 多语言
 const props = defineProps({
     locales: {
         type: Object,
         default: {},
     },
 });
-const localeData = ref(props.locales || {});
+const { localeData, localeGet, updateLocales } = useI18n();
 watch(
     () => props.locales,
     (val) => {
-        if (val) localeData.value = val;
-    }
+        if (val) updateLocales(val);
+    },
+    { immediate: true }
 );
-const localeGet = (key) => localeData.value && localeData.value[key];
 
 const lbForm = ref({ ...LBFormDefault });
 const innerActiveKey = ref(1);

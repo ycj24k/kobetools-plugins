@@ -1,23 +1,23 @@
 <template>
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div style="flex: 1;">
-            <XTextarea v-model="domains" placeholder="请输入需要查询的域名或IP地址，一行一个，单词最多提交10个，格式如：www.google.com，192.168.1.13"/>
+            <XTextarea v-model="domains" :placeholder="localeGet('placeholder1')"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" text="立即查询"/>
+                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" :text="localeGet('button1')"/>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出查询列表"/>
-                <XButton color="pink" text="VIP查询通道"/>
+                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" :text="localeGet('button2')"/>
+                <XButton color="pink" :text="localeGet('button3')"/>
             </div>
         </div>
         <div style="height: 400px;">
             <XTable ref="xTable" :columns="columns">
                 <template #option="{ record }">
                     <a-space :size="15">
-                        <XButton size="small" shape="square" text="详情" @xClick="showDetail(record)"/>
-                        <XButton color="yellow" size="small" shape="square" text="导出" @xClick="exportDetail(record)"/>
+                        <XButton size="small" shape="square" :text="localeGet('button4')" @xClick="showDetail(record)"/>
+                        <XButton color="yellow" size="small" shape="square" :text="localeGet('button5')" @xClick="exportDetail(record)"/>
                     </a-space>
                 </template>
             </XTable>
@@ -36,43 +36,29 @@ import XTable from "@/components/common/XTable.vue";
 import IpWebsiteQueryDetails from "./IpWebsiteQueryDetails.vue";
 import {showErrorNotification} from "@/hooks/useNotification";
 
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        width: 80
-    },
-    {
-        title: '域名信息',
-        dataIndex: 'domain',
-        width: 150
-    },
-    {
-        title: 'IP地址',
-        dataIndex: 'ip',
-        width: 150
-    },
-    {
-        title: 'IP地区',
-        dataIndex: 'address',
-        width: 200
-    },
-    {
-        title: '站点个数',
-        dataIndex: 'siteNum',
-        width: 100
-    },
-    {
-        title: '查询时间',
-        dataIndex: 'date',
-        width: 150
-    },
-    {
-        title: '操作',
-        slotName: 'option',
-        width: 180
-    },
-];
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
+
+const props = defineProps({
+    locales: { type: Object, default: {} }
+});
+
+const { localeGet, updateLocales, translateOptions } = useI18n(localZhCN);
+
+let columns = ref([]);
+
+watch(() => props.locales, (newVal) => {
+    if (newVal) updateLocales(newVal);
+    columns.value = [
+        { title: localeGet('columns.label1'), dataIndex: 'serialNumber', width: 80 },
+        { title: localeGet('columns.label2'), dataIndex: 'domain', width: 150 },
+        { title: localeGet('columns.label3'), dataIndex: 'ip', width: 150 },
+        { title: localeGet('columns.label4'), dataIndex: 'address', width: 200 },
+        { title: localeGet('columns.label5'), dataIndex: 'siteNum', width: 100 },
+        { title: localeGet('columns.label6'), dataIndex: 'date', width: 150 },
+        { title: localeGet('columns.label7'), slotName: 'option', width: 180 },
+    ];
+}, { immediate: true });
 
 let domains = ref("");
 let xTable = ref(null);
@@ -81,7 +67,7 @@ let isDownloadFile = ref(false);
 
 function queryTableData() {
     if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的域名或IP地址！');
+        showErrorNotification(localeGet('message1'));
         return;
     }
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
@@ -96,7 +82,7 @@ function queryTableData() {
 
 function exportTableData(){
     if (domains.value.trim().length === 0){
-        showErrorNotification('请选择需要导出的数据');
+        showErrorNotification(localeGet('message2'));
         return;
     }
     isDownloadFile.value = true;

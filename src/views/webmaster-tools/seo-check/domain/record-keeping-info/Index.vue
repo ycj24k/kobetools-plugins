@@ -1,27 +1,18 @@
 <script setup>
-import { ref } from "vue";
-import localeConfig from './zh-CN.js';
+import { ref, onMounted } from "vue";
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 import RecordKeepingInfoQuery from './RecordKeepingInfoQuery.vue'
 import EnterpriseRecordKeepingQuery from './EnterpriseRecordKeepingQuery.vue'
 import DomainRecordKeepingHistoryQuery from './DomainRecordKeepingHistoryQuery.vue'
-const localeData = ref({})
-setTimeout(() => {
-    localeData.value = localeConfig;
-}, 100);
-const localeGet = (key) => {
-    return localeData.value[key]
-}
-// 监听函数
-function dataListener(data) {
-    console.log('来自主应用的数据', data)
-    if (data&&data.locales) {
-        setTimeout(() => {
-            localeData.value = data.locales;
-        }, 200);
-    }
-}
-// 监听数据变化，初始化时如果有数据则主动触发一次
-if (window.microApp) window.microApp.addDataListener(dataListener, true)
+
+// 多语言（使用本地配置）
+const { localeGet, initMicroApp, localeData } = useI18n(localZhCN);
+
+// 初始化微前端监听
+onMounted(() => {
+  initMicroApp();
+});
 </script>
 
 <template>

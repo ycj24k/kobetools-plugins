@@ -3,7 +3,7 @@
     <a-grid class="form_main">
       <a-grid-item :span="6" class="form_left">
         <a-form-item no-style field="keyword">
-          <a-textarea v-model="keyword" class="form_area" placeholder="请输入关键词，一行一个" allow-clear />
+          <a-textarea v-model="keyword" class="form_area" :placeholder="localeGet('placeholder10')" allow-clear />
         </a-form-item>
       </a-grid-item>
       <a-grid-item :span="18" class="form_right">
@@ -12,35 +12,21 @@
             <a-grid-item :span="24" class="flex_box form_option">
               <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('title1') }}</div>
               <a-form-item no-style field="support" :rules="[{ required: true, message: localeGet('message1') }]" :validate-trigger="['change', 'blur']">
-                <a-radio-group v-model="SEMForm.support" :options="ZZSourceOptions"></a-radio-group>
+                <a-radio-group v-model="SEMForm.support" :options="translatedZZSourceOptions"></a-radio-group>
               </a-form-item>
             </a-grid-item>
             <a-grid-item :span="14" class="flex_box form_option">
-              <div class="form_title">月搜索量</div>
+              <div class="form_title">{{ localeGet('monthSearch') }}</div>
               <a-form-item no-style field="lengthFilter">
                 <a-space :size="20">
                   <a-switch v-model="SEMForm.lengthFilter" :checked-value="1" :unchecked-value="0" />
                   <template v-if="SEMForm.lengthFilter === 1">
                     <a-space :size="20">
-                      <span>最少</span>
-                      <a-select v-model="SEMForm.lengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
-                        <!-- <template #label="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template>
-                        <template #option="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template> -->
-                      </a-select>
+                      <span>{{ localeGet('label6') }}</span>
+                      <a-select v-model="SEMForm.lengthFilterVal.min" :options="translatedLengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')"></a-select>
                       <span>-</span>
-                      <span>最多</span>
-                      <a-select v-model="SEMForm.lengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder4')">
-                        <!-- <template #label="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template>
-                        <template #option="{ data }">
-                          <span>{{ localeGet(data?.label) }}</span>
-                        </template> -->
-                      </a-select>
+                      <span>{{ localeGet('label7') }}</span>
+                      <a-select v-model="SEMForm.lengthFilterVal.max" :options="translatedLengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder4')"></a-select>
                     </a-space>
                   </template>
                 </a-space>
@@ -52,14 +38,7 @@
                 <a-space :size="20">
                   <a-switch v-model="SEMForm.sensitiveFilter" :checked-value="1" :unchecked-value="0" />
                   <template v-if="SEMForm.sensitiveFilter === 1">
-                    <a-select v-model="SEMForm.sensitiveFilterVal" :options="customOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')">
-                      <template #label="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                      <template #option="{ data }">
-                        <span>{{ localeGet(data?.label) }}</span>
-                      </template>
-                    </a-select>
+                    <a-select v-model="SEMForm.sensitiveFilterVal" :options="translatedCustomOptions" :style="{ width: '220px' }" allow-search :placeholder="localeGet('placeholder2')"></a-select>
                   </template>
                 </a-space>
               </a-form-item>
@@ -71,31 +50,17 @@
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_title">{{ localeGet('title4') }}</div>
               <div class="flex_box form_content_top">
-                <div class="form_label">结果包含</div>
+                <div class="form_label">{{ localeGet('label8') }}</div>
                 <a-form-item no-style field="include">
-                  <a-radio-group v-model="SEMForm.include" :options="includeOptions">
-                    <template #label="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                    <template #option="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                  </a-radio-group>
+                  <a-radio-group v-model="SEMForm.include" :options="translatedIncludeOptions"></a-radio-group>
                 </a-form-item>
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="flex_box form_content_top">
-                <div class="form_label">结果不包含</div>
+                <div class="form_label">{{ localeGet('label9') }}</div>
                 <a-form-item no-style field="exclude">
-                  <a-radio-group v-model="SEMForm.exclude" :options="excludeOptions">
-                    <template #label="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                    <template #option="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                  </a-radio-group>
+                  <a-radio-group v-model="SEMForm.exclude" :options="translatedExcludeOptions"></a-radio-group>
                 </a-form-item>
               </div>
             </a-grid-item>
@@ -103,12 +68,12 @@
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="SEMForm.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="SEMForm.includeKeyword" class="form_area" :placeholder="localeGet('placeholder5')" allow-clear />
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="SEMForm.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="SEMForm.excludeKeyword" class="form_area" :placeholder="localeGet('placeholder5')" allow-clear />
               </div>
             </a-grid-item>
           </a-grid>
@@ -132,6 +97,7 @@ import { Message } from '@arco-design/web-vue';
 import { keywordTaskAdd, supportList } from '@/api/apps/tools/keyword';
 import { SEMFormDefault, includeOptions, excludeOptions, depthOptions, ZZSourceOptions, sensitiveOptions, lengthMinOptions, lengthMaxOptions, customOptions } from '../../utils/config';
 import { jumpPage, processTextArea } from '@/utils/index';
+import { useI18n } from '../../utils/i18n';
 
 // 多语言
 const props = defineProps({
@@ -140,19 +106,22 @@ const props = defineProps({
     default: {},
   },
 });
-const localeData = ref(props.locales);
-const columns = ref([]);
-// 监听 props 的变化
+const { localeGet, translateOptions, updateLocales } = useI18n();
 watch(
   () => props.locales,
   (newVal) => {
-    console.log(newVal);
-    localeData.value = newVal;
-  }
+    if (newVal) updateLocales(newVal);
+  },
+  { immediate: true }
 );
-const localeGet = (key) => {
-  return localeData.value[key];
-};
+
+// 翻译选项
+const translatedZZSourceOptions = translateOptions(ZZSourceOptions);
+const translatedIncludeOptions = translateOptions(includeOptions);
+const translatedExcludeOptions = translateOptions(excludeOptions);
+const translatedCustomOptions = translateOptions(customOptions);
+const translatedLengthMinOptions = translateOptions(lengthMinOptions);
+const translatedLengthMaxOptions = translateOptions(lengthMaxOptions);
 // 关键词挖掘
 // const ZZSourceOptions = ref([]);
 const SEMFormRef = ref(null);

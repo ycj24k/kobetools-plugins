@@ -3,16 +3,16 @@
     <a-grid class="form_main">
       <a-grid-item :span="6" class="form_left">
         <a-form-item no-style field="keywords">
-          <a-textarea v-model="keywords" class="form_area" placeholder="请输入需要挖掘关键词的产品或服务名称，一行一个，如：SEO公司" allow-clear />
+          <a-textarea v-model="keywords" class="form_area" :placeholder="localeGet('placeholder14')" allow-clear />
         </a-form-item>
       </a-grid-item>
       <a-grid-item :span="18" class="form_right">
         <a-grid :col-gap="20" class="form_item form_item_radio">
           <a-grid-item :span="12">
             <div class="flex_box">
-              <div class="form_title"><span style="color: #ff0000">*</span>AI提示词</div>
-              <a-button @click="AIForm.prompt = promptDefault" type="outline" shape="round">
-                <div>一键插入AI提示词</div>
+              <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('aiPromptTitle') }}</div>
+              <a-button @click="AIForm.prompt = localeGet(promptDefault)" type="outline" shape="round">
+                <div>{{ localeGet('button7') }}</div>
                 <div style="transform: rotate(15deg)">
                   <icon-arrow-down />
                 </div>
@@ -20,23 +20,16 @@
             </div>
           </a-grid-item>
           <a-grid-item :span="12" class="flex_box form_option">
-            <a-form-item no-style field="language" :rules="[{ required: true, message: '请选择关键词生成语言' }]" :validate-trigger="['change', 'blur']">
+            <a-form-item no-style field="language" :rules="[{ required: true, message: localeGet('placeholder7') }]" :validate-trigger="['change', 'blur']">
               <div class="flex_box" style="width: 100%">
-                <div class="form_title"><span style="color: #ff0000">*</span>输出语言</div>
-                <a-select v-model="AIForm.language" :options="AILangOptions" :style="{ width: '100%' }" placeholder="请选择关键词生成语言">
-                  <!-- <template #label="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
-                    </template>
-                    <template #option="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
-                    </template> -->
-                </a-select>
+                <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('outputLanguage') }}</div>
+                <a-select v-model="AIForm.language" :options="translatedAILangOptions" :style="{ width: '100%' }" :placeholder="localeGet('placeholder7')" allow-search></a-select>
               </div>
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="24" class="ai_tip">
             <a-form-item no-style field="prompt">
-              <a-textarea v-model="AIForm.prompt" class="form_area" placeholder="请输入AI提示词" allow-clear />
+              <a-textarea v-model="AIForm.prompt" class="form_area" :placeholder="localeGet('placeholder8')" allow-clear />
             </a-form-item>
           </a-grid-item>
         </a-grid>
@@ -44,31 +37,17 @@
           <a-grid :col-gap="20">
             <a-grid-item :span="19">
               <div class="flex_box form_item_radio form_item_radio_flex">
-                <div class="form_title"><span style="color: #ff0000">*</span>挖掘来源</div>
-                <a-form-item no-style field="model" :rules="[{ required: true, message: '请选择挖掘来源' }]" :validate-trigger="['change', 'blur']">
-                  <a-radio-group v-model="AIForm.model" :options="AIModelOptions">
-                    <!-- <template #label="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
-                    </template>
-                    <template #option="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
-                    </template> -->
-                  </a-radio-group>
+                <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('miningSource') }}</div>
+                <a-form-item no-style field="model" :rules="[{ required: true, message: localeGet('message12') }]" :validate-trigger="['change', 'blur']">
+                  <a-radio-group v-model="AIForm.model" :options="translatedAIModelOptions"></a-radio-group>
                 </a-form-item>
               </div>
             </a-grid-item>
             <a-grid-item :span="5">
               <div class="flex_box form_item_radio form_item_radio_flex">
-                <div class="form_title"><span style="color: #ff0000">*</span>挖掘数量</div>
-                <a-form-item no-style field="num" :rules="[{ required: true, message: '请选择挖掘数量' }]" :validate-trigger="['change', 'blur']">
-                  <a-select v-model="AIForm.num" :options="AINumberOptions" placeholder="请选择挖掘数量">
-                    <!-- <template #label="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
-                    </template>
-                    <template #option="{ data }">
-                      <span>{{ localeGet(data?.label) }}</span>
-                    </template> -->
-                  </a-select>
+                <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('miningCount') }}</div>
+                <a-form-item no-style field="num" :rules="[{ required: true, message: localeGet('message12') }]" :validate-trigger="['change', 'blur']">
+                  <a-select v-model="AIForm.num" :options="translatedAINumberOptions" :placeholder="localeGet('message12')"></a-select>
                 </a-form-item>
               </div>
             </a-grid-item>
@@ -79,31 +58,17 @@
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_title">{{ localeGet('title4') }}</div>
               <div class="flex_box form_content_top">
-                <div class="form_label">结果包含</div>
+                <div class="form_label">{{ localeGet('label8') }}</div>
                 <a-form-item no-style field="includeType">
-                  <a-radio-group v-model="AIForm.includeType" :options="includeOptions">
-                    <template #label="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                    <template #option="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                  </a-radio-group>
+                  <a-radio-group v-model="AIForm.includeType" :options="translatedIncludeOptions"></a-radio-group>
                 </a-form-item>
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="flex_box form_content_top">
-                <div class="form_label">结果不包含</div>
+                <div class="form_label">{{ localeGet('label9') }}</div>
                 <a-form-item no-style field="excludeType">
-                  <a-radio-group v-model="AIForm.excludeType" :options="excludeOptions">
-                    <template #label="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                    <template #option="{ data }">
-                      <span>{{ data?.label }}</span>
-                    </template>
-                  </a-radio-group>
+                  <a-radio-group v-model="AIForm.excludeType" :options="translatedExcludeOptions"></a-radio-group>
                 </a-form-item>
               </div>
             </a-grid-item>
@@ -111,25 +76,25 @@
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="includeKeywords" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="includeKeywords" class="form_area" :placeholder="localeGet('placeholder5')" allow-clear />
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="excludeKeywords" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="excludeKeywords" class="form_area" :placeholder="localeGet('placeholder5')" allow-clear />
               </div>
             </a-grid-item>
           </a-grid>
         </div>
         <div class="form_btn form_btnp">
-          <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">AI生成关键词</a-button>
+          <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('button6') }}</a-button>
         </div>
       </a-grid-item>
     </a-grid>
     <div class="form_explain">
       <div class="form_explain_title">{{ localeGet('introduce1') }}</div>
-      <div>{{ localeGet('content1') }}</div>
-      <div>{{ localeGet('content2') }}</div>
+      <div>{{ localeGet('content7') }}</div>
+      <div>{{ localeGet('content8') }}</div>
     </div>
   </a-form>
 </template>
@@ -141,6 +106,7 @@ import { keywordTaskAdddiscover, supportList } from '@/api/apps/tools/keyword';
 import { isPromptDefaultValid, promptDefault, AIFormDefault, includeOptions, excludeOptions, AIModelOptions, AILangOptions, AINumberOptions } from '../../utils/config';
 import { jumpPage, processTextArea } from '@/utils/index';
 import { showErrorNotification } from "@/hooks/useNotification";
+import { useI18n } from '../../utils/i18n';
 
 // 多语言
 const props = defineProps({
@@ -149,19 +115,21 @@ const props = defineProps({
     default: {},
   },
 });
-const localeData = ref(props.locales);
-const columns = ref([]);
-// 监听 props 的变化
+const { localeGet, translateOptions, updateLocales } = useI18n();
 watch(
   () => props.locales,
   (newVal) => {
-    console.log(newVal);
-    localeData.value = newVal;
-  }
+    if (newVal) updateLocales(newVal);
+  },
+  { immediate: true }
 );
-const localeGet = (key) => {
-  return localeData.value[key];
-};
+
+// 翻译选项
+const translatedAILangOptions = translateOptions(AILangOptions);
+const translatedIncludeOptions = translateOptions(includeOptions);
+const translatedExcludeOptions = translateOptions(excludeOptions);
+const translatedAINumberOptions = translateOptions(AINumberOptions);
+const translatedAIModelOptions = translateOptions(AIModelOptions);
 // 关键词挖掘
 // const supportOptions = ref([]);
 const AIFormRef = ref(null);
@@ -186,7 +154,7 @@ const AIFormSubmit = async ({ errors, values }) => {
     loading.value = true;
     try {
       if (!isPromptDefaultValid(AIForm.value.prompt)) {
-        showErrorNotification('AI提示词中有且仅有{keyword}、{number}、{language}三个通配符')
+        showErrorNotification(localeGet('message15'))
         return
       }
       AIForm.value.keywords = processTextArea(keywords.value);

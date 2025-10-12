@@ -1,22 +1,29 @@
 <script setup>
-
+import { ref, onMounted } from "vue";
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 import OuterLinkWebsiteQuery from "./OuterLinkWebsiteQuery.vue";
 
+const { localeGet, initMicroApp, localeData } = useI18n(localZhCN);
+
+onMounted(() => {
+  initMicroApp();
+});
 </script>
 
 <template>
     <div class="index">
         <div style="flex: 1;">
             <a-tabs default-active-key="1" justify>
-                <a-tab-pane key="1" title="网站首页外链查询">
-                    <OuterLinkWebsiteQuery />
+                <a-tab-pane key="1" :title="localeGet('type1')">
+                    <OuterLinkWebsiteQuery :locales="localeData" />
                 </a-tab-pane>
             </a-tabs>
         </div>
         <div style="height: 12px"></div>
         <div class="form_explain">
-            <div class="form_explain_title">工具介绍：</div>
-            <div>1、Koketools首页外链査询工具可高效率、大批量査询域名首页的外链情况，包含发现时间、链接权重、是否互链、是否nofollow等。</div>
+            <div class="form_explain_title">{{ localeGet('introduce1') }}</div>
+            {{ localeGet('content1') }}
         </div>
     </div>
 </template>

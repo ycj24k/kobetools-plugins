@@ -2,25 +2,25 @@
     <div style="display: flex; flex-direction: column; height: 100%;">
         <div style="height: 12px;"></div>
         <div style="display: flex; gap: 8px; align-items: center">
-            <div style="font-weight: bold">站点域名</div>
-            <a-input style="width: 320px; margin-right: 20px" placeholder="请输入站点域名，如：www.google.com" allow-clear />
-            <div style="font-weight: bold">搜索引擎</div>
+            <div style="font-weight: bold">{{ localeGet('label1') }}</div>
+            <a-input style="width: 320px; margin-right: 20px" :placeholder="localeGet('placeholder1')" allow-clear />
+            <div style="font-weight: bold">{{ localeGet('label2') }}</div>
             <a-radio-group>
-                <a-radio style="margin-left: 20px" v-for="sEngines in searchEngines" :key="sEngines.code" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.name }}</a-radio>
+                <a-radio style="margin-left: 20px" v-for="sEngines in searchEngines" :key="sEngines.code" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.label }}</a-radio>
             </a-radio-group>
         </div>
         <div style="height: 25px;"></div>
         <div style="flex: 1;">
-            <XTextarea v-model="domains" placeholder="请输入需要查询的域名信息，一行一个，单次最多提交10个，格式如：google.com"/>
+            <XTextarea v-model="domains" :placeholder="localeGet('placeholder2')"/>
         </div>
         <div style="height: 100px; display: flex; align-items: center;">
             <div style="width: 500px;">
                 <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
-                         text="立即查询"/>
+                         :text="localeGet('button1')"/>
             </div>
             <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" text="导出到本地"/>
-                <XButton color="pink" text="VIP查询通道"/>
+                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" :text="localeGet('button2')"/>
+                <XButton color="pink" :text="localeGet('button3')"/>
             </div>
         </div>
         <div style="height: 400px;">
@@ -30,69 +30,88 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import {download} from "@/hooks/useHttp";
 import {showErrorNotification} from "@/hooks/useNotification";
 import XTable from "@/components/common/XTable.vue";
 
-let columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNumber',
-        width: 100
-    },
-    {
-        title: '网站域名',
-        dataIndex: 'domain',
-        minWidth: 200
-    },
-    {
-        title: '关键词',
-        dataIndex: 'contactPerson',
-        width: 300
-    },
-    {
-        title: '搜索引擎',
-        dataIndex: 'registrar',
-        minWidth: 150
-    },
-    {
-        title: '搜索状态',
-        dataIndex: 'email',
-        minWidth: 230
-    },
-    {
-        title: '查询时间',
-        dataIndex: 'creationDate',
-        minWidth: 200
-    },
-    {
-        title: '操作',
-        dataIndex: 'age',
-        minWidth: 150
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from '../zh-CN.js';
+
+// 多语言
+const props = defineProps({
+    locales: {
+        type: Object,
+        default: {}
     }
-];
+});
 
-let searchEngines = [
-    {code: "baidu", name: "百度", disabled: false},
-    {code: "google", name: "谷歌", disabled: false},
-    {code: "bing", name: "必应", disabled: false},
-    {code: "so", name: "360", disabled: false},
-    {code: "sogou", name: "搜狗", disabled: false},
-    {code: "sm", name: "神马", disabled: false},
-    {code: "toutiao", name: "头条", disabled: false},
-    {code: "yahu", name: "雅虎", disabled: false},
-    {code: "yandex", name: "Yandex", disabled: false}
-];
+const { localeGet, updateLocales, translateOptions } = useI18n(localZhCN);
 
+// 监听 props 的变化
+watch(() => props.locales, (newVal) => {
+    if (newVal) updateLocales(newVal);
+    columns.value = [
+        {
+            title: localeGet('columns.label1'),
+            dataIndex: 'serialNumber',
+            width: 100
+        },
+        {
+            title: localeGet('columns.label2'),
+            dataIndex: 'domain',
+            minWidth: 200
+        },
+        {
+            title: localeGet('columns.label3'),
+            dataIndex: 'contactPerson',
+            width: 300
+        },
+        {
+            title: localeGet('columns.label4'),
+            dataIndex: 'registrar',
+            minWidth: 150
+        },
+        {
+            title: localeGet('columns.label5'),
+            dataIndex: 'email',
+            minWidth: 230
+        },
+        {
+            title: localeGet('columns.label6'),
+            dataIndex: 'creationDate',
+            minWidth: 200
+        },
+        {
+            title: localeGet('columns.label7'),
+            dataIndex: 'age',
+            minWidth: 150
+        }
+    ];
+    searchEngines.value = translateOptions([
+        {code: "baidu", label: "searchEngines.baidu", disabled: false},
+        {code: "google", label: "searchEngines.google", disabled: false},
+        {code: "bing", label: "searchEngines.bing", disabled: false},
+        {code: "so", label: "searchEngines.so", disabled: false},
+        {code: "sogou", label: "searchEngines.sogou", disabled: false},
+        {code: "sm", label: "searchEngines.sm", disabled: false},
+        {code: "toutiao", label: "searchEngines.toutiao", disabled: false},
+        {code: "yahu", label: "searchEngines.yahu", disabled: false},
+        {code: "yandex", label: "searchEngines.yandex", disabled: false}
+    ]);
+}, { immediate: true });
+
+let columns = ref([]);
+let searchEngines = ref([]);
 let domains = ref("");
 let isDownloadFile = ref(false);
+let xTable = ref(null);
 
 function queryTableData() {
     if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的域名信息！');
+        showErrorNotification(localeGet('message1'));
         return;
     }
     let data = domains.value.split("\n").filter(domain => domain.trim().length>0).map(domain => domain.trim());
@@ -101,7 +120,7 @@ function queryTableData() {
 
 function exportToLocation(){
     if (domains.value.trim().length === 0){
-        showErrorNotification('请输入需要查询的域名信息！');
+        showErrorNotification(localeGet('message1'));
         return;
     }
     isDownloadFile.value = true;
