@@ -56,7 +56,7 @@ import {download} from "@/hooks/useHttp";
 import {showErrorNotification} from "@/hooks/useNotification";
 
 import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
-import localZhCN from '../zh-CN.js';
+import localZhCN from './zh-CN.js';
 
 const props = defineProps({
     locales: { type: Object, default: {} }

@@ -47,8 +47,8 @@ import XTable from "@/components/common/XTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
 import { handleExport, validateDomains } from '@/utils';
 
-import { useI18n } from '../../../../keyword-tools/keyword/utils/i18n';
-import localZhCN from '../zh-CN.js';
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 
 // 多语言
 const props = defineProps({
