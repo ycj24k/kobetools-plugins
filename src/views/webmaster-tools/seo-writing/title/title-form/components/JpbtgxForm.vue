@@ -59,7 +59,7 @@
         </a-grid-item>
       </a-grid>
       <div class="flex_box form_item form_item_radio form_item_radio_max">
-        <div class="form_title"><span style="color: #ff0000">*</span>标题规则</div>
+        <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('dropdown.rule') }}</div>
         <a-form-item no-style field="rule" :rules="[{ required: true, message: localeGet('message5') }]" :validate-trigger="['change', 'blur']">
           <a-radio-group v-model="titleForm.rule" :options="ruleOptions">
             <template #label="{ data }">
@@ -83,7 +83,7 @@
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="6" class="flex_box form_option">
-            <div class="form_label">自动过滤</div>
+            <div class="form_label">{{ localeGet('label.autoFilter') }}</div>
             <a-form-item no-style field="auto">
               <a-space :size="20">
                 <a-switch v-model="titleForm.auto" :checked-value="1" :unchecked-value="0" />
@@ -109,13 +109,13 @@
               </a-form-item>
           </a-grid-item>
           <a-grid-item :span="12" class="flex_box form_option">
-            <div class="form_label">生成词长度</div>
+            <div class="form_label">{{ localeGet('label.lengthGen') }}</div>
             <a-form-item no-style field="lengthFilter">
               <a-space :size="20">
                 <a-switch v-model="titleForm.lengthFilter" :checked-value="1" :unchecked-value="0" />
                 <template v-if="titleForm.lengthFilter === 1">
                   <a-space :size="20">
-                    <span>最少</span>
+                    <span>{{ localeGet('label.min') }}</span>
                     <a-select v-model="titleForm.lengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder2')">
                       <!-- <template #label="{ data }">
                         <span>{{ localeGet(data?.label) }}</span>
@@ -125,7 +125,7 @@
                       </template> -->
                     </a-select>
                     <span>-</span>
-                    <span>最多</span>
+                    <span>{{ localeGet('label.max') }}</span>
                     <a-select v-model="titleForm.lengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
                       <!-- <template #label="{ data }">
                         <span>{{ localeGet(data?.label) }}</span>
@@ -140,13 +140,13 @@
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="12" class="flex_box form_option">
-            <div class="form_label">标题总长度</div>
+            <div class="form_label">{{ localeGet('dropdown.totalLength') }}</div>
             <a-form-item no-style field="totalLengthFilter">
               <a-space :size="20">
                 <a-switch v-model="titleForm.totalLengthFilter" :checked-value="1" :unchecked-value="0" />
                 <template v-if="titleForm.totalLengthFilter === 1">
                   <a-space :size="20">
-                    <span>最少</span>
+                    <span>{{ localeGet('label.min') }}</span>
                     <a-select v-model="titleForm.totalLengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder2')">
                       <!-- <template #label="{ data }">
                         <span>{{ localeGet(data?.label) }}</span>
@@ -156,7 +156,7 @@
                       </template> -->
                     </a-select>
                     <span>-</span>
-                    <span>最多</span>
+                    <span>{{ localeGet('label.max') }}</span>
                     <a-select v-model="titleForm.totalLengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
                       <!-- <template #label="{ data }">
                         <span>{{ localeGet(data?.label) }}</span>

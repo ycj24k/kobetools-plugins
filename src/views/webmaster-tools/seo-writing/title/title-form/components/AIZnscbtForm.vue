@@ -3,16 +3,16 @@
     <a-grid class="form_main">
       <a-grid-item :span="6" class="form_left">
         <a-form-item no-style field="keyword">
-          <a-textarea v-model="keyword" class="form_area" placeholder="请输入您的标题，一行一个" allow-clear />
+          <a-textarea v-model="keyword" class="form_area" :placeholder="localeGet('placeholder.titleInput')" allow-clear />
         </a-form-item>
       </a-grid-item>
       <a-grid-item :span="18" class="form_right">
         <a-grid :col-gap="20" class="form_item form_item_radio">
           <a-grid-item :span="12">
             <div class="flex_box">
-              <div class="form_title"><span style="color: #ff0000">*</span>AI提示词</div>
+              <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('ai.prompt') }}</div>
               <a-button type="outline" shape="round">
-                <div>一键插入AI提示词</div>
+                <div>{{ localeGet('ai.insertPrompt') }}</div>
                 <div style="transform: rotate(15deg)">
                   <icon-arrow-down />
                 </div>
@@ -21,8 +21,8 @@
           </a-grid-item>
           <a-grid-item :span="12" class="flex_box form_option">
             <div class="flex_box" style="width: 100%">
-              <div class="form_title"><span style="color: #ff0000">*</span>输出语言</div>
-              <a-select v-model="AITitleForm.lang" :options="AILangOptions" :style="{ width: '100%' }" placeholder="请选择标题生成语言">
+              <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('ai.lang') }}</div>
+              <a-select v-model="AITitleForm.lang" :options="AILangOptions" :style="{ width: '100%' }" :placeholder="localeGet('placeholder.titleLang')">
                 <!-- <template #label="{ data }">
                     <span>{{ localeGet(data?.label) }}</span>
                   </template>
@@ -34,7 +34,7 @@
           </a-grid-item>
           <a-grid-item :span="24" class="ai_tip">
             <a-form-item no-style field="keyword">
-              <a-textarea v-model="aiTip" class="form_area" placeholder="请输入AI提示词" allow-clear />
+              <a-textarea v-model="aiTip" class="form_area" :placeholder="localeGet('placeholder.aiTip')" allow-clear />
             </a-form-item>
           </a-grid-item>
         </a-grid>
@@ -42,7 +42,7 @@
           <a-grid :col-gap="20">
             <a-grid-item :span="14">
               <div class="flex_box form_item_radio form_item_radio_flex">
-                <div class="form_title"><span style="color: #ff0000">*</span>AI模型</div>
+                <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('ai.model') }}</div>
                 <a-form-item no-style field="model" :rules="[{ required: true, message: localeGet('message2') }]" :validate-trigger="['change', 'blur']">
                   <a-radio-group v-model="AITitleForm.model" :options="AIModelOptions">
                     <!-- <template #label="{ data }">
@@ -57,7 +57,7 @@
             </a-grid-item>
             <a-grid-item :span="4">
               <div class="flex_box form_item_radio">
-                <div class="form_title"><span style="color: #ff0000">*</span>标题数量</div>
+                <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('ai.titleCount') }}</div>
                 <a-form-item no-style field="keyNum" :rules="[{ required: true, message: localeGet('message2') }]" :validate-trigger="['change', 'blur']">
                   <a-select v-model="AITitleForm.keyNum" :options="AIKeyNumOptions">
                     <!-- <template #label="{ data }">
@@ -71,7 +71,7 @@
               </div>
             </a-grid-item>
             <a-grid-item :span="5" class="flex_box form_option">
-              <div class="form_label form_label1">同时生成关键词和描述</div>
+              <div class="form_label form_label1">{{ localeGet('ai.withDesc') }}</div>
               <a-form-item no-style field="isDesc">
                 <a-space :size="20">
                   <a-switch v-model="AITitleForm.isDesc" :checked-value="1" :unchecked-value="0" />
@@ -84,7 +84,7 @@
           <a-grid :col-gap="20">
             <a-grid-item :span="24">
               <div class="flex_box form_item_radio form_item_radio_flex">
-                <div class="form_title"><span style="color: #ff0000">*</span>标题风格</div>
+                <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('ai.style') }}</div>
                 <a-form-item no-style field="style" :rules="[{ required: true, message: localeGet('message2') }]" :validate-trigger="['change', 'blur']">
                   <a-radio-group v-model="AITitleForm.style" :options="AIStyleOptions">
                     <!-- <template #label="{ data }">
@@ -102,9 +102,9 @@
         <div class="form_item">
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
-              <div class="form_title">条件筛选</div>
+              <div class="form_title">{{ localeGet('filter.title') }}</div>
               <div class="flex_box form_content_top">
-                <div class="form_label">结果包含</div>
+                <div class="form_label">{{ localeGet('filter.include') }}</div>
                 <a-form-item no-style field="include">
                   <a-radio-group v-model="AITitleForm.include" :options="includeOptions">
                     <template #label="{ data }">
@@ -119,7 +119,7 @@
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="flex_box form_content_top">
-                <div class="form_label">结果不包含</div>
+                <div class="form_label">{{ localeGet('filter.exclude') }}</div>
                 <a-form-item no-style field="exclude">
                   <a-radio-group v-model="AITitleForm.exclude" :options="excludeOptions">
                     <template #label="{ data }">
@@ -136,18 +136,18 @@
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="AITitleForm.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="AITitleForm.includeKeyword" class="form_area" :placeholder="localeGet('placeholder.keywordPerLine')" allow-clear />
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="AITitleForm.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+                <a-textarea v-model="AITitleForm.excludeKeyword" class="form_area" :placeholder="localeGet('placeholder.keywordPerLine')" allow-clear />
               </div>
             </a-grid-item>
           </a-grid>
         </div>
         <div class="form_btn form_btnp">
-          <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">AI生成标题</a-button>
+          <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('btn.generate') }}</a-button>
         </div>
       </a-grid-item>
     </a-grid>

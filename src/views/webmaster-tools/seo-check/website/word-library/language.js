@@ -4,7 +4,7 @@ export default {
   ],
   value: {
     'en-US': [
-      'Word Library Query', 'Word Library Query', 'Enter website domains to query，one per line，max 10 per submission，format: www.google.com', 'Query Now', 'Export Query Results', 'VIP Query Channel', 'Select All', 'Invert', 'Clear', 'Please select search engine!', 'Enter website domains to query！', 'No query results obtained', 'Search Engine', 'Tool Introduction:', '1、Kobetools网站Word Library Query工具支持批量查询网站在爱站、站长工具的Keywords词库数据。', '2、Kobetools网站Word Library Query工具可以快速分析竞争对手站点的Keywords布局和SEO策略。', 'No.', 'Website Domain', 'Baidu', 'Google', 'Bing', '360', 'Sogou', 'Shenma', 'Toutiao', 'Yahoo', 'Yandex'
+      'Word Library Query', 'Word Library Query', 'Enter website domains to query, one per line, max 10 per submission, format: www.google.com', 'Query Now', 'Export Query Results', 'VIP Query Channel', 'Select All', 'Invert', 'Clear', 'Please select search engine!', 'Enter website domains to query!', 'No query results obtained', 'Search Engine', 'Tool Introduction:', '1. Kobetools Word Library Query tool supports batch querying of website keyword library data on Aizhan and Webmaster tools.', '2. Kobetools Word Library Query tool can quickly analyze competitor site keyword layout and SEO strategies.', 'No.', 'Website Domain', 'Baidu', 'Google', 'Bing', '360', 'Sogou', 'Shenma', 'Toutiao', 'Yahoo', 'Yandex'
     ],
     'zh-CN': [
       '词库查询', '词库查询', '请输入需要查询的网站域名，一行一个，单词最多提交10个，格式如：www.google.com', '立即查询', '导出查询结果', 'VIP查询通道', '全选', '反选', '清除', '请选择搜索引擎！', '请输入需要查询的网站域名！', '未获取到查询结果', '搜索引擎', '工具介绍：', '1、Kobetools网站词库查询工具支持批量查询网站在爱站、站长工具的关键词词库数据。', '2、Kobetools网站词库查询工具可以快速分析竞争对手站点的关键词布局和SEO策略。', '序号', '网站域名', '百度', '谷歌', '必应', '360', '搜狗', '神马', '头条', '雅虎', 'Yandex'

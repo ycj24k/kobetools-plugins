@@ -4,7 +4,7 @@ export default {
   ],
   value: {
     'en-US': [
-      'IP/Website Query', 'IP/Website Query', 'IP/Website Query详情', 'Enter domains to queryor IP address，one per line，max 20 per submission', 'Query Now', 'Export Query Results', 'VIP Query Channel', 'Enter domains to queryor IP address！', 'Please select data to export', 'Please select domain to query!', 'Tool Introduction:', '1、Kobetools IP/Website Query工具支持批量查询域名的IP地址和同IP网站信息。', '2、Kobetools IP/Website Query工具可以帮助分析服务器上的网站数量和质量。', 'No.', 'Domain/IP', 'Action'
+      'IP/Website Query', 'IP/Website Query', 'IP/Website Query Details', 'Enter domains to query or IP address, one per line, max 20 per submission', 'Query Now', 'Export Query Results', 'VIP Query Channel', 'Enter domains to query or IP address!', 'Please select data to export', 'Please select domain to query!', 'Tool Introduction:', '1. Kobetools IP/Website Query tool supports batch querying of domain IP addresses and same-IP website information.', '2. Kobetools IP/Website Query tool can help analyze the number and quality of websites on the server.', 'No.', 'Domain/IP', 'Action'
     ],
     'zh-CN': [
       'IP/网站查询', 'IP/网站查询', 'IP/网站查询详情', '请输入需要查询的域名或IP地址，一行一个，单次最多提交20个', '立即查询', '导出查询结果', 'VIP查询通道', '请输入需要查询的域名或IP地址！', '请选择需要导出的数据', '请选择需要查询的域名！', '工具介绍：', '1、Kobetools IP/网站查询工具支持批量查询域名的IP地址和同IP网站信息。', '2、Kobetools IP/网站查询工具可以帮助分析服务器上的网站数量和质量。', '序号', '域名/IP', '操作'

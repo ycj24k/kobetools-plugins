@@ -5,25 +5,25 @@
         <a-grid :col-gap="20" class="form_left_areas">
           <a-grid-item :span="6" class="form_left_area">
             <a-form-item no-style field="keywordA">
-              <a-textarea v-model="keywordA" class="form_area" placeholder="一行一个，请输入组合项" allow-clear />
+              <a-textarea v-model="keywordA" class="form_area" :placeholder="localeGet('placeholder.combineItem')" allow-clear />
             </a-form-item>
             <div class="form_left_area_text">A</div>
           </a-grid-item>
           <a-grid-item :span="6" class="form_left_area">
             <a-form-item no-style field="keywordB">
-              <a-textarea v-model="keywordB" class="form_area" placeholder="一行一个，请输入组合项" allow-clear />
+              <a-textarea v-model="keywordB" class="form_area" :placeholder="localeGet('placeholder.combineItem')" allow-clear />
             </a-form-item>
             <div class="form_left_area_text">B</div>
           </a-grid-item>
           <a-grid-item :span="6" class="form_left_area">
             <a-form-item no-style field="keywordC">
-              <a-textarea v-model="keywordC" class="form_area" placeholder="一行一个，请输入组合项" allow-clear />
+              <a-textarea v-model="keywordC" class="form_area" :placeholder="localeGet('placeholder.combineItem')" allow-clear />
             </a-form-item>
             <div class="form_left_area_text form_left_area_text1">C</div>
           </a-grid-item>
           <a-grid-item :span="6" class="form_left_area">
             <a-form-item no-style field="keywordD">
-              <a-textarea v-model="keywordD" class="form_area" placeholder="一行一个，请输入组合项" allow-clear />
+              <a-textarea v-model="keywordD" class="form_area" :placeholder="localeGet('placeholder.combineItem')" allow-clear />
             </a-form-item>
             <div class="form_left_area_text">D</div>
           </a-grid-item>
@@ -41,20 +41,20 @@
         <div class="form_item">
           <a-grid :col-gap="20" :row-gap="10">
             <a-grid-item :span="14" class="flex_box">
-              <div class="form_title"><span style="color: #ff0000">*</span>组合方式</div>
+              <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('compose.method') }}</div>
               <a-form-item no-style field="order">
                 <a-checkbox-group @change="orderHandleChange" v-model="orderSelect" :options="orderOptions"></a-checkbox-group>
               </a-form-item>
             </a-grid-item>
             <a-grid-item :span="10" class="flex_box">
-              <div class="form_title">条件筛选</div>
-              <div class="form_label">标题字符长度</div>
+              <div class="form_title">{{ localeGet('filter.title') }}</div>
+              <div class="form_label">{{ localeGet('filter.titleLength') }}</div>
               <a-form-item no-style field="lengthFilter">
                 <a-space :size="20">
                   <a-switch v-model="orderingForm.lengthFilter" :checked-value="1" :unchecked-value="0" />
                   <template v-if="orderingForm.lengthFilter === 1">
                     <a-space :size="20">
-                      <span>最少</span>
+                      <span>{{ localeGet('label.min') }}</span>
                       <a-select v-model="orderingForm.lengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
                         <!-- <template #label="{ data }">
                           <span>{{ localeGet(data?.label) }}</span>
@@ -64,7 +64,7 @@
                         </template> -->
                       </a-select>
                       <span>-</span>
-                      <span>最多</span>
+                      <span>{{ localeGet('label.max') }}</span>
                       <a-select v-model="orderingForm.lengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder4')">
                         <!-- <template #label="{ data }">
                           <span>{{ localeGet(data?.label) }}</span>
@@ -81,9 +81,9 @@
           </a-grid>
         </div>
         <a-space :size="30" class="form_btn">
-          <a-button class="form_btn1" type="primary" :loading="loading" @click="orderingFormJoin">组合生成标题</a-button>
-          <a-button class="form_btn2" type="primary" :loading="loading">组合项插入</a-button>
-          <a-button class="form_btn5" type="primary" :loading="loading" @click="clearAll">清空组合项</a-button>
+          <a-button class="form_btn1" type="primary" :loading="loading" @click="orderingFormJoin">{{ localeGet('btn.compose') }}</a-button>
+          <a-button class="form_btn2" type="primary" :loading="loading">{{ localeGet('btn.insert') }}</a-button>
+          <a-button class="form_btn5" type="primary" :loading="loading" @click="clearAll">{{ localeGet('btn.clear') }}</a-button>
         </a-space>
       </a-grid-item>
       <!-- <a-grid-item :span="6" class="form_right">

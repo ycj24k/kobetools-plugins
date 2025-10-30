@@ -4,7 +4,7 @@ export default {
   ],
   value: {
     'en-US': [
-      'External Link Query', 'External Link Query', 'External Link Query详情', 'Enter domains to query，one per line，max 20 per submission，format: google.com', 'Query Now', 'Export Query Results', 'VIP Query Channel', 'Enter domains to query！', 'Please select domain to query!', 'Tool Introduction:', '1、KobetoolsExternal Link Query工具支持批量查询网站的外链数据。', '2、KobetoolsExternal Link Query工具可以帮助分析网站的外链质量和分布情况。', 'No.', '域名', 'Action'
+      'External Link Query', 'External Link Query', 'External Link Query Details', 'Enter domains to query, one per line, max 20 per submission, format: google.com', 'Query Now', 'Export Query Results', 'VIP Query Channel', 'Enter domains to query!', 'Please select domain to query!', 'Tool Introduction:', '1. Kobetools External Link Query tool supports batch querying of website backlink data.', '2. Kobetools External Link Query tool can help analyze website backlink quality and distribution.', 'No.', 'Domain', 'Action'
     ],
     'zh-CN': [
       '外链查询', '外链查询', '外链查询详情', '请输入需要查询的域名，一行一个，单次最多提交20个，格式如：google.com', '立即查询', '导出查询结果', 'VIP查询通道', '请输入需要查询的域名！', '请选择需要查询的域名！', '工具介绍：', '1、Kobetools外链查询工具支持批量查询网站的外链数据。', '2、Kobetools外链查询工具可以帮助分析网站的外链质量和分布情况。', '序号', '域名', '操作'

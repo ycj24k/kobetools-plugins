@@ -17,12 +17,12 @@
           </a-grid-item>
           <a-grid-item :span="4" class="flex_box">
             <a-form-item field="name">
-              <a-input v-model="queryForm.name" placeholder="输入任务名称关键字" />
+              <a-input v-model="queryForm.name" :placeholder="localeGet('placeholder2')" />
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="4" class="flex_box">
             <a-form-item field="website">
-              <a-input v-model="queryForm.website" placeholder="输入备注信息关键字" />
+              <a-input v-model="queryForm.website" :placeholder="localeGet('placeholder3')" />
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="4">
@@ -99,13 +99,13 @@
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_option">
               <div class="form_title">{{ localeGet('title2') }}</div>
-              <div class="form_label">标题长度</div>
+              <div class="form_label">{{ localeGet('label2') }}</div>
               <a-form-item no-style field="lengthFilter">
                 <a-space :size="20">
                   <a-switch v-model="clearForm.form.lengthFilter" :checked-value="1" :unchecked-value="0" />
                   <template v-if="clearForm.form.lengthFilter === 1">
                     <a-space :size="20">
-                      <span>最少</span>
+                      <span>{{ localeGet('label3') }}</span>
                       <a-select v-model="clearForm.form.lengthFilterVal.min" :options="lengthMinOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder3')">
                         <!-- <template #label="{ data }">
                           <span>{{ localeGet(data?.label) }}</span>
@@ -115,7 +115,7 @@
                         </template> -->
                       </a-select>
                       <span>-</span>
-                      <span>最多</span>
+                      <span>{{ localeGet('label4') }}</span>
                       <a-select v-model="clearForm.form.lengthFilterVal.max" :options="lengthMaxOptions" :style="{ width: '140px' }" :placeholder="localeGet('placeholder4')">
                         <!-- <template #label="{ data }">
                           <span>{{ localeGet(data?.label) }}</span>
@@ -130,7 +130,7 @@
               </a-form-item>
             </a-grid-item>
             <a-grid-item :span="12" class="flex_box form_option">
-              <div class="form_label">违禁词过滤</div>
+              <div class="form_label">{{ localeGet('label1') }}</div>
               <a-form-item no-style field="sensitiveFilter">
                 <a-space :size="20">
                   <a-switch v-model="clearForm.form.sensitiveFilter" :checked-value="1" :unchecked-value="0" />
@@ -154,7 +154,7 @@
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_title">{{ localeGet('title3') }}</div>
               <div class="flex_box form_content_top">
-                <div class="form_label">结果包含</div>
+                <div class="form_label">{{ localeGet('label5') }}</div>
                 <a-form-item no-style field="include">
                   <a-radio-group v-model="clearForm.form.include" :options="includeOptions">
                     <template #label="{ data }">
@@ -169,7 +169,7 @@
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="flex_box form_content_top">
-                <div class="form_label">结果不包含</div>
+                <div class="form_label">{{ localeGet('label6') }}</div>
                 <a-form-item no-style field="exclude">
                   <a-radio-group v-model="clearForm.form.exclude" :options="excludeOptions">
                     <template #label="{ data }">
@@ -186,12 +186,12 @@
           <a-grid :col-gap="20" :row-gap="10" class="form_content">
             <a-grid-item :span="12" class="flex_box form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="clearForm.form.includeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+              <a-textarea v-model="clearForm.form.includeKeyword" class="form_area" :placeholder="localeGet('placeholder8')" allow-clear />
               </div>
             </a-grid-item>
             <a-grid-item :span="12" class="form_content_item">
               <div class="form_content_input">
-                <a-textarea v-model="clearForm.form.excludeKeyword" class="form_area" placeholder="请输入关键词，每行一个关键词" allow-clear />
+              <a-textarea v-model="clearForm.form.excludeKeyword" class="form_area" :placeholder="localeGet('placeholder8')" allow-clear />
               </div>
             </a-grid-item>
           </a-grid>
@@ -209,6 +209,8 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 import { Message } from '@arco-design/web-vue';
 import dayjs from 'dayjs';
 import { titleTaskList, titleTaskClean, titleTaskDel, titleTaskOut, titleTaskSave } from '@/api/apps/tools/title';
@@ -216,20 +218,10 @@ import { clearFormDefault, typeOptions, taskTableColumns, sensitiveOptions, leng
 import localeConfig from './zh-CN.js';
 import { jumpPage, processTextArea } from '@/utils/index';
 // 多语言
-const localeData = ref({});
-localeData.value = localeConfig;
-const localeGet = (key) => {
-  return localeData.value[key];
-};
+const { localeGet, initMicroApp, localeData } = useI18n(localZhCN);
 
-// 监听函数
-function dataListener(data) {
-  console.log('来自主应用的数据', data);
-  if (data&&data.locales) localeData.value = data.locales;
-}
-// 监听数据变化，初始化时如果有数据则主动触发一次
-//@ts-ignore
-if (window.microApp) window.microApp.addDataListener(dataListener, true);
+// 微前端初始化
+initMicroApp();
 
 
 const selectedKeys = ref([]);

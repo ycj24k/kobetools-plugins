@@ -3,23 +3,23 @@
     <a-grid class="form_main">
       <a-grid-item :span="4">
         <a-form-item no-style field="keyword">
-          <a-textarea v-model="keyword" class="form_area" placeholder="请输入简体中文标题，一行一个" allow-clear />
+          <a-textarea v-model="keyword" class="form_area" :placeholder="localeGet('placeholder.titleInputCN')" allow-clear />
         </a-form-item>
       </a-grid-item>
       <a-grid-item :span="20" class="form_middle">
         <div class="flex_box flex_row_between form_item">
           <a-space :size="20" class="flex_box form_option">
             <div class="form_btn">
-              <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">1、一键拆分标题</a-button>
+              <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('lb.splitTitle') }}</a-button>
             </div>
             <div class="form_btn">
-              <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">2、提取所有词根</a-button>
+              <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('lb.extractRoots') }}</a-button>
             </div>
             <div class="form_btn">
-              <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">3、同义词生成</a-button>
+              <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('lb.synonymGen') }}</a-button>
             </div>
           </a-space>
-          <a-checkbox v-model="model.isDetail">生成关键词和描述</a-checkbox>
+          <a-checkbox v-model="model.isDetail">{{ localeGet('ai.withDesc') }}</a-checkbox>
         </div>
         <a-grid :col-gap="20" class="flex_box form_option">
           <a-grid-item :span="12" class="set_box">
@@ -54,15 +54,15 @@
         <div class="form_item">
             <a-grid :col-gap="20" :row-gap="10" class="form_content">
                 <a-grid-item :span="12" class="flex_box form_option">
-                    <div class="form_title"><span style="color: #ff0000">*</span>输出语言</div>
-                    <a-form-item no-style field="language" :rules="[{ required: true, message: '请选择输出语言' }]"
+                    <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('ai.lang') }}</div>
+                    <a-form-item no-style field="language" :rules="[{ required: true, message: localeGet('rule.lang') }]"
                         :validate-trigger="['change', 'blur']">
-                        <a-select v-model="model.language" :options="AILangOptions" placeholder="请选择关键词生成语言" />
+                        <a-select v-model="model.language" :options="AILangOptions" :placeholder="localeGet('placeholder.titleLang')" />
                     </a-form-item>
                 </a-grid-item>
                 <a-grid-item :span="12" class="flex_box form_item_radio1">
-                    <div class="form_title"><span style="color: #ff0000">*</span>排列顺序</div>
-                    <a-form-item no-style field="order" :rules="[{ required: true, message: '请选择排列顺序' }]"
+                    <div class="form_title"><span style="color: #ff0000">*</span>{{ localeGet('lb.order') }}</div>
+                    <a-form-item no-style field="order" :rules="[{ required: true, message: localeGet('rule.order') }]"
                         :validate-trigger="['change', 'blur']">
                         <a-radio-group v-model="model.order" :options="LBOrderOptions">
                             <template #label="{ data }"><span>{{ data?.label }}</span></template>
@@ -73,7 +73,7 @@
             </a-grid>
         </div>
         <div class="form_btn form_btnp">
-          <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">立即生成标题</a-button>
+          <a-button class="form_btn1" type="primary" html-type="submit" :loading="loading">{{ localeGet('btn.generateNow') }}</a-button>
         </div>
       </a-grid-item>
     </a-grid>

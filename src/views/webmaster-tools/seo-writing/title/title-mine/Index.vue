@@ -11,15 +11,15 @@
           </a-grid-item>
           <a-grid-item :span="4" class="flex_box">
             <a-form-item field="title">
-              <a-input v-model="queryForm.title" placeholder="请输入标题关键字" />
+              <a-input v-model="queryForm.title" :placeholder="localeGet('placeholder2')" />
             </a-form-item>
           </a-grid-item>
           <a-grid-item :span="16">
             <div class="flex_box form_btns">
               <a-button class="form_btn1" type="primary" @click="getList">{{ localeGet('btn1') }}</a-button>
               <a-button class="form_btn2" type="primary" @click="handleAdd">{{ localeGet('btn2') }}</a-button>
-              <a-button class="form_btn3" type="primary" @click="handleExport('txt')">导出TXT</a-button>
-              <a-button class="form_btn4" type="primary" @click="handleExport('csv')">导出表格</a-button>
+              <a-button class="form_btn3" type="primary" @click="handleExport('txt')">{{ localeGet('btn3') }}</a-button>
+              <a-button class="form_btn4" type="primary" @click="handleExport('csv')">{{ localeGet('btn4') }}</a-button>
               <a-button class="form_btn7" type="outline" @click="handleReset">{{ localeGet('btn5') }}</a-button>
               <a-button type="outline" @click="handleRefresh">{{ localeGet('btn6') }}</a-button>
             </div>
@@ -77,7 +77,7 @@
             <div class="modal_title_icon">
               <icon-info-circle-fill />
             </div>
-            <div class="modal_title_text">添加文章标题</div>
+            <div class="modal_title_text">{{ localeGet('title1') }}</div>
           </div>
         </template>
         <a-spin :loading="addLoading" :tip="localeGet('tip1')" style="width: 100%;">
@@ -246,8 +246,8 @@
         </a-spin>
         <template #footer>
           <div class="flex_box flex_row_center modal_footer">
-            <a-button :loading="addLoading" style="color: #333" @click="addVisible = false">取消</a-button>
-            <a-button :loading="addLoading" class="form_btn3" @click="addSubmit">确定</a-button>
+            <a-button :loading="addLoading" style="color: #333" @click="addVisible = false">{{ localeGet('btn11') }}</a-button>
+            <a-button :loading="addLoading" class="form_btn3" @click="addSubmit">{{ localeGet('btn12') }}</a-button>
           </div>
         </template>
       </a-modal>
@@ -425,8 +425,8 @@
         </a-spin>
         <template #footer>
           <div class="flex_box flex_row_center modal_footer">
-            <a-button :loading="AIMakeLoading" style="color: #333" @click="AIMakeVisible = false">取消</a-button>
-            <a-button :loading="AIMakeLoading" class="form_btn3" @click="makeSubmit">确定</a-button>
+            <a-button :loading="AIMakeLoading" style="color: #333" @click="AIMakeVisible = false">{{ localeGet('btn11') }}</a-button>
+            <a-button :loading="AIMakeLoading" class="form_btn3" @click="makeSubmit">{{ localeGet('btn12') }}</a-button>
           </div>
         </template>
       </a-modal>
@@ -436,6 +436,8 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
+import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
+import localZhCN from './zh-CN.js';
 import { Message } from '@arco-design/web-vue';
 import dayjs from 'dayjs';
 import { titleMyAdd, titleMyList, titleMySave, titleMyDel, titleTaskList, titleMyListAll } from '@/api/apps/tools/title';
@@ -444,20 +446,10 @@ import { exportModal, getListFromExcel, processTextArea } from '@/utils';
 import localeConfig from './zh-CN.js';
 import { useRouter } from 'vue-router';
 // 多语言
-const localeData = ref({});
-localeData.value = localeConfig;
-const localeGet = (key) => {
-  return localeData.value[key];
-};
+const { localeGet, initMicroApp, localeData } = useI18n(localZhCN);
 
-// 监听函数
-function dataListener(data) {
-  console.log('来自主应用的数据', data);
-  if (data && data.locales) localeData.value = data.locales;
-}
-// 监听数据变化，初始化时如果有数据则主动触发一次
-//@ts-ignore
-if (window.microApp) window.microApp.addDataListener(dataListener, true);
+// 微前端初始化
+initMicroApp();
 const router = useRouter();
 
 const selectedKeys = ref([]);
