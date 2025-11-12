@@ -1,34 +1,51 @@
 <template>
-    <div style="display: flex; flex-direction: column; height: 100%;">
-        <div style="height: 12px;"></div>
-        <div style="display: flex; gap: 12px;">
-            <div style="display: flex; gap: 12px; width: 150px;">
-                <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="allSelect">全选</div>
-                <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="revoltSelect">反选</div>
-                <div style="font-weight: bold; color: #6886f1; cursor: pointer" @click="queryParam.platforms=[];">清除</div>
+    <div class="gjczs-form">
+        <div class="spacer-sm"></div>
+        <div class="platform-row">
+            <div class="platform-actions">
+                <div class="platform-action" @click="allSelect">全选</div>
+                <div class="platform-action" @click="revoltSelect">反选</div>
+                <div class="platform-action" @click="queryParam.platforms = []">清除</div>
             </div>
-            <div style="display: flex; gap: 12px; width: 300px;">
+            <div class="platform-checkboxes">
                 <a-checkbox-group v-model="queryParam.platforms">
-                    <a-checkbox v-for="platform in platforms" :key="platform.code" :value="platform.code">{{platform.name}}</a-checkbox>
+                    <a-checkbox
+                        v-for="platform in platforms"
+                        :key="platform.code"
+                        :value="platform.code"
+                    >
+                        {{ platform.name }}
+                    </a-checkbox>
                 </a-checkbox-group>
             </div>
         </div>
-        <div style="height: 25px;"></div>
-        <div style="flex: 1;">
-            <XTextarea v-model="queryParam.keywords"
-                       placeholder="请输入关键字，一行一个，请勿在关键字开头或结尾出现空格，最多提交100个"/>
+        <div class="spacer-md"></div>
+        <div class="textarea-wrapper">
+            <XTextarea
+                v-model="queryParam.keywords"
+                placeholder="请输入关键字，一行一个，请勿在关键字开头或结尾出现空格，最多提交100个"
+            />
         </div>
-        <div style="height: 100px; display: flex; align-items: center;">
-            <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
-                         text="立即查询"/>
+        <div class="action-row">
+            <div class="action-left">
+                <XButton
+                    :loading="xTable?.table?.isLoadTable"
+                    @xClick="queryTableData"
+                    color="purple_blue_pink"
+                    text="立即查询"
+                />
             </div>
-            <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出查询结果"/>
-                <XButton color="pink" text="VIP查询通道"/>
+            <div class="action-right">
+                <XButton
+                    :loading="isDownloadFile"
+                    @xClick="exportTableData"
+                    color="blue"
+                    text="导出查询结果"
+                />
+                <XButton color="pink" text="VIP查询通道" />
             </div>
         </div>
-        <div style="height: 400px;">
+        <div class="table-wrapper">
             <XTable ref="xTable" :columns="columns" :spanMethod="spanMethod">
                 <template #BaidupcBr="{ record }">
                     <XCapsuleTag type="baidu" :text="record.BaidupcBr" />
@@ -39,7 +56,6 @@
                 <template #WxBR="{ record }">
                     <XCapsuleTag type="wx" :text="record.WxBR" />
                 </template>
-
                 <template>
                     详情|未开发
                 </template>
@@ -131,26 +147,39 @@ function queryTableData() {
 
     // 是转换下结果
     xTable.value.queryTableData("/api/sites/query/weight", data, (result) => {
-        let datas = result.data;
-        let allDatas = [];
-        for (let i = 0; i < datas.length; i++) {
-            let data = datas[i];
-            if (data.hasOwnProperty("domainAizhan")){
-                let domainAizhan = data.domainAizhan;
-                domainAizhan.platform = "爱站";
-                domainAizhan.serialNumber = (i+1);
-                allDatas.push(domainAizhan);
+        const transformed = (result.data || []).reduce((acc, item, index) => {
+            const serialNumber = index + 1;
+            const keyword = item.domain || "";
+            if (item.domainAizhan) {
+                acc.push({
+                    ...item.domainAizhan,
+                    platform: "爱站",
+                    keyword,
+                    serialNumber,
+                });
             }
-            if (data.hasOwnProperty("domainZ")){
-                let domainZ = data.domainZ;
-                domainZ.platform = "站长";
-                domainZ.serialNumber = (i+1);
-                allDatas.push(domainZ);
+            if (item.domainZ) {
+                acc.push({
+                    ...item.domainZ,
+                    platform: "站长",
+                    keyword,
+                    serialNumber,
+                });
             }
+            return acc;
+        }, []);
+
+        const meta = {
+            data: transformed,
+            total: typeof result.total === "number" ? result.total : transformed.length,
+        };
+        if (typeof result.successCount === "number") {
+            meta.successCount = result.successCount;
         }
-        xTable.value.table.tableAllData = allDatas;
-        xTable.value.table.total = allDatas.length;
-        xTable.value.onPageIndexChange(1);
+        if (typeof result.failCount === "number") {
+            meta.failCount = result.failCount;
+        }
+        return meta;
     });
 }
 
@@ -212,6 +241,69 @@ function spanMethod({record, column, rowIndex, columnIndex}) {
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.gjczs-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
+    .spacer-sm {
+        height: 12px;
+    }
+
+    .spacer-md {
+        height: 25px;
+    }
+
+    .platform-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+
+        .platform-actions {
+            display: flex;
+            gap: 12px;
+            width: 150px;
+
+            .platform-action {
+                font-weight: 600;
+                color: #6886f1;
+                cursor: pointer;
+            }
+        }
+
+        .platform-checkboxes {
+            display: flex;
+            gap: 12px;
+            width: 300px;
+        }
+    }
+
+    .textarea-wrapper {
+        height: 200px;
+    }
+
+    .action-row {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .action-left {
+            width: 500px;
+        }
+
+        .action-right {
+            flex: 1;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+    }
+
+    .table-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+}
 </style>

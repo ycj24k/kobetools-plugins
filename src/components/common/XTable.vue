@@ -1,7 +1,7 @@
 <script setup>
 
 import { post } from "@/hooks/useHttp";
-import { ref, reactive, watch, onMounted, onUnmounted, computed } from "vue";
+import { ref, reactive, watch, onMounted, onUnmounted, computed, useSlots } from "vue";
 import { showErrorNotification } from "@/hooks/useNotification";
 
 const props = defineProps({
@@ -56,14 +56,36 @@ const rowSelection = reactive({
 
 const selectedKeys = ref([]);
 
+const slots = useSlots();
+const forwardedSlots = computed(() => {
+    const slotObj = slots || {};
+    return Object.keys(slotObj)
+        .filter((key) => key !== 'default' && typeof slotObj[key] === 'function')
+        .reduce((acc, key) => {
+            acc[key] = slotObj[key];
+            return acc;
+        }, {});
+});
+const hasEmptySlot = computed(() => typeof (slots || {}).empty === 'function');
+
 // 动态高度计算
 const windowHeight = ref(window.innerHeight);
-const tableHeight = computed(() => {
+const dynamicHeight = computed(() => Math.max(windowHeight.value - props.heightOffset, 300));
+const scrollConfig = computed(() => {
     if (!props.enableDynamicHeight) {
-        return '100%';
+        return {};
     }
-    const calculatedHeight = windowHeight.value - props.heightOffset;
-    return Math.max(calculatedHeight, 300); // 最小高度300px
+    return { y: dynamicHeight.value };
+});
+const dynamicHeightPx = computed(() => `${dynamicHeight.value}px`);
+const scrollContainerStyle = computed(() => {
+    if (!props.enableDynamicHeight) {
+        return {};
+    }
+    return {
+        "--x-table-max-height": dynamicHeightPx.value,
+        maxHeight: dynamicHeightPx.value
+    };
 });
 
 // 监听窗口大小变化
@@ -125,13 +147,35 @@ function queryTableData(url, data, callback = () => { }) {
  * @param columns
  * @returns {*}
  */
-function dealColumns(columns) {
-    for (let i = 0; i < columns.length; i++) {
-        if (!columns.hasOwnProperty('align')) {
-            columns[i].align = 'center';
-        }
+function setDefaultAlign(column) {
+    if (!Object.prototype.hasOwnProperty.call(column, "align")) {
+        column.align = "center";
     }
+    if (Array.isArray(column.children)) {
+        column.children.forEach(setDefaultAlign);
+    }
+}
+
+function dealColumns(columns = []) {
+    columns.forEach(setDefaultAlign);
     return columns;
+}
+
+function normalizeTableData(source = [], options = {}) {
+    const { keepExistingSerial = false } = options;
+    if (!Array.isArray(source)) {
+        return [];
+    }
+    return source.map((item, index) => {
+        if (item && typeof item === "object") {
+            const normalized = { ...item };
+            if (!keepExistingSerial || !Object.prototype.hasOwnProperty.call(normalized, "serialNumber")) {
+                normalized.serialNumber = index + 1;
+            }
+            return normalized;
+        }
+        return item;
+    });
 }
 
 /**
@@ -141,19 +185,50 @@ function dealColumns(columns) {
  */
 function setData(result, callback = () => { }) {
     table.isLoadTable = false;
-    table.tableAllData = result.data;
-    for (let i = 0; i < table.tableAllData.length; i++) {
-        table.tableAllData[i].serialNumber = (i + 1);
+
+    const rawData = Array.isArray(result?.data) ? result.data : [];
+    let normalizedData = normalizeTableData(rawData);
+    table.tableAllData = normalizedData;
+
+    const callbackResult = callback(result);
+    let metaInfo = {};
+    let customData;
+
+    if (Array.isArray(callbackResult)) {
+        customData = callbackResult;
+    } else if (callbackResult && typeof callbackResult === "object") {
+        metaInfo = { ...callbackResult };
+        if (Array.isArray(metaInfo.data)) {
+            customData = metaInfo.data;
+            delete metaInfo.data;
+        }
     }
-    // 外面可能要调整数据格式
-    callback(result);
-    table.total = table.tableAllData.length;
-    if (result.hasOwnProperty('successCount')) {
+
+    if (!customData && table.tableAllData !== normalizedData) {
+        customData = table.tableAllData;
+    }
+
+    if (customData) {
+        normalizedData = normalizeTableData(customData, { keepExistingSerial: true });
+        table.tableAllData = normalizedData;
+    }
+
+    const totalFromMeta = typeof metaInfo.total === "number" ? metaInfo.total : undefined;
+    const totalFromResult = typeof result.total === "number" ? result.total : undefined;
+    table.total = totalFromMeta ?? totalFromResult ?? normalizedData.length;
+
+    if (Object.prototype.hasOwnProperty.call(metaInfo, "successCount")) {
+        table.successCount = metaInfo.successCount;
+    } else if (result && result.hasOwnProperty("successCount")) {
         table.successCount = result.successCount;
     }
-    if (result.hasOwnProperty('failCount')) {
+
+    if (Object.prototype.hasOwnProperty.call(metaInfo, "failCount")) {
+        table.failCount = metaInfo.failCount;
+    } else if (result && result.hasOwnProperty("failCount")) {
         table.failCount = result.failCount;
     }
+
     onPageIndexChange(1);
 }
 
@@ -186,28 +261,30 @@ defineExpose({ queryTableData, table, setData, onPageIndexChange, selectedKeys }
 </script>
 
 <template>
-    <div style="height: 100%; display: flex; flex-direction: column">
-        <div style="flex: 1; overflow-y: auto">
-            <a-table column-resizable :loading="table.isLoadTable" :scroll="{ y: tableHeight }" :scrollbar="true"
+    <div class="x-table">
+        <div
+            class="x-table__scroll"
+            :class="{ 'x-table__scroll--dynamic': enableDynamicHeight }"
+            :style="scrollContainerStyle"
+        >
+            <a-table column-resizable :loading="table.isLoadTable" :scroll="scrollConfig" :scrollbar="true"
+                v-slots="forwardedSlots"
                 :columns="dealColumns(columns)" :data="table.tableCurrData" :bordered="{ cell: true }" row-key="serialNumber"
                 :row-selection="rowSelection" :spanMethod="spanMethod" :pagination="false" v-model:selectedKeys="selectedKeys">
-                <template v-for="(slot, slotName) in $slots" :key="slotName" #[slotName]="slotProps">
-                    <slot :name="slotName" v-bind="slotProps" />
-                </template>
-                <template #empty>
-                    <div style="display: flex; align-items: center; justify-content: center; height: 295px;">暂无数据</div>
+                <template v-if="!hasEmptySlot" #empty>
+                    <div class="x-table__empty">暂无数据</div>
                 </template>
             </a-table>
         </div>
-        <div style="height: 12px;"></div>
-        <div style="height: 32px; display: flex;" v-if="table.total">
-            <div style="width: 400px; display: flex; align-items: center">
-                查询数量：<span style="color: blue;font-weight: bold;">{{ table.total }}</span>&nbsp;条，
-                成功：<span style="color: green;font-weight: bold;">{{ table.successCount }}</span>&nbsp;条，失败：<span
-                    style="color: red;font-weight: bold;">{{ table.failCount }}</span>&nbsp;条
+        <div class="x-table__spacer"></div>
+        <div class="x-table__footer" v-if="table.total">
+            <div class="x-table__stats">
+                查询数量：<span class="x-table__number x-table__number--total">{{ table.total }}</span>条，
+                成功：<span class="x-table__number x-table__number--success">{{ table.successCount }}</span>条，失败：<span
+                    class="x-table__number x-table__number--fail">{{ table.failCount }}</span>条
             </div>
-            <div style="flex: 1; text-align: right">
-                <a-pagination show-total style="display: inline-block" v-model="table.pageIndex" :page-size="table.pageSize"
+            <div class="x-table__pager">
+                <a-pagination show-total v-model="table.pageIndex" :page-size="table.pageSize"
                     :total="table.total" show-page-size @change="onPageIndexChange"
                     @page-size-change="onPageSizeChange" />
             </div>
@@ -215,4 +292,77 @@ defineExpose({ queryTableData, table, setData, onPageIndexChange, selectedKeys }
     </div>
 </template>
 
-<style scoped></style>
+<style lang="less" scoped>
+.x-table {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.x-table__scroll {
+    flex: 1;
+    overflow-y: auto;
+    max-height: var(--x-table-max-height, none);
+    min-height: 0;
+}
+
+.x-table__scroll--dynamic {
+    :deep(.arco-table-body) {
+        max-height: inherit;
+        overflow-y: auto;
+    }
+}
+
+.x-table__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 295px;
+    color: #999;
+}
+
+.x-table__spacer {
+    height: 12px;
+}
+
+.x-table__footer {
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+}
+
+.x-table__stats {
+    width: 400px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    color: #333;
+}
+
+.x-table__number {
+    font-weight: bold;
+}
+
+.x-table__number--total {
+    color: #165dff;
+}
+
+.x-table__number--success {
+    color: #00b42a;
+}
+
+.x-table__number--fail {
+    color: #f53f3f;
+}
+
+.x-table__pager {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.x-table__pager :deep(.arco-pagination) {
+    display: inline-flex;
+}
+</style>

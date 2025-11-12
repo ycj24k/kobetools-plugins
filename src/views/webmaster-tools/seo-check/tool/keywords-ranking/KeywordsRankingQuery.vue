@@ -1,53 +1,65 @@
 <template>
-    <div style="display: flex; flex-direction: column; height: 100%;">
-        <div style="height: 12px;"></div>
-        <div style="display: flex; gap: 20px;">
-            <div style="font-weight: bold">{{ localeGet('label1') }}</div>
-            <a-radio-group>
-                <a-radio style="margin-left: 30px" v-for="sEngines in searchEngines" :key="sEngines.code" :disabled="sEngines.disabled"
-                         :value="sEngines.code">{{ sEngines.label }}
-                </a-radio>
-            </a-radio-group>
-        </div>
-        <div style="height: 25px;"></div>
-        <div style="display: flex; align-items: center">
-            <span style="font-weight: bold; margin-right: 20px">{{ localeGet('label2') }}</span>
-            <a-radio-group>
-                <a-radio style="margin-left: 30px">{{ localeGet('portOptions.pc') }}</a-radio>
-                <a-radio style="margin-left: 30px">{{ localeGet('portOptions.wap') }}</a-radio>
-            </a-radio-group>
-            <span style="font-weight: bold; margin-left: 80px; margin-right: 20px">{{ localeGet('label3') }}</span>
-            <a-radio-group>
-                <a-radio style="margin-left: 30px">{{ localeGet('queryModeOptions.fast') }}</a-radio>
-                <a-radio style="margin-left: 30px">{{ localeGet('queryModeOptions.realtime') }}</a-radio>
-            </a-radio-group>
-            <span style="font-weight: bold; margin-left: 80px; margin-right: 20px">{{ localeGet('label4') }}</span>
-            <a-select style="width: 150px; margin-right: 5px" :placeholder="localeGet('placeholder2')">
-                <a-option>{{ localeGet('locationOptions.china') }}</a-option>
-            </a-select>
-            <a-select style="width: 150px" :placeholder="localeGet('placeholder3')">
-                <a-option>{{ localeGet('locationOptions.china') }}</a-option>
-            </a-select>
-        </div>
-        <div style="height: 25px;"></div>
-        <div style="flex: 1;">
-            <XTextarea v-model="domains"
-                       :placeholder="localeGet('placeholder1')"/>
-        </div>
-        <div style="height: 100px; display: flex; align-items: center;">
-            <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
-                         :text="localeGet('button1')"/>
-            </div>
-            <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" :text="localeGet('button2')"/>
-                <XButton color="pink" :text="localeGet('button3')"/>
-            </div>
-        </div>
-        <div style="height: 400px;">
-            <XTable ref="xTable" :columns="columns" />
-        </div>
+  <div class="keywords-ranking-query">
+    <div class="keywords-ranking-query__engines">
+      <div class="keywords-ranking-query__label">{{ localeGet('label1') }}</div>
+      <a-radio-group class="keywords-ranking-query__radio-group">
+        <a-radio
+          v-for="sEngines in searchEngines"
+          :key="sEngines.code"
+          :disabled="sEngines.disabled"
+          :value="sEngines.code"
+          class="keywords-ranking-query__radio"
+        >
+          {{ sEngines.label }}
+        </a-radio>
+      </a-radio-group>
     </div>
+    <div class="keywords-ranking-query__filters">
+      <div class="keywords-ranking-query__group">
+        <span class="keywords-ranking-query__label">{{ localeGet('label2') }}</span>
+        <a-radio-group class="keywords-ranking-query__radio-group">
+          <a-radio class="keywords-ranking-query__radio">{{ localeGet('portOptions.pc') }}</a-radio>
+          <a-radio class="keywords-ranking-query__radio">{{ localeGet('portOptions.wap') }}</a-radio>
+        </a-radio-group>
+      </div>
+      <div class="keywords-ranking-query__group">
+        <span class="keywords-ranking-query__label">{{ localeGet('label3') }}</span>
+        <a-radio-group class="keywords-ranking-query__radio-group">
+          <a-radio class="keywords-ranking-query__radio">{{ localeGet('queryModeOptions.fast') }}</a-radio>
+          <a-radio class="keywords-ranking-query__radio">{{ localeGet('queryModeOptions.realtime') }}</a-radio>
+        </a-radio-group>
+      </div>
+      <div class="keywords-ranking-query__group keywords-ranking-query__group--location">
+        <span class="keywords-ranking-query__label">{{ localeGet('label4') }}</span>
+        <a-select class="keywords-ranking-query__select" :placeholder="localeGet('placeholder2')">
+          <a-option>{{ localeGet('locationOptions.china') }}</a-option>
+        </a-select>
+        <a-select class="keywords-ranking-query__select" :placeholder="localeGet('placeholder3')">
+          <a-option>{{ localeGet('locationOptions.china') }}</a-option>
+        </a-select>
+      </div>
+    </div>
+    <div class="keywords-ranking-query__textarea">
+      <XTextarea v-model="domains" :placeholder="localeGet('placeholder1')" />
+    </div>
+    <div class="keywords-ranking-query__actions">
+      <div class="keywords-ranking-query__primary-action">
+        <XButton
+          :loading="xTable?.table?.isLoadTable"
+          @xClick="queryTableData"
+          color="purple_blue_pink"
+          :text="localeGet('button1')"
+        />
+      </div>
+      <div class="keywords-ranking-query__extra-actions">
+        <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" :text="localeGet('button2')" />
+        <XButton color="pink" :text="localeGet('button3')" />
+      </div>
+    </div>
+    <div class="keywords-ranking-query__table">
+      <XTable ref="xTable" :columns="columns" />
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -127,6 +139,79 @@ function exportToLocation() {
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.keywords-ranking-query {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 12px;
 
+  &__engines {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-bottom: 25px;
+  }
+
+  &__group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &__group--location {
+    gap: 20px;
+  }
+
+  &__label {
+    font-weight: bold;
+  }
+
+  &__radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  &__radio {
+    margin: 0;
+  }
+
+  &__select {
+    width: 150px;
+  }
+
+  &__textarea {
+    flex: 1;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    height: 100px;
+    margin-top: 25px;
+  }
+
+  &__primary-action {
+    width: 500px;
+  }
+
+  &__extra-actions {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  &__table {
+    height: 400px;
+  }
+}
 </style>

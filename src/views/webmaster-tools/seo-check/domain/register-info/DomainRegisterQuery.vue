@@ -1,19 +1,28 @@
 <template>
-    <div style="display: flex; flex-direction: column; height: 100%;">
-        <div style="flex: 1;">
-            <XTextarea v-model="domains" :placeholder="localeGet('placeholder1')"/>
+    <div class="domain-layout">
+        <div class="domain-layout__textarea">
+            <XTextarea v-model="domains" :placeholder="localeGet('placeholder1')" />
         </div>
-        <div style="height: 100px; display: flex; align-items: center;">
-            <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" :text="localeGet('button1')"/>
+        <div class="domain-layout__actions">
+            <div class="domain-layout__primary">
+                <XButton
+                    :loading="xTable?.table?.isLoadTable"
+                    @xClick="queryTableData"
+                    color="purple_blue_pink"
+                    :text="localeGet('button1')"
+                />
             </div>
-            <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
-                    :text="localeGet('button2')" />
-                <XButton color="pink" :text="localeGet('button5')"/>
+            <div class="domain-layout__extra">
+                <XButton
+                    :loading="isDownloadFile"
+                    @xClick="exportRecordKeepingDomains"
+                    color="blue"
+                    :text="localeGet('button2')"
+                />
+                <XButton color="pink" :text="localeGet('button5')" />
             </div>
         </div>
-        <div style="height: 400px;">
+        <div class="domain-layout__table">
             <XTable ref="xTable" :columns="columns">
                 <template #age="{ record }">
                     <div>{{ record.age }}</div>
@@ -77,6 +86,6 @@ function exportRecordKeepingDomains() {
 
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+@import '@/assets/style/domain.less';
 </style>

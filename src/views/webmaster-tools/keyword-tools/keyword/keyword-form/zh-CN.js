@@ -17,7 +17,7 @@ export default {
   'title1': '挖掘平台',
   'title2': '挖掘深度',
   'title3': '高级筛选',
-  'title4': '包含不包含',
+  'title4': '条件筛选',
   'title5': '组合方式',
   'title6': '智能加空格',
   'title7': '全选/全不选',

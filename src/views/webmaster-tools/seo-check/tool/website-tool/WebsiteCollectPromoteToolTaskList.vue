@@ -1,41 +1,37 @@
 <template>
-    <div style="display: flex; flex-direction: column; height: 100%;">
-        <div style="height: 12px;"></div>
-        <div style="display: flex; gap: 12px">
-            <a-select style="width: 150px" placeholder="任务类型">
-                <a-option>Beijing</a-option>
-            </a-select>
-            <a-select style="width: 150px" placeholder="搜索引擎">
-                <a-option>Beijing</a-option>
-            </a-select>
-            <a-select style="width: 150px" placeholder="操作方式">
-                <a-option>Beijing</a-option>
-            </a-select>
-            <a-select style="width: 150px" placeholder="任务状态">
-                <a-option>Beijing</a-option>
-            </a-select>
-            <a-input style="width: 300px" placeholder="请输入任务名称" allow-clear />
-            <XButton color="purple_blue_pink" size="small" text="搜索" />
-            <XButtonOutline color="blue" size="small" text="重置" />
-            <XButtonOutline color="blue" size="small" text="刷新" />
-        </div>
-        <div style="height: 25px;"></div>
-        <div style="flex: 1;">
-            <a-table :columns="columns" />
-            <div style="height: 12px;"></div>
-            <div style="display: flex;">
-                <div style="display: flex; gap: 12px; align-items: center; flex: 1">
-                    <XButton color="yellow" size="small" text="批量删除" />
-                    <XButtonOutline color="blue" size="small" text="加载全部" />
-                    <span>共计：10 条</span>
-                </div>
-                <div style="flex: 1; justify-items: right">
-                    <a-pagination show-total :total="50" show-page-size/>
-                </div>
-            </div>
-        </div>
-
+  <div class="website-collect-promote-tool-task-list">
+    <div class="website-collect-promote-tool-task-list__filters">
+      <a-select class="website-collect-promote-tool-task-list__select" placeholder="任务类型">
+        <a-option>Beijing</a-option>
+      </a-select>
+      <a-select class="website-collect-promote-tool-task-list__select" placeholder="搜索引擎">
+        <a-option>Beijing</a-option>
+      </a-select>
+      <a-select class="website-collect-promote-tool-task-list__select" placeholder="操作方式">
+        <a-option>Beijing</a-option>
+      </a-select>
+      <a-select class="website-collect-promote-tool-task-list__select" placeholder="任务状态">
+        <a-option>Beijing</a-option>
+      </a-select>
+      <a-input class="website-collect-promote-tool-task-list__input" placeholder="请输入任务名称" allow-clear />
+      <XButton color="purple_blue_pink" size="small" text="搜索" />
+      <XButtonOutline color="blue" size="small" text="重置" />
+      <XButtonOutline color="blue" size="small" text="刷新" />
     </div>
+    <div class="website-collect-promote-tool-task-list__table">
+      <a-table :columns="columns" />
+      <div class="website-collect-promote-tool-task-list__table-footer">
+        <div class="website-collect-promote-tool-task-list__table-actions">
+          <XButton color="yellow" size="small" text="批量删除" />
+          <XButtonOutline color="blue" size="small" text="加载全部" />
+          <span>共计：10 条</span>
+        </div>
+        <div class="website-collect-promote-tool-task-list__pagination">
+          <a-pagination show-total :total="50" show-page-size />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -122,6 +118,52 @@ let columns = [
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.website-collect-promote-tool-task-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 12px;
+  gap: 25px;
 
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  &__select {
+    width: 150px;
+  }
+
+  &__input {
+    width: 300px;
+  }
+
+  &__table {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__table-footer {
+    display: flex;
+    align-items: center;
+  }
+
+  &__table-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex: 1;
+  }
+
+  &__pagination {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
 </style>

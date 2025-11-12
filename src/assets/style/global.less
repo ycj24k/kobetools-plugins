@@ -13,6 +13,18 @@ html, body, #plugins {
     -webkit-font-smoothing: antialiased;
 }
 
+/* 子应用根容器：仅在本应用内部生效的变量与容器能力 */
+.kobe-embed-root {
+    /* 自适应字体与基本间距（宿主可覆盖） */
+    --kobe-font-size: clamp(14px, 0.95vw, 16px);
+    --kobe-gap: 16px;
+    --kobe-radius: 8px;
+    font-size: var(--kobe-font-size);
+    width: 100%;
+    min-height: 100%;
+    container-type: inline-size;
+}
+
 .plugins-container {
     background-color: #f2f3f5;
     height: 100%;

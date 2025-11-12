@@ -129,28 +129,38 @@ function queryTableData() {
 
     // 是转换下结果
     xTable.value.queryTableData("/api/sites/query/rank", data, (result) => {
-        let datas = result.data;
-        let allDatas = [];
-        for (let i = 0; i < datas.length; i++) {
-            let data = datas[i];
-            if (data.hasOwnProperty("pc")){
-                let pc = data.pc;
-                pc.domain = data.domain;
-                pc.platform = "pc";
-                pc.serialNumber = (i+1);
-                allDatas.push(pc);
+        const transformed = (result.data || []).reduce((acc, item, index) => {
+            const serialNumber = index + 1;
+            if (item.pc) {
+                acc.push({
+                    ...item.pc,
+                    domain: item.domain,
+                    platform: "pc",
+                    serialNumber,
+                });
             }
-            if (data.hasOwnProperty("mobile")){
-                let mobile = data.mobile;
-                mobile.domain = data.domain;
-                mobile.platform = "mobile";
-                mobile.serialNumber = (i+1);
-                allDatas.push(mobile);
+            if (item.mobile) {
+                acc.push({
+                    ...item.mobile,
+                    domain: item.domain,
+                    platform: "mobile",
+                    serialNumber,
+                });
             }
+            return acc;
+        }, []);
+
+        const meta = {
+            data: transformed,
+            total: typeof result.total === "number" ? result.total : transformed.length,
+        };
+        if (typeof result.successCount === "number") {
+            meta.successCount = result.successCount;
         }
-        xTable.value.table.tableAllData = allDatas;
-        xTable.value.table.total = allDatas.length;
-        xTable.value.onPageIndexChange(1);
+        if (typeof result.failCount === "number") {
+            meta.failCount = result.failCount;
+        }
+        return meta;
     });
 }
 

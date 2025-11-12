@@ -146,7 +146,7 @@ export const useAppStore = defineStore('app', {
     },
 
     async logout() {
-      localStorage.removeItem('userToken');
+      localStorage.removeItem('kobetoolsToken');
       this.userToken = null;
     },
   },

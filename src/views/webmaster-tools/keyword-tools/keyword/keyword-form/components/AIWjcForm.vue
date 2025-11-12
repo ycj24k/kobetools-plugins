@@ -130,6 +130,7 @@ const translatedIncludeOptions = translateOptions(includeOptions);
 const translatedExcludeOptions = translateOptions(excludeOptions);
 const translatedAINumberOptions = translateOptions(AINumberOptions);
 const translatedAIModelOptions = translateOptions(AIModelOptions);
+AIFormDefault.prompt = localeGet(AIFormDefault.prompt);
 // 关键词挖掘
 // const supportOptions = ref([]);
 const AIFormRef = ref(null);

@@ -1,0 +1,63 @@
+.domain-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__textarea {
+    flex: 1;
+    min-height: 200px;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 100px;
+    margin-top: 20px;
+  }
+
+  &__primary {
+    width: 500px;
+    flex-shrink: 0;
+  }
+
+  &__extra {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  &__table {
+    height: 400px;
+  }
+}
+
+.domain-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__tabs {
+    flex: 1;
+    min-height: 0;
+  }
+
+  &__spacer {
+    height: 12px;
+  }
+}
+
+.required-mark {
+  color: #ff4d4f;
+}
+
+.status-text {
+  font-weight: 500;
+
+  &--danger {
+    color: #ff4d4f;
+    font-weight: 700;
+  }
+}
+

@@ -1,55 +1,59 @@
 <template>
-    <div style="display: flex; flex-direction: column; height: 100%">
-        <div class="query_box">
-            <div class="flex_box query_item">
-                <div class="query_label"><span style="color: red;">*</span>{{ localeGet('title1') }}</div>
+    <div class="domain-security">
+        <div class="domain-security__filters">
+            <div class="query_item">
+                <div class="query_label"><span class="required-mark">*</span>{{ localeGet('title1') }}</div>
                 <div class="query_value">
                     <a-checkbox-group v-model="querys" :options="translatedQueryOptions"></a-checkbox-group>
                 </div>
             </div>
         </div>
-        <div style="flex: 1">
+        <div class="domain-security__textarea">
             <XTextarea v-model="domains" :placeholder="localeGet('placeholder1')" />
         </div>
-        <div style="height: 100px; display: flex; align-items: center">
-            <div style="width: 500px">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
-                    :text="localeGet('button1')" />
+        <div class="domain-security__actions">
+            <div class="domain-security__primary">
+                <XButton
+                    :loading="xTable?.table?.isLoadTable"
+                    @xClick="queryTableData"
+                    color="purple_blue_pink"
+                    :text="localeGet('button1')"
+                />
             </div>
-            <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue" :text="localeGet('button2')" />
+            <div class="domain-security__extra">
+                <XButton
+                    :loading="isDownloadFile"
+                    @xClick="exportRecordKeepingDomains"
+                    color="blue"
+                    :text="localeGet('button2')"
+                />
                 <XButton color="pink" :text="localeGet('button5')" />
             </div>
         </div>
-        <div style="height: 400px">
-            <XTable ref="xTable" :columns="columns">
+        <div class="domain-security__table">
+            <XTable ref="xTable" :columns="resolvedColumns">
                 <template #isBlocked="{ record }">
-                    <div
-                        :style="{ color: record.isBlocked === '是' ? 'red' : '', fontWeight: record.isBlocked === '是' ? 700 : 500 }">
+                    <div :class="['status-text', { 'status-text--danger': record.isBlocked === '是' }]">
                         {{ record.isBlocked }}
                     </div>
                 </template>
                 <template #qqRes="{ record }">
-                    <div
-                        :style="{ color: record.qqRes === localeGet('status.risk') ? 'red' : '', fontWeight: record.qqRes === localeGet('status.risk') ? 700 : 500 }">
+                    <div :class="['status-text', { 'status-text--danger': record.qqRes === localeGet('status.risk') }]">
                         {{ record.qqRes }}
                     </div>
                 </template>
                 <template #wxRes="{ record }">
-                    <div
-                        :style="{ color: record.wxRes === localeGet('status.risk') ? 'red' : '', fontWeight: record.wxRes === localeGet('status.risk') ? 700 : 500 }">
+                    <div :class="['status-text', { 'status-text--danger': record.wxRes === localeGet('status.risk') }]">
                         {{ record.wxRes }}
                     </div>
                 </template>
                 <template #baiduMessage="{ record }">
-                    <div
-                        :style="{ color: record.baiduMessage === localeGet('status.risk') ? 'red' : '', fontWeight: record.baiduMessage === localeGet('status.risk') ? 700 : 500 }">
+                    <div :class="['status-text', { 'status-text--danger': record.baiduMessage === localeGet('status.risk') }]">
                         {{ record.baiduMessage }}
                     </div>
                 </template>
                 <template #beianSecurity="{ record }">
-                    <div
-                        :style="{ color: record.beianSecurity === localeGet('status.blacklist') ? 'red' : '', fontWeight: record.beianSecurity === localeGet('status.blacklist') ? 700 : 500 }">
+                    <div :class="['status-text', { 'status-text--danger': record.beianSecurity === localeGet('status.blacklist') }]">
                         {{ record.beianSecurity }}
                     </div>
                 </template>
@@ -75,8 +79,17 @@ const props = defineProps({
         default: {},
     },
 });
-const { localeGet, updateLocales, translateOptions } = useI18n(localZhCN);
-watch(() => props.locales, (v) => { if (v) updateLocales(v); }, { immediate: true });
+const localeData = ref(props.locales);
+const { translateOptions } = useI18n(localZhCN);
+watch(
+    () => props.locales,
+    (newVal) => {
+        localeData.value = newVal || {};
+    },
+    { immediate: true }
+);
+
+const localeGet = (key) => localeData.value?.[key] ?? key;
 
 const querys = ref(['isBlocked', 'wxSecurity', 'qqSecurity', 'baiduBlock']);
 const queryOptions = [
@@ -96,36 +109,37 @@ const queryOptions = [
 const translatedQueryOptions = translateOptions(queryOptions);
 
 const getColumnsDefault = () => [
-    { title: localeGet('securityColumns.label1'), dataIndex: 'serialNumber', sortable: { sortDirections: ['ascend', 'descend'] }, width: 90 },
-    { title: localeGet('securityColumns.label2'), dataIndex: 'domain', sortable: { sortDirections: ['ascend', 'descend'] }, width: 150 }
+    { title: 'securityColumns.label1', dataIndex: 'serialNumber', sortable: { sortDirections: ['ascend', 'descend'] }, width: 90 },
+    { title: 'securityColumns.label2', dataIndex: 'domain', sortable: { sortDirections: ['ascend', 'descend'] }, width: 150 }
 ];
 
-const columns = ref([
-    ...getColumnsDefault(),
-    { title: localeGet('securityColumns.label3'), dataIndex: 'isBlocked', slotName: 'isBlocked', sortable: { sortDirections: ['ascend', 'descend'] }, width: 150 },
-    { title: localeGet('securityColumns.label5'), dataIndex: 'wxRes', slotName: 'wxRes', sortable: { sortDirections: ['ascend', 'descend'] }, width: 150 },
-    { title: localeGet('securityColumns.label4'), dataIndex: 'qqRes', slotName: 'qqRes', sortable: { sortDirections: ['ascend', 'descend'] }, width: 150 },
-    { title: localeGet('securityColumns.label6'), dataIndex: 'baiduMessage', slotName: 'baiduMessage', sortable: { sortDirections: ['ascend', 'descend'] }, width: 150 },
-]);
+const columns = ref([]);
 
-watch(querys, (newValue) => {
-    let list = [...getColumnsDefault()]
-    for  (let i = 0; i < queryOptions.length; i++) {
-        const element = queryOptions[i];
-        if (querys.value.includes(element.value)) {
-            list.push({
-                title: localeGet(element.label),
-                dataIndex: element.column,
-                slotName: element.column,
-                sortable: {
-                    sortDirections: ['ascend', 'descend'],
-                },
-                width: 150,
+const rebuildColumns = () => {
+    const base = [...getColumnsDefault()];
+    queryOptions.forEach((option) => {
+        if (querys.value.includes(option.value)) {
+            base.push({
+                title: option.label,
+                dataIndex: option.column,
+                slotName: option.column,
+                sortable: { sortDirections: ['ascend', 'descend'] },
+                width: 150
             });
         }
-    }
-    columns.value = [...list];
-}, { immediate: true });
+    });
+    columns.value = base;
+};
+
+watch(querys, rebuildColumns, { immediate: true });
+watch(localeData, rebuildColumns);
+
+const resolvedColumns = computed(() =>
+    columns.value.map((col) => ({
+        ...col,
+        title: localeGet(col.title)
+    }))
+);
 
 let domains = ref('');
 let xTable = ref(null);
@@ -157,20 +171,61 @@ function exportRecordKeepingDomains() {
 </script>
 
 <style lang="less" scoped>
-.query_box {
-    .query_item {
+@import '@/assets/style/domain.less';
+
+.domain-security {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &__filters {
         padding: 10px 0 20px;
 
+        .query_item {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .query_label {
-            width: 80px;
+            width: 90px;
             font-size: 14px;
             font-weight: bold;
         }
 
         .query_value {
-            width: calc(100% - 100px);
+            flex: 1;
             font-size: 14px;
         }
+    }
+
+    &__textarea {
+        flex: 1;
+        min-height: 200px;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 100px;
+        margin-top: 20px;
+    }
+
+    &__primary {
+        width: 500px;
+        flex-shrink: 0;
+    }
+
+    &__extra {
+        flex: 1;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    &__table {
+        height: 400px;
     }
 }
 </style>

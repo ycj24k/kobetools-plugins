@@ -1,36 +1,40 @@
 <template>
-    <div style="display: flex; flex-direction: column; height: 100%;">
-        <div style="flex: 1;">
+    <div class="domain-layout">
+        <div class="domain-layout__textarea">
             <XTextarea v-model="domains" :placeholder="localeGet('placeholder2')" />
         </div>
-        <div style="height: 100px; display: flex; align-items: center;">
-            <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
-                    :text="localeGet('button1')" />
+        <div class="domain-layout__actions">
+            <div class="domain-layout__primary">
+                <XButton
+                    :loading="xTable?.table?.isLoadTable"
+                    @xClick="queryTableData"
+                    color="purple_blue_pink"
+                    :text="localeGet('button1')"
+                />
             </div>
-            <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportRecordKeepingDomains" color="blue"
-                    :text="localeGet('button2')" />
+            <div class="domain-layout__extra">
+                <XButton
+                    :loading="isDownloadFile"
+                    @xClick="exportRecordKeepingDomains"
+                    color="blue"
+                    :text="localeGet('button2')"
+                />
                 <XButton color="pink" :text="localeGet('button4')" />
             </div>
         </div>
-        <div style="height: 400px;">
-            <XTable ref="xTable" :columns="columns" :locales="localeData" />
+        <div class="domain-layout__table">
+            <XTable ref="xTable" :columns="resolvedColumns" :locales="localeData" />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import XButton from "@/components/common/XButton.vue";
 import XTextarea from "@/components/common/XTextarea.vue";
 import XTable from "@/components/common/XTable.vue";
 import { showErrorNotification } from "@/hooks/useNotification";
 import { handleExport } from '@/utils';
-import { useI18n } from '../../../keyword-tools/keyword/utils/i18n';
-import localZhCN from './zh-CN.js';
-
-// 多语言
 const props = defineProps({
     locales: {
         type: Object,
@@ -38,15 +42,16 @@ const props = defineProps({
     }
 });
 
-const { localeGet, updateLocales } = useI18n(localZhCN);
-const columns = ref([]);
-
-// 监听 props 的变化
+const localeData = ref(props.locales);
 watch(() => props.locales, (newVal) => {
-    if (newVal) updateLocales(newVal);
-    columns.value = [
+    localeData.value = newVal || {};
+}, { immediate: true });
+
+const localeGet = (key) => localeData.value?.[key] ?? key;
+
+const columns = ref([
         {
-            title: localeGet('domainColumns.label1'),
+            title: 'domainColumns.label1',
             dataIndex: 'serialNumber',
             sortable: {
                 sortDirections: ['ascend', 'descend']
@@ -54,7 +59,7 @@ watch(() => props.locales, (newVal) => {
             width: 100
         },
         {
-            title: localeGet('domainColumns.label2'),
+            title: 'domainColumns.label2',
             dataIndex: 'domain',
             sortable: {
                 sortDirections: ['ascend', 'descend']
@@ -62,12 +67,12 @@ watch(() => props.locales, (newVal) => {
             width: 150
         },
         {
-            title: localeGet('domainColumns.label3'),
+            title: 'domainColumns.label3',
             dataIndex: 'company',
             width: 300
         },
         {
-            title: localeGet('domainColumns.label4'),
+            title: 'domainColumns.label4',
             dataIndex: 'type',
             sortable: {
                 sortDirections: ['ascend', 'descend']
@@ -75,12 +80,12 @@ watch(() => props.locales, (newVal) => {
             width: 100
         },
         {
-            title: localeGet('domainColumns.label5'),
+            title: 'domainColumns.label5',
             dataIndex: 'icp_main',
             width: 150
         },
         {
-            title: localeGet('domainColumns.label6'),
+            title: 'domainColumns.label6',
             dataIndex: 'icp',
             sortable: {
                 sortDirections: ['ascend', 'descend']
@@ -88,12 +93,12 @@ watch(() => props.locales, (newVal) => {
             width: 150
         },
         {
-            title: localeGet('domainColumns.label7'),
+            title: 'domainColumns.label7',
             dataIndex: 'main_id',
             width: 150
         },
         {
-            title: localeGet('domainColumns.label8'),
+            title: 'domainColumns.label8',
             dataIndex: 'icp_time',
             sortable: {
                 sortDirections: ['ascend', 'descend']
@@ -101,7 +106,14 @@ watch(() => props.locales, (newVal) => {
             width: 150
         },
     ]
-});
+);
+
+const resolvedColumns = computed(() =>
+    columns.value.map(col => ({
+        ...col,
+        title: localeGet(col.title)
+    }))
+);
 
 let domains = ref("");
 let xTable = ref(null);
@@ -126,4 +138,6 @@ function exportRecordKeepingDomains() {
 
 </script>
 
-<style scoped></style>
+<style lang="less" scoped>
+@import '@/assets/style/domain.less';
+</style>

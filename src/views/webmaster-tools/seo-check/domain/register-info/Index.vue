@@ -14,8 +14,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="index">
-        <div style="flex: 1;">
+    <div class="domain-page">
+        <div class="domain-page__tabs">
             <a-tabs default-active-key="1" justify>
                 <a-tab-pane key="1" :title="localeGet('type1')">
                     <DomainRegisterQuery :locales="localeData" />
@@ -25,7 +25,7 @@ onMounted(() => {
                 </a-tab-pane>
             </a-tabs>
         </div>
-        <div style="height: 12px"></div>
+        <div class="domain-page__spacer"></div>
         <div class="form_explain">
             <div class="form_explain_title">{{ localeGet('introduce1') }}</div>
             <div>{{ localeGet('content1') }}</div>
@@ -35,6 +35,8 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
+@import '@/assets/style/domain.less';
+
 :deep(.arco-tabs-tab-active) {
     font-weight: bold;
 }

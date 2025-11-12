@@ -1,32 +1,42 @@
 <template>
-    <div style="display: flex; flex-direction: column; height: 100%;">
-        <div style="height: 12px;"></div>
-        <div style="display: flex; gap: 8px; align-items: center">
-            <div style="font-weight: bold">{{ localeGet('label1') }}</div>
-            <a-input style="width: 320px; margin-right: 20px" :placeholder="localeGet('placeholder1')" allow-clear />
-            <div style="font-weight: bold">{{ localeGet('label2') }}</div>
-            <a-radio-group>
-                <a-radio style="margin-left: 20px" v-for="sEngines in searchEngines" :key="sEngines.code" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.label }}</a-radio>
-            </a-radio-group>
-        </div>
-        <div style="height: 25px;"></div>
-        <div style="flex: 1;">
-            <XTextarea v-model="domains" :placeholder="localeGet('placeholder2')"/>
-        </div>
-        <div style="height: 100px; display: flex; align-items: center;">
-            <div style="width: 500px;">
-                <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
-                         :text="localeGet('button1')"/>
-            </div>
-            <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
-                <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" :text="localeGet('button2')"/>
-                <XButton color="pink" :text="localeGet('button3')"/>
-            </div>
-        </div>
-        <div style="height: 400px;">
-            <XTable ref="xTable" :columns="columns" />
-        </div>
+  <div class="keywords-index-query">
+    <div class="keywords-index-query__filters">
+      <div class="keywords-index-query__label">{{ localeGet('label1') }}</div>
+      <a-input class="keywords-index-query__input" :placeholder="localeGet('placeholder1')" allow-clear />
+      <div class="keywords-index-query__label">{{ localeGet('label2') }}</div>
+      <a-radio-group class="keywords-index-query__radio-group">
+        <a-radio
+          v-for="sEngines in searchEngines"
+          :key="sEngines.code"
+          :disabled="sEngines.disabled"
+          :value="sEngines.code"
+          class="keywords-index-query__radio"
+        >
+          {{ sEngines.label }}
+        </a-radio>
+      </a-radio-group>
     </div>
+    <div class="keywords-index-query__textarea">
+      <XTextarea v-model="domains" :placeholder="localeGet('placeholder2')" />
+    </div>
+    <div class="keywords-index-query__actions">
+      <div class="keywords-index-query__primary-action">
+        <XButton
+          :loading="xTable?.table?.isLoadTable"
+          @xClick="queryTableData"
+          color="purple_blue_pink"
+          :text="localeGet('button1')"
+        />
+      </div>
+      <div class="keywords-index-query__extra-actions">
+        <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" :text="localeGet('button2')" />
+        <XButton color="pink" :text="localeGet('button3')" />
+      </div>
+    </div>
+    <div class="keywords-index-query__table">
+      <XTable ref="xTable" :columns="columns" />
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -132,6 +142,64 @@ function exportToLocation(){
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.keywords-index-query {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 12px;
 
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+
+  &__label {
+    font-weight: bold;
+  }
+
+  &__input {
+    width: 320px;
+    margin-right: 20px;
+  }
+
+  &__radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  &__radio {
+    margin: 0;
+  }
+
+  &__textarea {
+    flex: 1;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    height: 100px;
+    margin-top: 25px;
+  }
+
+  &__primary-action {
+    width: 500px;
+  }
+
+  &__extra-actions {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  &__table {
+    height: 400px;
+  }
+}
 </style>

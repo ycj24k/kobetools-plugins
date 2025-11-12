@@ -1,27 +1,25 @@
 <template>
-  <div style="display: flex; flex-direction: column; height: 100%;">
-    <div style="height: 12px;"></div>
-    <div style="display: flex; gap: 12px;">
-      <div style="display: flex; gap: 12px; width: 300px;">
+  <div class="gjcssl-form">
+    <div class="gjcssl-form__language-row">
+      <div class="gjcssl-form__language-options">
         <a-radio-group v-model="queryParam.language">
           <a-radio v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</a-radio>
         </a-radio-group>
       </div>
     </div>
-    <div style="height: 25px;"></div>
-    <div style="flex: 1;">
+    <div class="gjcssl-form__textarea">
       <XTextarea v-model="queryParam.keywords" placeholder="请输入需要查询的关键字，一行一个，一次最多提交100个" />
     </div>
-    <div style="height: 100px; display: flex; align-items: center;">
-      <div style="width: 500px;">
+    <div class="gjcssl-form__actions">
+      <div class="gjcssl-form__primary-action">
         <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink" text="立即查询" />
       </div>
-      <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
+      <div class="gjcssl-form__extra-actions">
         <XButton :loading="isDownloadFile" @xClick="exportTableData" color="blue" text="导出查询结果" />
         <XButton color="pink" text="VIP查询通道" />
       </div>
     </div>
-    <div style="height: 400px;">
+    <div class="gjcssl-form__table-wrapper">
       <XTable ref="xTable" :columns="columns" :spanMethod="spanMethod">
         <template>
           详情|未开发
@@ -46,7 +44,7 @@ let languages = [
 ];
 
 let queryParam = reactive({
-  language: '',
+  language: languages[0]?.code ?? '',
   keywords: ''
 });
 
@@ -98,7 +96,7 @@ let isDownloadFile = ref(false);
 
 function queryTableData() {
 
-  if (queryParam.languages.length === 0 || queryParam.keywords.trim().length === 0) {
+  if (!queryParam.language || queryParam.keywords.trim().length === 0) {
     showErrorNotification('站长平台和搜索引擎分别至少选择一个，查询的网站域名不能为空！');
     return;
   }
@@ -106,31 +104,44 @@ function queryTableData() {
 
   // 是转换下结果
   xTable.value.queryTableData("/api/sites/query/weight", data, (result) => {
-    let datas = result.data;
-    let allDatas = [];
-    for (let i = 0; i < datas.length; i++) {
-      let data = datas[i];
-      if (data.hasOwnProperty("domainAizhan")) {
-        let domainAizhan = data.domainAizhan;
-        domainAizhan.language = "爱站";
-        domainAizhan.serialNumber = (i + 1);
-        allDatas.push(domainAizhan);
+    const transformed = (result.data || []).reduce((acc, item, index) => {
+      const serialNumber = index + 1;
+      const keyword = item.domain || "";
+      if (item.domainAizhan) {
+        acc.push({
+          ...item.domainAizhan,
+          language: "爱站",
+          keyword,
+          serialNumber,
+        });
       }
-      if (data.hasOwnProperty("domainZ")) {
-        let domainZ = data.domainZ;
-        domainZ.language = "站长";
-        domainZ.serialNumber = (i + 1);
-        allDatas.push(domainZ);
+      if (item.domainZ) {
+        acc.push({
+          ...item.domainZ,
+          language: "站长",
+          keyword,
+          serialNumber,
+        });
       }
+      return acc;
+    }, []);
+
+    const meta = {
+      data: transformed,
+      total: typeof result.total === "number" ? result.total : transformed.length,
+    };
+    if (typeof result.successCount === "number") {
+      meta.successCount = result.successCount;
     }
-    xTable.value.table.tableAllData = allDatas;
-    xTable.value.table.total = allDatas.length;
-    xTable.value.onPageIndexChange(1);
+    if (typeof result.failCount === "number") {
+      meta.failCount = result.failCount;
+    }
+    return meta;
   });
 }
 
 function exportTableData() {
-  if (queryParam.languages.length === 0 || queryParam.keywords.trim().length === 0) {
+  if (!queryParam.language || queryParam.keywords.trim().length === 0) {
     showErrorNotification('站长平台和搜索引擎分别至少选择一个，查询的网站域名不能为空！');
     return;
   }
@@ -143,14 +154,12 @@ function exportTableData() {
 
 // 全选
 function allSelect() {
-  queryParam.languages = languages.map(language => language.code);
+  queryParam.language = languages[0]?.code ?? '';
 }
 
 // 反选
 function revoltSelect() {
-  queryParam.languages = languages
-    .filter(language => !queryParam.languages.includes(language.code))
-    .map(language => language.code);
+  queryParam.language = '';
 }
 
 /**
@@ -187,4 +196,49 @@ function spanMethod({ record, column, rowIndex, columnIndex }) {
 
 </script>
 
-<style scoped></style>
+<style lang="less" scoped>
+.gjcssl-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 12px;
+
+  &__language-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+
+  &__language-options {
+    display: flex;
+    gap: 12px;
+    width: 300px;
+  }
+
+  &__textarea {
+    height: 200px;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    height: 100px;
+    margin-top: 25px;
+  }
+
+  &__primary-action {
+    width: 500px;
+  }
+
+  &__extra-actions {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  &__table-wrapper {
+    margin-top: 16px;
+  }
+}
+</style>

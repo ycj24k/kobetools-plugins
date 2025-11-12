@@ -366,6 +366,10 @@
                             "name": "recycle-bin",
                             "children": [
                             ]
+                        },
+                        {
+                            "title": "个人中心",
+                            "name": "personal-center"
                         }
                     ]
                 }

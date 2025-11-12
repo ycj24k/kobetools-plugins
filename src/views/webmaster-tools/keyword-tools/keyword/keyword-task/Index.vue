@@ -28,7 +28,7 @@
         </a-grid>
       </a-form>
       <div class="table_box">
-        <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading" :columns="taskTableColumns" :data="tableData" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="false" :scroll="{ x: '100%', y: 500 }">
+        <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading" :columns="taskTableColumns" :data="tableData" :row-selection="rowSelection" v-model:selectedKeys="selectedKeys" :pagination="false" :scroll="{ x: '100%', y: 'calc(100vh - 300px)' }">
           <template #header="{ column }">
             <div>{{ column.title === 'taskTableColumns.title5' ? localeGet('taskTableColumns.title5') : localeGet(column.title) }}</div>
           </template>

@@ -30,7 +30,7 @@
         <a-table column-resizable :bordered="{ cell: true }" :loading="tableLoading || saveLoading"
           :columns="myTableColumns" :data="tableData" row-key="id" :row-selection="rowSelection"
           v-model:selectedKeys="selectedKeys" :pagination="false"
-          :scroll="{ x: '100%', y: 'calc(100vh - 300px)' }">
+          :scroll="{ x: '100%' }">
           <template #header="{ column }">
             <div>{{ column.title === 'myTableColumns.title7' ? localeGet('myTableColumns.title7') : localeGet(column.title) }}</div>
           </template>

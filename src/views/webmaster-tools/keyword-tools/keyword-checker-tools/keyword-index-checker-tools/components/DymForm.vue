@@ -1,29 +1,42 @@
 <template>
-    <div style="display: flex; flex-direction: column; height: 100%;">
-        <div style="height: 12px;"></div>
-        <div style="display: flex; gap: 8px; align-items: center">
-            <div style="font-weight: bold">站点域名</div>
-            <a-input v-model="domains" style="width: 320px; margin-right: 20px" placeholder="请输入站点域名，如：www.google.com" allow-clear />
-            <div style="font-weight: bold">搜索引擎</div>
-            <a-radio-group>
-                <a-radio style="margin-left: 20px" v-for="sEngines in searchEngines" :key="sEngines.code" :disabled="sEngines.disabled" :value="sEngines.code">{{ sEngines.name }}</a-radio>
+    <div class="keyword-index-form">
+        <div class="keyword-index-form__spacer-xs"></div>
+        <div class="keyword-index-form__filter-row">
+            <div class="keyword-index-form__label">站点域名</div>
+            <a-input
+                v-model="domains"
+                class="keyword-index-form__input"
+                placeholder="请输入站点域名，如：www.google.com"
+                allow-clear
+            />
+            <div class="keyword-index-form__label">搜索引擎</div>
+            <a-radio-group class="keyword-index-form__radio-group">
+                <a-radio
+                    v-for="sEngines in searchEngines"
+                    :key="sEngines.code"
+                    :disabled="sEngines.disabled"
+                    :value="sEngines.code"
+                    class="keyword-index-form__radio"
+                >
+                    {{ sEngines.name }}
+                </a-radio>
             </a-radio-group>
         </div>
-        <div style="height: 25px;"></div>
-        <div style="flex: 1;">
+        <div class="keyword-index-form__spacer-md"></div>
+        <div class="keyword-index-form__textarea">
             <XTextarea v-model="keywords" placeholder="请输入需要查询索引的关键词，一行一个，一次最多提交100个"/>
         </div>
-        <div style="height: 100px; display: flex; align-items: center;">
-            <div style="width: 500px;">
+        <div class="keyword-index-form__actions">
+            <div class="keyword-index-form__actions-left">
                 <XButton :loading="xTable?.table?.isLoadTable" @xClick="queryTableData" color="purple_blue_pink"
                          text="立即查询"/>
             </div>
-            <div style="flex: 1; display: flex; gap: 12px; justify-content: flex-end">
+            <div class="keyword-index-form__actions-right">
                 <XButton :loading="isDownloadFile" @xClick="exportToLocation" color="blue" text="导出查询结果"/>
                 <XButton color="pink" text="VIP查询通道"/>
             </div>
         </div>
-        <div style="height: 400px;">
+        <div class="keyword-index-form__table">
             <XTable ref="xTable" :columns="columns" />
         </div>
     </div>
@@ -111,6 +124,74 @@ function exportToLocation(){
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.keyword-index-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
+    &__spacer-xs {
+        height: 12px;
+    }
+
+    &__spacer-md {
+        height: 25px;
+    }
+
+    &__filter-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    &__label {
+        font-weight: 600;
+    }
+
+    &__input {
+        width: 320px;
+        margin-right: 20px;
+    }
+
+    &__radio-group {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 20px;
+        row-gap: 12px;
+        margin-left: 20px;
+    }
+
+    &__radio {
+        font-weight: 400;
+    }
+
+    &__textarea {
+        height: 200px;
+    }
+
+    &__actions {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__actions-left {
+        width: 500px;
+    }
+
+    &__actions-right {
+        flex: 1;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    &__table {
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+    }
+}
 </style>

@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { Message, Modal } from '@arco-design/web-vue';
 
-axios.defaults.baseURL = 'http://39.108.83.171';
+const DEFAULT_API_BASE_URL =
+  process.env.VUE_APP_API_BASE_URL || 'http://39.108.83.171';
+const FRONT_API_BASE_URL =
+  process.env.VUE_APP_API_FRONT_BASE_URL || 'http://39.108.112.20:20001';
+
+axios.defaults.baseURL = DEFAULT_API_BASE_URL;
 
 axios.interceptors.request.use(
   (config) => {
@@ -14,11 +19,17 @@ axios.interceptors.request.use(
       if (!config.headers) {
         config.headers = {};
       }
-      config.headers['access-token'] = `${token}`;
-      config.headers['Authori-zation'] = `${token}`;
+      config.headers['access-token'] = token;
+      config.headers['Authorization'] = token;
+      config.headers['Authori-zation'] = token;
     }
-    if (config.url.indexOf('/api/front/') != -1) {
-      config.baseURL = 'http://39.108.112.20:20001';
+    if (
+      typeof config.url === 'string' &&
+      config.url.startsWith('/api/front/')
+    ) {
+      config.baseURL = FRONT_API_BASE_URL;
+    } else if (!config.baseURL) {
+      config.baseURL = DEFAULT_API_BASE_URL;
     }
     return config;
   },
@@ -31,7 +42,10 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response) => {
     const res = response.data;
-    console.log(res);
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.debug('[axios] response:', res);
+    }
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200 && res.data !== 200) {
       // 处理429状态码
